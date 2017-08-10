@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/bg">
+    <RelativeLayout
+        android:id="@+id/sens_rr"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:layout_height="44dp">
+        <ImageView
+            android:id="@+id/sensitizze_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/back_02"
+            android:layout_marginLeft="15dp"/>
+
+        <ImageView
+            android:id="@+id/sensitize_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/close_01"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="15dp"/>
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/sensitize_car"
+        android:layout_below="@id/sens_rr"
+        android:layout_marginTop="47dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="26dp"
+        android:textColor="#fff"
+        android:text="打车服务"/>
+
+</RelativeLayout>

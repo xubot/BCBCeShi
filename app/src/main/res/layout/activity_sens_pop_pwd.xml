@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="#fff"
+    android:layout_width="302dp"
+    android:layout_height="212dp">
+
+    <EditText
+        android:id="@+id/sens_edit_phone"
+        android:layout_width="250dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="15dp"
+        android:layout_gravity="center"
+        android:background="@null"
+        android:hint="设置登录密码（8-16位）"
+        android:inputType="textPassword"
+        android:textSize="13dp"
+        android:textColorHint="#a9a9a9a9"/>
+    <View
+        android:layout_below="@id/sens_edit_phone"
+        style="@style/Home_View"
+        android:layout_gravity="center"
+        android:id="@+id/view2"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="15dp"
+        android:textColor="#a9a9a9"
+        android:text="需包含数字，字母，符号中至少2种元素\n密码长度8-16位"/>
+
+    <Button
+        android:id="@+id/sensitize_pwd"
+        android:layout_width="240dp"
+        android:layout_height="40dp"
+        android:text="确定"
+        android:textSize="19dp"
+        android:textColor="#ffffff"
+        android:background="@drawable/sp"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center"
+        android:layout_below="@id/view2"/>
+
+</LinearLayout>

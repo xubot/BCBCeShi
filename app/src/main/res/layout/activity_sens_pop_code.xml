@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="#fff"
+    android:layout_width="302dp"
+    android:layout_height="211dp">
+
+    <TextView
+        android:id="@+id/codephone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:layout_gravity="center"
+        android:textSize="14dp"
+        android:text="验证码发送至   13051672112"/>
+
+    <TextView
+        android:id="@+id/resend"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/s"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="center"
+        android:text="重新发送"/>
+
+   <LinearLayout
+       android:layout_width="wrap_content"
+       android:layout_marginTop="30dp"
+       android:orientation="horizontal"
+       android:layout_gravity="center"
+       android:layout_height="48dp">
+
+       <EditText
+           android:id="@+id/e_one"
+           android:layout_width="48dp"
+           android:layout_height="48dp"
+           android:background="@drawable/s"/>
+       <EditText
+           android:id="@+id/e_twe"
+           android:layout_width="48dp"
+           android:layout_height="48dp"
+           android:layout_marginLeft="18dp"
+           android:background="@drawable/s"/>
+       <EditText
+           android:id="@+id/e_three"
+           android:layout_width="48dp"
+           android:layout_height="48dp"
+           android:layout_marginLeft="18dp"
+           android:background="@drawable/s"/>
+       <EditText
+           android:id="@+id/e_frou"
+           android:layout_width="48dp"
+           android:layout_height="48dp"
+           android:layout_marginLeft="18dp"
+           android:background="@drawable/s"/>
+   </LinearLayout>
+
+</LinearLayout>

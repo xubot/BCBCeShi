@@ -99,6 +99,8 @@ public class MainActivity extends BaseActivity implements MainView{
                 Log.d("zzz", "logout=" + token);
                 //调起退出
                 presenterLayer.setLogout(token);
+
+
             }
         });
     }

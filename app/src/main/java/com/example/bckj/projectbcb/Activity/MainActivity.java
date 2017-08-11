@@ -4,7 +4,12 @@ import android.content.Intent;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -15,6 +20,7 @@ import com.example.bckj.projectbcb.Bean.LogoutBean;
 import com.example.bckj.projectbcb.Bean.MessageEvent;
 import com.example.bckj.projectbcb.Presenter.PresenterLayer;
 import com.example.bckj.projectbcb.R;
+import com.example.bckj.projectbcb.Utils.JavaScriptinterface;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.example.bckj.projectbcb.ViewLayer.MainView;
 
@@ -33,6 +39,7 @@ public class MainActivity extends BaseActivity implements MainView{
     private LinearLayout modify_ll;
     private LinearLayout logout_ll;
     private SharedUtils instance;
+    private WebView myWebView;
 
     //初始化布局
     @Override
@@ -40,13 +47,13 @@ public class MainActivity extends BaseActivity implements MainView{
         setContentView(R.layout.activity_main);
         //初始化EventBus
         EventBus.getDefault().register(this);
-
+        //加载html页面
+        setWebViewH5();
     }
+
     //得到控件
     @Override
     protected void init() {
-        //打车控件
-        home_taxi = (TextView) findViewById(R.id.home_taxi);
         //侧滑按钮控件
         home_img = (ImageView) findViewById(R.id.home_img);
         //得到侧滑页
@@ -61,13 +68,6 @@ public class MainActivity extends BaseActivity implements MainView{
     //控件的点击事件
     @Override
     public void cheked(){
-        //调起打车按钮监听
-        home_taxi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, TaxiActivity.class));
-            }
-        });
         //调起侧滑（按钮按下，将抽屉打开）
         home_img.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,8 +99,6 @@ public class MainActivity extends BaseActivity implements MainView{
                 Log.d("zzz", "logout=" + token);
                 //调起退出
                 presenterLayer.setLogout(token);
-
-
             }
         });
     }
@@ -138,7 +136,7 @@ public class MainActivity extends BaseActivity implements MainView{
         presenterLayer = new PresenterLayer();
         presenterLayer.setMainView(this);
     }
-
+    //得到用户名
     @Override
     public void getDataName(DataNameBean dataNameBean) {
         String msg = dataNameBean.getMsg();
@@ -167,5 +165,44 @@ public class MainActivity extends BaseActivity implements MainView{
         }else {
             Toast.makeText(this,  msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    //加载html页面
+    private void setWebViewH5() {
+        myWebView = (WebView) findViewById(R.id.myWebView);
+        WebSettings webSettings = myWebView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
+        webSettings.setAllowContentAccess(true);
+        webSettings.setAppCacheEnabled(false);
+        webSettings.setBuiltInZoomControls(false);
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+        // 开启 DOM storage API 功能
+        webSettings.setDomStorageEnabled(true);
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
+        myWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
+        myWebView.addJavascriptInterface(new JavaScriptinterface(this), "android");
+        myWebView.loadUrl("http://118.190.91.24:8080/freewifi/index.html");
+        myWebView.setWebChromeClient(new WebChromeClient());
+        myWebView.setWebViewClient(new myWebViewClient());
+    }
+
+    //设置WebView类
+    class myWebViewClient extends WebViewClient {
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, String url) {
+            // TODO Auto-generated method stub
+            view.loadUrl(url);
+            return true;
+        }
+    }
+
+    // 此按键监听的是返回键，能够返回到上一个网页（通过网页的hostlistery）
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && myWebView.canGoBack()) {
+            myWebView.goBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

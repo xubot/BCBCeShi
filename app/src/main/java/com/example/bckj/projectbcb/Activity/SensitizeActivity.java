@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -12,10 +13,15 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.bckj.projectbcb.Bean.StatusBean;
+import com.example.bckj.projectbcb.Presenter.PresenterLayer;
 import com.example.bckj.projectbcb.R;
+import com.example.bckj.projectbcb.Utils.SharedUtils;
+import com.example.bckj.projectbcb.ViewLayer.SensitizeView;
 
-public class SensitizeActivity extends AppCompatActivity {
+public class SensitizeActivity extends AppCompatActivity implements SensitizeView{
     private PopupWindow popupWindow;
     private TextView codephone;
     private Button sensitize_s;
@@ -27,15 +33,32 @@ public class SensitizeActivity extends AppCompatActivity {
     private ImageView pic_code;
     private EditText sens_edit_phone;
     private EditText sens_log_edit_phone;
-    private View view_line;
+    private PresenterLayer presenterLayer;
+    private SharedUtils instance;
+    private String logintoken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensitize);
+
         sensitize_car = (TextView) findViewById(R.id.sensitize_car);
+        //得到注册的token值
+        instance = SharedUtils.getInstance();
+        logintoken = (String) instance.getData(this, "logintoken", "");
+        Log.d("zzz", "logintoken=" + logintoken);
+
+        load();
+
         //打开弹出框点击监听
-        setSensOnClickCar();
+        //setSensOnClickCar();
+    }
+
+    public void load(){
+        Log.d("zzz", "logintokenload=" + logintoken);
+        presenterLayer = new PresenterLayer();
+        presenterLayer.SensitizeView(this);
+        presenterLayer.setStatus(logintoken);
     }
     //打开弹出框点击监听
     private void setSensOnClickCar() {
@@ -224,5 +247,26 @@ public class SensitizeActivity extends AppCompatActivity {
         //设置点击popupWindow外部,是否可以消失,如果想要消失,必须通过setBackgroundDrawable方法设置popupWindow的背景
         popupWindow.setOutsideTouchable(false);
         popupWindow.setFocusable(true);
+    }
+
+    @Override
+    public void status(StatusBean statusBean) {
+        int code = statusBean.getCode();
+        int data = statusBean.getData();
+        String msg = statusBean.getMsg();
+        String msg_en = statusBean.getMsg_en();
+        if(code==1){
+            Log.d("zzz", "sensitize=" + msg + "\n" + msg_en);
+            Toast.makeText(context, "本APP是否激活（1：是；0：否）：\n"+data, Toast.LENGTH_SHORT).show();
+            if(data==1){
+                //打开弹出框点击监听
+                setSensOnClickCar();
+            }else {
+                Toast.makeText(context, "请去邮箱激活此APP，方可激活服务", Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            Log.d("zzz", "sensitize=" + msg + "\n" + msg_en);
+            Toast.makeText(context, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+        }
     }
 }

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import com.example.bckj.projectbcb.Bean.DataNameBean;
 import com.example.bckj.projectbcb.Bean.PersonDataBean;
+import com.example.bckj.projectbcb.Bean.ReActiveUserBean;
 import com.example.bckj.projectbcb.Presenter.PresenterLayer;
 import com.example.bckj.projectbcb.R;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
@@ -32,6 +33,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
     public void initView() {
         setContentView(R.layout.activity_person_data);
         setToolBar("",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        //得到登陆后的token值
         SharedUtils instance = SharedUtils.getInstance();
         token = (String) instance.getData(this, "token", "");
     }
@@ -64,7 +66,9 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         details_again.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PersonDataActivity.this, "已点击重新获得", Toast.LENGTH_SHORT).show();
+                Log.d("zzz", "details_again=" + token);
+                //调起得到重新激活邮件
+                presenterLayer.setreActiveUser(token);
             }
         });
     }
@@ -74,9 +78,10 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         Log.d("zzz", "load=" + token);
         presenterLayer = new PresenterLayer();
         presenterLayer.setPersonDataView(this);
+        //调起得到个人信息
         presenterLayer.setPersonData(token);
     }
-
+    //得到个人信息
     @Override
     public void personData(PersonDataBean personDataBean) {
         String msg = personDataBean.getMsg();
@@ -105,6 +110,20 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             }
         });
     }
+    //得到重新激活邮件
+    @Override
+    public void reActiveData(ReActiveUserBean reActiveUserBean) {
+        int code = reActiveUserBean.getCode();
+        String msg = reActiveUserBean.getMsg();
+        String msg_en = reActiveUserBean.getMsg_en();
+        if(code==1){
+            Toast.makeText(this, "重新激活的链接已发送:"+msg+"\n The reactivated link has been sent:"+msg_en, Toast.LENGTH_SHORT).show();
+            finish();
+        }else {
+            Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+        }
+    }
+
     //显示图片的配置
     private DisplayImageOptions getImagerBuild() {
         return new DisplayImageOptions.Builder()

@@ -1,6 +1,7 @@
 package com.example.bckj.projectbcb.ViewLayer;
 
 import com.example.bckj.projectbcb.Bean.PersonDataBean;
+import com.example.bckj.projectbcb.Bean.ReActiveUserBean;
 
 /**
  * Created by Administrator on 2017/8/7.
@@ -8,4 +9,5 @@ import com.example.bckj.projectbcb.Bean.PersonDataBean;
 
 public interface PersonDataView {
     void personData(PersonDataBean personDataBean);
+    void reActiveData(ReActiveUserBean reActiveUserBean);
 }

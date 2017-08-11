@@ -30,6 +30,7 @@ public class LogActivity extends BaseActivity implements LogView{
     public void initView() {
         setContentView(R.layout.activity_log);
         setToolBar("",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        //得到存储对象
         instance = SharedUtils.getInstance();
     }
 
@@ -88,9 +89,11 @@ public class LogActivity extends BaseActivity implements LogView{
         String msg = logBean.getMsg();
         String msg_en = logBean.getMsg_en();
         String token = logBean.getData().getToken();
+        //存入登陆后的token值
         instance.saveData(LogActivity.this,"token",token);
         Log.d("zzz", code + "\n" + msg + "\n" + msg_en+"\n"+token);
         if(code==1){
+            //发送EventBus标示
             EventBus.getDefault().post(new MessageEvent(true));
             finish();
         }else {

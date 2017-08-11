@@ -1,13 +1,16 @@
 package com.example.bckj.projectbcb.Activity;
 
+import android.content.Intent;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.example.bckj.projectbcb.Bean.LoginBean;
 import com.example.bckj.projectbcb.Presenter.PresenterLayer;
 import com.example.bckj.projectbcb.R;
+import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.example.bckj.projectbcb.ViewLayer.LoginView;
 
 public class LoginActivity extends BaseActivity implements LoginView{
@@ -19,11 +22,14 @@ public class LoginActivity extends BaseActivity implements LoginView{
     private EditText login_edit_phone;
     private Button login_login;
     private PresenterLayer presenterLayer;
+    private SharedUtils instance;
 
     @Override
     public void initView() {
         setContentView(R.layout.activity_login);
         setToolBar("",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        //得到存储对象
+        instance = SharedUtils.getInstance();
     }
 
     @Override
@@ -74,11 +80,14 @@ public class LoginActivity extends BaseActivity implements LoginView{
         String msg_en = loginBean.getMsg_en();
         LoginBean.DataBean data = loginBean.getData();
         String token = data.getToken();
-        Log.d("zzz", code + "\n" + msg + "\n" + msg_en+"\n"+token);
+        //存入注册token值
+        instance.saveData(LoginActivity.this,"logintoken",token);
         if(code==1){
-            //startActivity(new Intent(LoginActivity.this,SensitizeActivity.class));
+            Toast.makeText(this, "注册："+msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+            startActivity(new Intent(LoginActivity.this,SensitizeActivity.class));
             finish();
         }else {
+            Toast.makeText(this,msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
             Log.d("zzz", code + "\n" + msg + "\n" + msg_en);
         }
     }

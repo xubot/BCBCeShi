@@ -8,12 +8,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bckj.projectbcb.Bean.DataNameBean;
 import com.example.bckj.projectbcb.Bean.LogoutBean;
 import com.example.bckj.projectbcb.Bean.MessageEvent;
 import com.example.bckj.projectbcb.Presenter.PresenterLayer;
 import com.example.bckj.projectbcb.R;
+import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.example.bckj.projectbcb.ViewLayer.MainView;
 
 import de.greenrobot.event.EventBus;
@@ -30,12 +32,15 @@ public class MainActivity extends BaseActivity implements MainView{
     private PresenterLayer presenterLayer;
     private LinearLayout modify_ll;
     private LinearLayout logout_ll;
+    private SharedUtils instance;
 
     //初始化布局
     @Override
     public void initView() {
         setContentView(R.layout.activity_main);
+        //初始化EventBus
         EventBus.getDefault().register(this);
+
     }
     //得到控件
     @Override
@@ -88,7 +93,12 @@ public class MainActivity extends BaseActivity implements MainView{
         logout_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                presenterLayer.setLogout();
+                //得到登录的token值
+                instance = SharedUtils.getInstance();
+                String token = (String) instance.getData(MainActivity.this, "token", "");
+                Log.d("zzz", "logout=" + token);
+                //调起退出
+                presenterLayer.setLogout(token);
             }
         });
     }
@@ -99,13 +109,23 @@ public class MainActivity extends BaseActivity implements MainView{
         flag = eventBus.getFlag();
         Log.d("sxd", flag +"");
         if(flag){
+            meunlog.setText("默认用户名");
+            //String token = (String) instance.getData(MainActivity.this, "token", "");
+            //Log.d("xxx", "eventbus=" + token);
             //得打个人数据
-            //presenterLayer.setData();
+            //presenterLayer.setData(token);
             //登陆后点击调到个人信息
             meunlog.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(MainActivity.this,PersonDataActivity.class));
+                }
+            });
+        }else {
+            meunlog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this,LogActivity.class));
                 }
             });
         }
@@ -120,11 +140,11 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     public void getDataName(DataNameBean dataNameBean) {
         String msg = dataNameBean.getMsg();
-        Log.d("zzz", msg);
+        Log.d("xxx", msg);
         DataNameBean.DataBean data = dataNameBean.getData();
         //得到用户名
         final String username = data.getUsername();
-        Log.d("zzz", username);
+        Log.d("xxx", username);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -132,11 +152,18 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         });
     }
-
+    //退出登录信息
     @Override
     public void getLogout(LogoutBean logoutBean) {
+        int code = logoutBean.getCode();
         String msg = logoutBean.getMsg();
         String msg_en = logoutBean.getMsg_en();
-        Log.d("zzz","out:"+msg+"\n"+msg_en);
+        if(code==1){
+            Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+            EventBus.getDefault().post(new MessageEvent(false));
+            finish();
+        }else {
+            Toast.makeText(this,  msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+        }
     }
 }

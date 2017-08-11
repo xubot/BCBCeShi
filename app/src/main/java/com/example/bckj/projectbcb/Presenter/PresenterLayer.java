@@ -10,6 +10,7 @@ import com.example.bckj.projectbcb.Bean.LoginBean;
 import com.example.bckj.projectbcb.Bean.LogoutBean;
 import com.example.bckj.projectbcb.Bean.Modifypwd;
 import com.example.bckj.projectbcb.Bean.PersonDataBean;
+import com.example.bckj.projectbcb.Bean.ReActiveUserBean;
 import com.example.bckj.projectbcb.Bean.StatusBean;
 import com.example.bckj.projectbcb.Moude.MoudelLayer;
 import com.example.bckj.projectbcb.Utils.net.Api;
@@ -103,7 +104,7 @@ public class PresenterLayer {
                     }
                     @Override
                     public void onNext(LoginBean loginBean) {
-                        Log.d("zzz", loginBean + "vddddddddd");
+                        Log.d("zzz", loginBean.getMsg() + "=one");
                         loginView.login(loginBean);
                         Log.d("zzz", "2");
                     }
@@ -134,7 +135,7 @@ public class PresenterLayer {
                     }
                     @Override
                     public void onNext(LoginBean loginBean) {
-                        Log.d("zzz", loginBean + "vddddddddd");
+                        Log.d("zzz", loginBean.getMsg() + "=twe");
                         loginView.login(loginBean);
                         Log.d("zzz", "2");
                     }
@@ -156,10 +157,10 @@ public class PresenterLayer {
         this.sensitizeView = sensitizeView;
     }
     //发起激活自身请求
-    public void setStatus() {
+    public void setStatus(String token) {
         Retrofit retrofit = moudelLayer.getData();
         Api api = retrofit.create(Api.class);
-        Observable<StatusBean> List_course = api.status();
+        Observable<StatusBean> List_course = api.status(token);
         List_course.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<StatusBean>() {
@@ -192,10 +193,10 @@ public class PresenterLayer {
         this.mainView = mainView;
     }
     //发起得到信息
-    public void setData(){
+    public void setData(String token){
         Retrofit retrofit = moudelLayer.getData();
         Api api = retrofit.create(Api.class);
-        Observable<DataNameBean> List_course = api.mainDetails();
+        Observable<DataNameBean> List_course = api.mainDetails(token);
         List_course.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<DataNameBean>() {
@@ -223,10 +224,10 @@ public class PresenterLayer {
                 });
     }
     //发起退出登录
-    public void setLogout(){
+    public void setLogout(String token){
         Retrofit retrofit = moudelLayer.getData();
         Api api = retrofit.create(Api.class);
-        Observable<LogoutBean> List_course = api.logout();
+        Observable<LogoutBean> List_course = api.logout(token);
         List_course.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<LogoutBean>() {
@@ -236,7 +237,7 @@ public class PresenterLayer {
                     }
                     @Override
                     public void onNext(LogoutBean logoutBean) {
-                        Log.d("zzz", logoutBean + "vddddddddd");
+                        Log.d("zzz", logoutBean.getMsg() + "vddddddddd");
                         mainView.getLogout(logoutBean);
                         Log.d("zzz", "2");
                     }
@@ -258,10 +259,10 @@ public class PresenterLayer {
         this.modifyView = modifyView;
     }
     //发起修改密码
-    public void setModifyPwd(String oldpwd,String newpwd, String newrepwd){
+    public void setModifyPwd(String oldpwd,String newpwd, String newrepwd,String token){
         Retrofit retrofit = moudelLayer.getData();
         Api api = retrofit.create(Api.class);
-        Observable<Modifypwd> List_course = api.modifypwd(oldpwd,newpwd,newrepwd);
+        Observable<Modifypwd> List_course = api.modifypwd(oldpwd,newpwd,newrepwd,token);
         List_course.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Observer<Modifypwd>() {
@@ -325,6 +326,41 @@ public class PresenterLayer {
                     }
                 });
     }
+    //发起重新激活邮件
+    public void setreActiveUser(String token){
+        Retrofit retrofit = moudelLayer.getData();
+        Api api = retrofit.create(Api.class);
+        Log.d("zzz", "Person=" + token);
+        Observable<ReActiveUserBean> List_course = api.reActiveUser(token);
+        List_course.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Observer<ReActiveUserBean>() {
+                    @Override
+                    public void onSubscribe(Disposable d) {
+
+                    }
+
+                    @Override
+                    public void onNext(ReActiveUserBean reActiveUserBean) {
+                        Log.d("zzz", reActiveUserBean.getMsg() + "vddddddddd");
+                        personDataView.reActiveData(reActiveUserBean);
+                        Log.d("zzz", "2");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onComplete() {
+
+                    }
+                });
+    }
+
+
+
 
     //得到ForgetView对象
     public void setForgetView(ForgetView forgetView){
@@ -361,7 +397,7 @@ public class PresenterLayer {
                     }
                 });
     }
-    //发起得到验证码
+    //发起找回
     public void setForget_Back(String emal,String code,String pwd,String repwd){
         Retrofit retrofit = moudelLayer.getData();
         Api api = retrofit.create(Api.class);

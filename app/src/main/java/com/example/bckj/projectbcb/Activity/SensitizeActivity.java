@@ -51,7 +51,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         load();
 
         //打开弹出框点击监听
-        //setSensOnClickCar();
+        setSensOnClickCar();
     }
 
     public void load(){
@@ -260,7 +260,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             Toast.makeText(context, "本APP是否激活（1：是；0：否）：\n"+data, Toast.LENGTH_SHORT).show();
             if(data==1){
                 //打开弹出框点击监听
-                setSensOnClickCar();
+                // setSensOnClickCar();
             }else {
                 Toast.makeText(context, "请去邮箱激活此APP，方可激活服务", Toast.LENGTH_SHORT).show();
             }

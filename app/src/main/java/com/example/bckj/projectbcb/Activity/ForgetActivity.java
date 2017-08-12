@@ -1,10 +1,10 @@
 package com.example.bckj.projectbcb.Activity;
 
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bckj.projectbcb.Bean.BackBean;
 import com.example.bckj.projectbcb.Bean.CodeBean;
@@ -71,13 +71,17 @@ public class ForgetActivity extends BaseActivity implements ForgetView{
     public void code(CodeBean codeBean) {
         String msg = codeBean.getMsg();
         String msg_en = codeBean.getMsg_en();
-        Log.d("zzz", "qqq:" + msg+"\n" + msg_en);
+        Toast.makeText(this,"发送："+msg+"\n" + msg_en, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void back(BackBean backBean) {
+        int code = backBean.getCode();
         String msg = backBean.getMsg();
         String msg_en = backBean.getMsg_en();
-        Log.d("zzz", "www:" + msg+"\n" + msg_en);
+        if(code==1){
+            Toast.makeText(this,"找回："+ msg+"\n" + msg_en, Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 }

@@ -1,5 +1,7 @@
 package com.example.bckj.projectbcb.Activity;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
 
@@ -8,6 +10,7 @@ import com.example.bckj.projectbcb.R;
 public class TaxiActivity extends BaseActivity {
 
     private ImageView taxiim;
+    private ImageView taxicall;
 
     @Override
     public void initView() {
@@ -19,6 +22,8 @@ public class TaxiActivity extends BaseActivity {
     protected void init() {
         //得到聊天的控件
         taxiim = (ImageView) findViewById(R.id.taxiim);
+        //打电话控件
+        taxicall = (ImageView) findViewById(R.id.taxicall);
     }
     //控件的点击事件
     @Override
@@ -29,6 +34,23 @@ public class TaxiActivity extends BaseActivity {
             public void onClick(View v) {
                 setContentView(R.layout.activity_taxi_view);
                 setToolBar("等待应答",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+                //调起打电话的控件监听
+                ImageView taxi_view_call= (ImageView) findViewById(R.id.taxi_view_call);
+                taxi_view_call.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent tn = new Intent("android.intent.action.CALL", Uri.parse("tel:"+"18513433864"));
+                        startActivity(tn);
+                    }
+                });
+            }
+        });
+        //调起打电话的控件监听
+        taxicall.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent tn = new Intent("android.intent.action.CALL", Uri.parse("tel:"+"18513433864"));
+                startActivity(tn);
             }
         });
     }

@@ -78,12 +78,13 @@ public class LoginActivity extends BaseActivity implements LoginView{
         int code = loginBean.getCode();
         String msg = loginBean.getMsg();
         String msg_en = loginBean.getMsg_en();
-        LoginBean.DataBean data = loginBean.getData();
-        String token = data.getToken();
-        //存入注册token值
-        instance.saveData(LoginActivity.this,"logintoken",token);
+
         if(code==1){
             Toast.makeText(this, "注册："+msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+            LoginBean.DataBean data = loginBean.getData();
+            String token = data.getToken();
+            //存入注册token值
+            instance.saveData(LoginActivity.this,"logintoken",token);
             startActivity(new Intent(LoginActivity.this,SensitizeActivity.class));
             finish();
         }else {

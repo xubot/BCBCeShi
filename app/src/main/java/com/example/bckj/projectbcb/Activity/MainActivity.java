@@ -1,16 +1,19 @@
 package com.example.bckj.projectbcb.Activity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ImageView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,7 +34,7 @@ import de.greenrobot.event.ThreadMode;
 public class MainActivity extends BaseActivity implements MainView{
 
     private TextView home_taxi;
-    private ImageView home_img;
+    //private ImageView home_img;
     private DrawerLayout mDrawerLayout;
     private TextView meunlog;
     private boolean flag;
@@ -40,6 +43,7 @@ public class MainActivity extends BaseActivity implements MainView{
     private LinearLayout logout_ll;
     private SharedUtils instance;
     private WebView myWebView;
+    private Button home_img;
 
     //初始化布局
     @Override
@@ -55,7 +59,9 @@ public class MainActivity extends BaseActivity implements MainView{
     @Override
     protected void init() {
         //侧滑按钮控件
-        home_img = (ImageView) findViewById(R.id.home_img);
+        //home_img = (ImageView) findViewById(R.id.home_img);
+        //侧滑按钮控件
+        home_img = (Button) findViewById(R.id.home_img);
         //得到侧滑页
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //侧滑页里面的登录控件
@@ -171,20 +177,38 @@ public class MainActivity extends BaseActivity implements MainView{
     private void setWebViewH5() {
         myWebView = (WebView) findViewById(R.id.myWebView);
         WebSettings webSettings = myWebView.getSettings();
+        //启用数据库
+        webSettings.setDatabaseEnabled(true);
         webSettings.setJavaScriptEnabled(true);
         webSettings.setAllowContentAccess(true);
         webSettings.setAppCacheEnabled(false);
         webSettings.setBuiltInZoomControls(false);
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
+        webSettings.setGeolocationEnabled(true);
+        //设置定位的数据库路径
+        String dir = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
+        myWebView.getSettings().setGeolocationDatabasePath(dir);
         // 开启 DOM storage API 功能
         webSettings.setDomStorageEnabled(true);
         webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.SINGLE_COLUMN);
         myWebView.getSettings().setCacheMode(WebSettings.LOAD_DEFAULT);
         myWebView.addJavascriptInterface(new JavaScriptinterface(this), "android");
         myWebView.loadUrl("http://118.190.91.24:8080/freewifi/index.html");
-        myWebView.setWebChromeClient(new WebChromeClient());
         myWebView.setWebViewClient(new myWebViewClient());
+        //配置权限
+        myWebView.setWebChromeClient(new WebChromeClient() {
+            @Override
+            public void onReceivedIcon(WebView view, Bitmap icon) {
+                super.onReceivedIcon(view, icon);
+            }
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin,GeolocationPermissions.Callback callback) {
+                callback.invoke(origin, true, false);
+                super.onGeolocationPermissionsShowPrompt(origin, callback);
+            }
+        });
+
     }
 
     //设置WebView类

@@ -18,7 +18,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textColor="#fff"
-            android:textSize="18dp"
-            android:text="标题处"/>
+            android:textSize="18dp"/>
     </android.support.v7.widget.Toolbar>
 </RelativeLayout>

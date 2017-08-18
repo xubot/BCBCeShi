@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.net.Uri;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.bckj.projectbcb.R;
 
@@ -11,6 +13,7 @@ public class TaxiActivity extends BaseActivity {
 
     private ImageView taxiim;
     private ImageView taxicall;
+    private TextView cancel;
 
     @Override
     public void initView() {
@@ -24,6 +27,8 @@ public class TaxiActivity extends BaseActivity {
         taxiim = (ImageView) findViewById(R.id.taxiim);
         //打电话控件
         taxicall = (ImageView) findViewById(R.id.taxicall);
+        //取消控件
+        cancel = (TextView) findViewById(R.id.cancel);
     }
     //控件的点击事件
     @Override
@@ -51,6 +56,25 @@ public class TaxiActivity extends BaseActivity {
             public void onClick(View v) {
                 Intent tn = new Intent("android.intent.action.CALL", Uri.parse("tel:"+"18513433864"));
                 startActivity(tn);
+            }
+        });
+        //取消订单监听
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(TaxiActivity.this, "已取消", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+    }
+
+    @Override
+    public void onClike(ImageView img1) {
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(TaxiActivity.this,MainActivity.class));
+                finish();
             }
         });
     }

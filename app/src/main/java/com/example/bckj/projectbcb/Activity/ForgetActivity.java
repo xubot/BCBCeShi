@@ -1,8 +1,10 @@
 package com.example.bckj.projectbcb.Activity;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +59,17 @@ public class ForgetActivity extends BaseActivity implements ForgetView{
                 String pwd = forget_edit_pwd.getText().toString();
                 String repwd = forget_edit_repwd.getText().toString();
                 presenterLayer.setForget_Back(emal,code,pwd,repwd);
+            }
+        });
+    }
+
+    @Override
+    public void onClike(ImageView img1) {
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ForgetActivity.this,LogActivity.class));
+                finish();
             }
         });
     }

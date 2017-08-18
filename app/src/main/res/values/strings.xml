@@ -1,3 +1,31 @@
 <resources>
-    <string name="app_name">ProjectBCB</string>
+    <string name="app_name">拔草吧</string>
+    <string name="yuyan">中文</string>
+    <string name="menu_log">登录</string>
+    <string name="menu_change">修改密码</string>
+    <string name="menu_logout">退出</string>
+    <string name="log_forget">忘记密码</string>
+    <string name="log_sign">注册</string>
+    <string name="hiht_user">用户名/邮箱</string>
+    <string name="hiht_pwd">请输入密码</string>
+    <string name="forget_emil">邮箱地址</string>
+    <string name="forget_Edcode">输入验证码</string>
+    <string name="forget_repwd">确认密码</string>
+    <string name="forget_find">找回</string>
+    <string name="fotget_getcode">获得验证码</string>
+    <string name="sign_user">请输入用户名</string>
+    <string name="sign_phone">请输入手机号（可不填）</string>
+    <string name="old_pwd">旧密码</string>
+    <string name="modify_pwd">新密码</string>
+    <string name="modify_ed">请输入</string>
+    <string name="complete">完成</string>
+    <string name="pop_phone">请输入手机号</string>
+    <string name="pop_next">下一步</string>
+    <string name="pop_setpwd">设置登录密码（8-16位）</string>
+    <string name="pop_all">需包含数字，字母，符号中至少2种元素\n密码长度8-16位</string>
+    <string name="pop_sure">确认</string>
+    <string name="taxi_cancel">取消行程</string>
+    <string name="taxi_msg">请输入信息</string>
+    <string name="taxi_pic">请输入图形验证码</string>
+    <string name="taxi_renovate">看不清？点击刷新</string>
 </resources>

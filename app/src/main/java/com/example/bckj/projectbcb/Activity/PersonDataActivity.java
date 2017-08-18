@@ -60,7 +60,6 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         modifypic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 Toast.makeText(PersonDataActivity.this, "已点击修改头像,", Toast.LENGTH_SHORT).show();
             }
         });

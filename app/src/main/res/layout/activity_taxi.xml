@@ -122,7 +122,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="50dp"
         android:textColor="#00a3ff"
-        android:textSize="18dp"
-        android:text="取消行程"/>
+        android:textSize="18sp"
+        android:text="@string/taxi_cancel"/>
 
 </RelativeLayout>

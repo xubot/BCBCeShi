@@ -1,6 +1,7 @@
 package com.example.bckj.projectbcb.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -42,6 +43,21 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensitize);
 
+        ImageView back= (ImageView) findViewById(R.id.sensitizze_back);
+        ImageView close= (ImageView) findViewById(R.id.sensitize_close);
+        back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SensitizeActivity.this,LoginActivity.class));
+                finish();
+            }
+        });
+        close.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         sensitize_car = (TextView) findViewById(R.id.sensitize_car);
         //得到注册的token值
         instance = SharedUtils.getInstance();
@@ -49,9 +65,6 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         Log.d("zzz", "logintoken=" + logintoken);
 
         load();
-
-        //打开弹出框点击监听
-        setSensOnClickCar();
     }
 
     public void load(){
@@ -260,7 +273,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             Toast.makeText(context, "本APP是否激活（1：是；0：否）：\n"+data, Toast.LENGTH_SHORT).show();
             if(data==1){
                 //打开弹出框点击监听
-                // setSensOnClickCar();
+                 setSensOnClickCar();
             }else {
                 Toast.makeText(context, "请去邮箱激活此APP，方可激活服务", Toast.LENGTH_SHORT).show();
             }

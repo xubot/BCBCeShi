@@ -14,9 +14,9 @@
         android:id="@+id/complete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="完成"
+        android:text="@string/complete"
         android:layout_marginRight="15dp"
-        android:textSize="23dp"
+        android:textSize="23sp"
         android:layout_marginTop="5dp"
         android:textColor="#fff"
         android:layout_alignParentRight="true"/>
@@ -34,11 +34,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textColor="#333333"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
-                android:text="旧密码"/>
+                android:text="@string/old_pwd"/>
             <EditText
                 android:id="@+id/oldpwd"
                 android:layout_width="wrap_content"
@@ -46,9 +46,9 @@
                 android:background="@null"
                 android:layout_gravity="center"
                 android:textColorHint="#999999"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:layout_marginLeft="50dp"
-                android:hint="请输入"/>
+                android:hint="@string/modify_ed"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -61,11 +61,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textColor="#333333"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
-                android:text="新密码"/>
+                android:text="@string/modify_pwd"/>
             <EditText
                 android:id="@+id/newpwd"
                 android:layout_width="wrap_content"
@@ -73,9 +73,9 @@
                 android:background="@null"
                 android:layout_gravity="center"
                 android:textColorHint="#999999"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:layout_marginLeft="50dp"
-                android:hint="请输入"/>
+                android:hint="@string/modify_ed"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"
@@ -88,11 +88,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textColor="#333333"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
-                android:text="确认密码"/>
+                android:text="@string/forget_repwd"/>
             <EditText
                 android:id="@+id/newrepwd"
                 android:layout_width="wrap_content"
@@ -100,9 +100,9 @@
                 android:background="@null"
                 android:layout_gravity="center"
                 android:textColorHint="#999999"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:layout_marginLeft="38dp"
-                android:hint="请输入"/>
+                android:hint="@string/modify_ed"/>
         </LinearLayout>
         <View
             android:layout_width="match_parent"

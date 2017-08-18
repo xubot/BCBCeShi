@@ -31,7 +31,7 @@
         android:layout_marginTop="47dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="26dp"
+        android:textSize="26sp"
         android:textColor="#fff"
         android:text="打车服务"/>
 

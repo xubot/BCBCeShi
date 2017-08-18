@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">ChinaOrEn</string>
+    <string name="yuyan">En</string>
+    <string name="menu_log">Log In</string>
+    <string name="menu_change">Change password</string>
+    <string name="menu_logout">Exit</string>
+    <string name="log_forget">Forget Password</string>
+    <string name="log_sign">Sign Up</string>
+    <string name="hiht_user">Username/mailbox</string>
+    <string name="hiht_pwd">Password</string>
+    <string name="forget_emil">Email Address</string>
+    <string name="forget_Edcode">Enter verfication code</string>
+    <string name="forget_repwd">confirm password</string>
+    <string name="forget_find">Fimd</string>
+    <string name="fotget_getcode">Resend</string>
+    <string name="sign_user">Username</string>
+    <string name="sign_phone">phone number (can fill)</string>
+    <string name="old_pwd">old password</string>
+    <string name="modify_pwd">new password</string>
+    <string name="modify_ed">Please enter</string>
+    <string name="complete">Complete</string>
+    <string name="pop_phone">Phone number</string>
+    <string name="pop_next">Next</string>
+    <string name="pop_setpwd">Set login password (8-16 bits)</string>
+    <string name="pop_all">Must contain numbers, letters, symbols, at least 2 elements, \n password length 8-16 bits</string>
+    <string name="pop_sure">confirm</string>
+    <string name="taxi_cancel">cancel the trip</string>
+    <string name="taxi_msg">Please input information</string>
+    <string name="taxi_pic">Please enter the graphical verification code</string>
+    <string name="taxi_renovate">Can\'t see clearly? Click refresh</string>
+</resources>

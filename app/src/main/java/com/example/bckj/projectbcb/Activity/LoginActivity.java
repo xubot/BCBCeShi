@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.bckj.projectbcb.Bean.LoginBean;
@@ -63,6 +64,17 @@ public class LoginActivity extends BaseActivity implements LoginView{
                 } else {
                     presenterLayer.setLoginTwe(login_usre,login_email,login_pwd,login_repwd);
                 }
+            }
+        });
+    }
+
+    @Override
+    public void onClike(ImageView img1) {
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(LoginActivity.this,LogActivity.class));
+                finish();
             }
         });
     }

@@ -3,6 +3,7 @@ package com.example.bckj.projectbcb.Activity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,6 +47,16 @@ public class ModifyActivity extends BaseActivity implements ModifyView{
                 String newPwd = newpwd.getText().toString();
                 String newRePwd = newrepwd.getText().toString();
                 presenterLayer.setModifyPwd(oldPwd,newPwd,newRePwd,token);
+            }
+        });
+    }
+
+    @Override
+    public void onClike(ImageView img1) {
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }

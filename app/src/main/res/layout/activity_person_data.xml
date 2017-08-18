@@ -23,7 +23,7 @@
         android:textColor="#fff"
         android:layout_marginTop="15dp"
         android:layout_gravity="center_horizontal"
-        android:text=""/>
+        android:text="修改头像"/>
 
 
     <LinearLayout

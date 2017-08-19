@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView
     android:layout_height="match_parent"
-    android:background="@mipmap/bg"
-    tools:context="com.example.bckj.projectbcb.Activity.ForgetActivity">
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@mipmap/bg">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <include
         android:id="@+id/base"
@@ -22,22 +24,22 @@
         android:textColor="#fff"/>
     <RelativeLayout
         android:layout_width="290dp"
-        android:layout_height="320dp"
+        android:layout_height="350dp"
         android:background="@drawable/shp"
         android:id="@+id/relativeLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_below="@id/log_tv"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="48dp"
+        android:layout_below="@+id/log_tv"
+        android:layout_centerHorizontal="true">
         <EditText
             android:id="@+id/forget_edit_usre"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:background="@null"
             android:hint="@string/forget_emil"
             android:textSize="14sp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="35dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:textColorHint="#a9a9a9a9"/>
         <View
             android:layout_below="@id/forget_edit_usre"
@@ -47,10 +49,10 @@
             android:id="@+id/forget_edit_code"
             android:layout_below="@+id/view1"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:textSize="14sp"
             android:hint="@string/forget_Edcode"
             android:background="@null"
@@ -76,13 +78,13 @@
             android:id="@+id/forget_edit_pwd"
             android:layout_below="@id/view3"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:background="@null"
             android:hint="@string/hiht_pwd"
+            android:layout_marginTop="10dp"
             android:textSize="14sp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginBottom="10dp"
             android:textColorHint="#a9a9a9a9"/>
         <View
             android:layout_below="@id/forget_edit_pwd"
@@ -92,13 +94,13 @@
             android:id="@+id/forget_edit_repwd"
             android:layout_below="@id/view"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:background="@null"
             android:hint="@string/forget_repwd"
             android:textSize="14sp"
             android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:textColorHint="#a9a9a9a9"/>
         <View
             android:layout_below="@id/forget_edit_repwd"
@@ -117,3 +119,4 @@
             android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 </RelativeLayout>
+</ScrollView>

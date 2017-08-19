@@ -61,6 +61,7 @@ public class ModifyActivity extends BaseActivity implements ModifyView{
         });
     }
 
+
     @Override
     protected void load() {
         presenterLayer = new PresenterLayer();

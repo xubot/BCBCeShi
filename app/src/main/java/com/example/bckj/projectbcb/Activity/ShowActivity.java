@@ -21,12 +21,12 @@ public class ShowActivity extends AppCompatActivity {
         setContentView(R.layout.activity_show);
         instance = SharedUtils.getInstance();
         Intent intent = getIntent();
-        String path = intent.getStringExtra("num");
+        String path = intent.getStringExtra("url");
         String flag = (String) instance.getData(this, "yuyan", "");
         Log.d("aasd", flag);
         if(flag.equals("中文")){
             init1(path);
-        }else if(flag.equals("En")){
+        }else if(flag.equals("EN")){
             init(path);
         }
     }
@@ -68,7 +68,7 @@ public class ShowActivity extends AppCompatActivity {
                 super.onPageFinished(view, url);
                 String insertJavaScript = "javascript:setTimeout(function(){{var s=document.createElement('script');s.type='text/javascript';s.charset='UTF-8';s.src=((location && location.href && location.href.indexOf('https') == 0)?'https://ssl.microsofttranslator.com':'http://www.microsofttranslator.com')+'/ajax/v3/WidgetV3.ashx?siteData=ueOIGRSKkd965FeEGM5JtQ**&ctf=False&ui=true&settings=undefined&from=zh-CHS';var p=document.getElementsByTagName('head')[0]||document.documentElement;p.insertBefore(s,p.firstChild); }},0)";
                 //添加翻译的按钮
-                view.loadUrl("javascript:$('.scope-address').attr('id','MicrosoftTranslatorWidget')");
+                view.loadUrl("javascript:$('.scope-page-detail').append('<button id=\"MicrosoftTranslatorWidget\"></button>')");
                 //添加翻译的脚本
                 view.loadUrl(insertJavaScript);
                 //删除某些元素

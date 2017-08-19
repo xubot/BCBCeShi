@@ -41,8 +41,8 @@
                 android:text="@string/old_pwd"/>
             <EditText
                 android:id="@+id/oldpwd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
                 android:background="@null"
                 android:layout_gravity="center"
                 android:textColorHint="#999999"
@@ -68,8 +68,8 @@
                 android:text="@string/modify_pwd"/>
             <EditText
                 android:id="@+id/newpwd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
                 android:background="@null"
                 android:layout_gravity="center"
                 android:textColorHint="#999999"
@@ -83,27 +83,35 @@
             android:background="#d6d6d6"/>
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:layout_height="45dp">
+            android:layout_height="45dp"
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#333333"
                 android:layout_gravity="center"
                 android:layout_marginLeft="15dp"
-                android:text="@string/forget_repwd"/>
+                android:text="@string/forget_repwd"
+                android:textColor="#333333"
+                android:textSize="14sp"/>
+
             <EditText
                 android:id="@+id/newrepwd"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@null"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
                 android:layout_gravity="center"
-                android:textColorHint="#999999"
-                android:textSize="14sp"
                 android:layout_marginLeft="38dp"
-                android:hint="@string/modify_ed"/>
+                android:background="@null"
+                android:hint="@string/modify_ed"
+                android:textColorHint="#999999"
+                android:textSize="14sp"/>
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d6d6d6"/>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"

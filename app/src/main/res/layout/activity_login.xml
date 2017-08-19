@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<ScrollView
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@mipmap/bg"
     tools:context="com.example.bckj.projectbcb.Activity.LoginActivity">
-    <include
+
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+     <include
         android:id="@+id/base"
         layout="@layout/activity_base"/>
-    <TextView
+     <TextView
         android:id="@+id/log_tv"
         android:layout_below="@id/base"
         android:layout_width="wrap_content"
@@ -19,8 +23,7 @@
         android:layout_marginLeft="42.5dp"
         android:textSize="26sp"
         android:textColor="#fff"/>
-
-    <RelativeLayout
+        <RelativeLayout
         android:id="@+id/relativeLayout"
         android:layout_below="@id/log_tv"
         android:layout_width="290dp"
@@ -31,14 +34,14 @@
         <EditText
             android:id="@+id/login_edit_usre"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:background="@null"
             android:hint="@string/sign_user"
             android:textSize="14sp"
             android:textColorHint="#a9a9a9a9"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="35dp"
-            android:layout_marginBottom="15dp"/>
+            android:layout_marginBottom="10dp"/>
         <View
             android:layout_below="@id/login_edit_usre"
             style="@style/Home_View"
@@ -47,12 +50,12 @@
             android:id="@+id/login_edit_email"
             android:layout_below="@id/login_edit_usre"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:background="@null"
             android:hint="@string/forget_emil"
             android:textSize="14sp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_centerHorizontal="true"
             android:textColorHint="#a9a9a9a9"/>
 
@@ -64,13 +67,13 @@
             android:id="@+id/login_edit_pwd"
             android:layout_below="@id/login_edit_email"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:hint="@string/hiht_pwd"
             android:background="@null"
             android:inputType="textPassword"
             android:textSize="14sp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_centerHorizontal="true"
             android:textColorHint="#a9a9a9a9"/>
         <View
@@ -81,12 +84,12 @@
             android:id="@+id/login_edit_repwd"
             android:layout_below="@id/login_edit_pwd"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:hint="@string/forget_repwd"
             android:textSize="14sp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_centerHorizontal="true"
             android:textColorHint="#a9a9a9a9"
             android:background="@null"
@@ -99,12 +102,12 @@
             android:id="@+id/login_edit_phone"
             android:layout_below="@id/login_edit_repwd"
             android:layout_width="250dp"
-            android:layout_height="wrap_content"
+            android:layout_height="30dp"
             android:layout_marginLeft="10dp"
             android:hint="@string/sign_phone"
             android:textSize="14sp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
             android:layout_centerHorizontal="true"
             android:textColorHint="#a9a9a9a9"
             android:background="@null"
@@ -122,8 +125,9 @@
             android:textSize="19sp"
             android:textColor="#ffffff"
             android:background="@drawable/sp"
-            android:layout_marginTop="35dp"
+            android:layout_marginTop="30dp"
             android:layout_below="@id/end_view"
             android:layout_centerHorizontal="true"/>
     </RelativeLayout>
 </RelativeLayout>
+</ScrollView>

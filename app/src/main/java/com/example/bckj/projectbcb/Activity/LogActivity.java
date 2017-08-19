@@ -101,15 +101,16 @@ public class LogActivity extends BaseActivity implements LogView{
         int code = logBean.getCode();
         String msg = logBean.getMsg();
         String msg_en = logBean.getMsg_en();
-        String token = logBean.getData().getToken();
         if(code==1){
+            String token = logBean.getData().getToken();
             //存入登陆后的token值
             instance.saveData(LogActivity.this,"token",token);
             Toast.makeText(this, msg + "\n" + msg_en, Toast.LENGTH_SHORT).show();
             Log.d("zzz", code + "\n" + msg + "\n" + msg_en+"\n"+token);
             //发送EventBus标示
             EventBus.getDefault().post(new MessageEvent(true));
-            startActivity(new Intent(LogActivity.this,MainActivity.class));
+            //startActivity(new Intent(LogActivity.this,MainActivity.class));
+            finish();
         }else {
             Toast.makeText(this, msg + "\n" + msg_en, Toast.LENGTH_SHORT).show();
             Log.d("zzz", code + "\n" + msg + "\n" + msg_en);

@@ -81,6 +81,17 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         //调起得到个人信息
         presenterLayer.setPersonData(token);
     }
+
+    //返回按钮监听
+    @Override
+    public void onClike(ImageView img1) {
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+    }
     //得到个人信息
     @Override
     public void personData(PersonDataBean personDataBean) {

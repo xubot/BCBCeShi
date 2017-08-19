@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity implements MainView{
         //得到登录状态
         flag = eventBus.getFlag();
         Log.d("sxd", flag +"");
-        if(flag){
+        if(flag==true){
             meunlog.setText("默认用户名");
             //String token = (String) instance.getData(MainActivity.this, "token", "");
             //Log.d("xxx", "eventbus=" + token);
@@ -99,6 +99,7 @@ public class MainActivity extends BaseActivity implements MainView{
                 }
             });
         }else {
+            meunlog.setText(R.string.menu_log);
             Log.d("sxd1", "走这了");
             meunlog_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -170,13 +171,13 @@ public class MainActivity extends BaseActivity implements MainView{
                 startActivity(new Intent(MainActivity.this,LogActivity.class));
             }
         });
-        //修改密码
+        /*//修改密码
         modify_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,ModifyActivity.class));
             }
-        });
+        });*/
         //退出监听
         logout_ll.setOnClickListener(new View.OnClickListener() {
             @Override

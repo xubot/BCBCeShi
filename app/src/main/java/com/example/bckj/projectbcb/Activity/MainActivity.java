@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
 import android.webkit.JavascriptInterface;
 import android.webkit.WebChromeClient;
@@ -49,11 +50,13 @@ public class MainActivity extends BaseActivity implements MainView{
     private String url_ch="http://118.190.91.24:8080/freewifi/app/index.html?id=ch";
     private String url_en="http://118.190.91.24:8080/freewifi/app/index.html?id=en";
     private long exitTime=0;
+    private LinearLayout yuyan_ll;
 
     //初始化布局
     @Override
     public void initView() {
         setContentView(R.layout.activity_main);
+        yuyan_ll = (LinearLayout) findViewById(R.id.yuyan_ll);
         china = (TextView) findViewById(R.id.ch);
         englsh = (TextView) findViewById(R.id.en);
         meunlog = (TextView) findViewById(R.id.meunlog);
@@ -61,6 +64,8 @@ public class MainActivity extends BaseActivity implements MainView{
         edit = (TextView) findViewById(R.id.edit);
         //修改密码控件
         modify = (TextView) findViewById(R.id.modify);
+        //显示控件
+        yuyan_ll.setVisibility(ViewGroup.VISIBLE);
         instance = SharedUtils.getInstance();
         //加载html页面
         setWebViewH5();
@@ -115,6 +120,7 @@ public class MainActivity extends BaseActivity implements MainView{
     protected void init() {
         //侧滑按钮控件
         home_img = (Button) findViewById(R.id.home_img);
+        home_img.setVisibility(ViewGroup.VISIBLE);
         //得到侧滑页
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //侧滑页里面的登录控件
@@ -275,6 +281,7 @@ public class MainActivity extends BaseActivity implements MainView{
 
     //通过h5跳转原生
     class JS{
+        //得到传来的地址调到 原生界面
         @JavascriptInterface
         public void get(String path){
             System.out.println("打印"+path);
@@ -283,11 +290,19 @@ public class MainActivity extends BaseActivity implements MainView{
             intent.setClass(MainActivity.this, ShowActivity.class);
             startActivity(intent);
         }
+        //叫起打车调到原生界面
         @JavascriptInterface
         public void forTaxi() {
             Intent intent = new Intent();
             intent.setClass(MainActivity.this, TaxiActivity.class);
             startActivity(intent);
+        }
+        @JavascriptInterface
+        //js那边的方法名
+        public void hide(){
+            System.out.println("打印:"+"走了雷锋精神浪费");
+            //隐藏控件
+            yuyan_ll.setVisibility(ViewGroup.GONE);
         }
     }
 

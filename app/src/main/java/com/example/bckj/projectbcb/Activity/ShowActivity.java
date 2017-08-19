@@ -5,8 +5,10 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 
 import com.example.bckj.projectbcb.R;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
@@ -15,10 +17,13 @@ public class ShowActivity extends AppCompatActivity {
 
     private WebView mWebView;
     private SharedUtils instance;
+    private ImageView show_back;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show);
+        show_back = (ImageView) findViewById(R.id.show_back);
         instance = SharedUtils.getInstance();
         Intent intent = getIntent();
         String path = intent.getStringExtra("url");
@@ -29,6 +34,13 @@ public class ShowActivity extends AppCompatActivity {
         }else if(flag.equals("EN")){
             init(path);
         }
+        show_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(ShowActivity.this,MainActivity.class));
+                finish();
+            }
+        });
     }
     //英文网页
     private void init(String path){

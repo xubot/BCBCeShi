@@ -1,5 +1,7 @@
 package com.example.bckj.projectbcb.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
@@ -88,11 +90,12 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         logout_ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //得到登录的token值
+                /*//得到登录的token值
                 String token = (String) instance.getData(PersonDataActivity.this, "token", "");
                 Log.d("zzz", "logout=" + token);
                 //调起退出
-                presenterLayer.setLogout(token);
+                presenterLayer.setLogout(token);*/
+                normalDialog();
             }
         });
         //修改密码
@@ -175,6 +178,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         String msg_en = logoutBean.getMsg_en();
         if(code==1){
             Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+            //normalDialog();
             //退出成功后传值
             EventBus.getDefault().post(new MessageEvent(false));
             startActivity(new Intent(PersonDataActivity.this,MainActivity.class));
@@ -193,5 +197,38 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
                 //给图片设置圆角  int值 表示 圆角的半径大小 值越大 越圆
                 .displayer(new RoundedBitmapDisplayer(60))
                 .build();
+    }
+
+
+    private void normalDialog() {
+        // 1.创建出一个对话框的构造器
+        AlertDialog.Builder builder = new AlertDialog.Builder(PersonDataActivity.this);
+        // 设置标题
+        builder.setTitle("警告:");
+        // 设置图标
+        builder.setIcon(R.mipmap.ic_launcher);
+        // 设置内容
+        builder.setMessage("您确定要退出吗");
+        // 设置确定按钮
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+              @Override
+              public void onClick(DialogInterface dialog, int which) {
+                  //得到登录的token值
+                  String token = (String) instance.getData(PersonDataActivity.this, "token", "");
+                  Log.d("zzz", "logout=" + token);
+                  //调起退出
+                  presenterLayer.setLogout(token);
+              }
+        });
+        // 设置取消按钮
+        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+             @Override
+             public void onClick(DialogInterface dialog, int which) {
+                 // TODO Auto-generated method stub
+                 Toast.makeText(PersonDataActivity.this, "很高兴继续为您服务",Toast.LENGTH_SHORT).show();
+             }
+        });
+        // 创建出对话框 并显示出来
+        builder.create().show();
     }
 }

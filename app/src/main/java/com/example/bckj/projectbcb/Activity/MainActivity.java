@@ -23,7 +23,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bckj.projectbcb.Bean.DataNameBean;
-import com.example.bckj.projectbcb.Bean.LogoutBean;
 import com.example.bckj.projectbcb.Bean.MessageEvent;
 import com.example.bckj.projectbcb.Presenter.PresenterLayer;
 import com.example.bckj.projectbcb.R;
@@ -40,13 +39,11 @@ public class MainActivity extends BaseActivity implements MainView{
     private DrawerLayout mDrawerLayout;
     private LinearLayout meunlog_ll;
     private PresenterLayer presenterLayer;
-    private LinearLayout modify_ll;
-    private LinearLayout logout_ll;
     private SharedUtils instance;
     private WebView myWebView;
     private Button home_img;
     private boolean flag;
-    private TextView edit,meunlog,china,englsh,modify;
+    private TextView meunlog,china,englsh;
     private String url_ch="http://118.190.91.24:8080/freewifi/app/index.html?id=ch";
     private String url_en="http://118.190.91.24:8080/freewifi/app/index.html?id=en";
     private long exitTime=0;
@@ -60,10 +57,6 @@ public class MainActivity extends BaseActivity implements MainView{
         china = (TextView) findViewById(R.id.ch);
         englsh = (TextView) findViewById(R.id.en);
         meunlog = (TextView) findViewById(R.id.meunlog);
-        //退出控件
-        edit = (TextView) findViewById(R.id.edit);
-        //修改密码控件
-        modify = (TextView) findViewById(R.id.modify);
         //显示控件
         yuyan_ll.setVisibility(ViewGroup.VISIBLE);
         instance = SharedUtils.getInstance();
@@ -78,12 +71,12 @@ public class MainActivity extends BaseActivity implements MainView{
         //得到登录状态
         flag = eventBus.getFlag();
         Log.d("sxd", flag +"");
-        if(flag==true){
+        if(flag){
             meunlog.setText("默认用户名");
-            //String token = (String) instance.getData(MainActivity.this, "token", "");
-            //Log.d("xxx", "eventbus=" + token);
+            String token = (String) instance.getData(MainActivity.this, "token", "");
+            Log.d("xxx", "eventbus=" + token);
             //得打个人数据
-            //presenterLayer.setData(token);
+            presenterLayer.setData(token);
             //登陆后点击调到个人信息
             meunlog_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -92,25 +85,13 @@ public class MainActivity extends BaseActivity implements MainView{
                     startActivity(new Intent(MainActivity.this,PersonDataActivity.class));
                 }
             });
-            modify_ll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this,ModifyActivity.class));
-                }
-            });
         }else {
             meunlog.setText(R.string.menu_log);
             Log.d("sxd1", "走这了");
             meunlog_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this,LogActivity.class));
-                }
-            });
-            modify_ll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(MainActivity.this, "请先登录", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(MainActivity.this,PersonDataActivity.class));
                 }
             });
         }
@@ -126,10 +107,6 @@ public class MainActivity extends BaseActivity implements MainView{
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //侧滑页里面的登录控件
         meunlog_ll = (LinearLayout)findViewById(R.id.ll);
-        //修改密码控件组
-        modify_ll = (LinearLayout) findViewById(R.id.modify_ll);
-        //退出控件组
-        logout_ll = (LinearLayout) findViewById(R.id.logout_ll);
     }
     //控件的点击事件
     @Override
@@ -146,7 +123,8 @@ public class MainActivity extends BaseActivity implements MainView{
              @Override
              public void onClick(View v) {
                  String CH = china.getText().toString();
-                 china.setTextColor(Color.RED);
+                 china.setTextColor(Color.BLUE);
+                 //#00a3ff
                  englsh.setTextColor(Color.BLACK);
                  updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
                  instance.saveData(MainActivity.this,"yuyan",CH);
@@ -158,7 +136,7 @@ public class MainActivity extends BaseActivity implements MainView{
             public void onClick(View v) {
                 String EN = englsh.getText().toString();
                 china.setTextColor(Color.BLACK);
-                englsh.setTextColor(Color.RED);
+                englsh.setTextColor(Color.BLUE);
                 updateLange(Locale.ENGLISH,url_en);
                 instance.saveData(MainActivity.this,"yuyan",EN);
             }
@@ -171,24 +149,7 @@ public class MainActivity extends BaseActivity implements MainView{
                 startActivity(new Intent(MainActivity.this,LogActivity.class));
             }
         });
-        /*//修改密码
-        modify_ll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,ModifyActivity.class));
-            }
-        });*/
-        //退出监听
-        logout_ll.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //得到登录的token值
-                String token = (String) instance.getData(MainActivity.this, "token", "");
-                Log.d("zzz", "logout=" + token);
-                //调起退出
-                presenterLayer.setLogout(token);
-            }
-        });
+
     }
     //请求数据
     @Override
@@ -211,20 +172,6 @@ public class MainActivity extends BaseActivity implements MainView{
                 meunlog.setText(username);
             }
         });
-    }
-    //退出登录信息
-    @Override
-    public void getLogout(LogoutBean logoutBean) {
-        int code = logoutBean.getCode();
-        String msg = logoutBean.getMsg();
-        String msg_en = logoutBean.getMsg_en();
-        if(code==1){
-            Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
-            //退出成功后传值
-            EventBus.getDefault().post(new MessageEvent(false));
-        }else {
-            Toast.makeText(this,  msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
-        }
     }
 
     //加载html页面
@@ -330,8 +277,6 @@ public class MainActivity extends BaseActivity implements MainView{
     public void refresh(String url) {
         myWebView.loadUrl(url);
         meunlog.setText(R.string.menu_log);
-        edit.setText(R.string.menu_logout);
-        modify.setText(R.string.menu_change);
     }
 
     // 此按键监听的是返回键，能够返回到上一个网页（通过网页的hostlistery）

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -10,23 +10,26 @@
         layout="@layout/activity_base"/>
     <ImageView
         android:id="@+id/personhead"
+        android:layout_below="@id/base"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         android:src="@mipmap/img_01"/>
     <TextView
         android:id="@+id/modifypic"
+        android:layout_below="@id/personhead"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="15sp"
         android:textColor="#fff"
         android:layout_marginTop="15dp"
-        android:layout_gravity="center_horizontal"
+        android:layout_centerHorizontal="true"
         android:text=""/>
 
-
     <LinearLayout
+        android:id="@+id/person_ll"
+        android:layout_below="@id/modifypic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -122,4 +125,57 @@
                 android:text="13051672112"/>
         </RelativeLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="40dp"
+        android:layout_height="30dp"
+        android:background="#fff">
+        <LinearLayout
+            android:id="@+id/logout_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="12dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_14"/>
+
+            <TextView
+                android:id="@+id/edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:textSize="13sp"
+                android:textColor="#333333"
+                android:text="@string/menu_logout"/>
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/modify_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="12dp"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/icon_130"/>
+
+            <TextView
+                android:id="@+id/modify"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="6dp"
+                android:layout_gravity="center"
+                android:textSize="13sp"
+                android:textColor="#333333"
+                android:text="@string/menu_change"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

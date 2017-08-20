@@ -109,7 +109,6 @@ public class LogActivity extends BaseActivity implements LogView{
             Log.d("zzz", code + "\n" + msg + "\n" + msg_en+"\n"+token);
             //发送EventBus标示
             EventBus.getDefault().post(new MessageEvent(true));
-            //startActivity(new Intent(LogActivity.this,MainActivity.class));
             finish();
         }else {
             Toast.makeText(this, msg + "\n" + msg_en, Toast.LENGTH_SHORT).show();

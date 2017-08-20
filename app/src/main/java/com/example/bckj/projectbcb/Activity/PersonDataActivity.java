@@ -1,13 +1,17 @@
 package com.example.bckj.projectbcb.Activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.bckj.projectbcb.Bean.DataNameBean;
+import com.example.bckj.projectbcb.Bean.LogoutBean;
+import com.example.bckj.projectbcb.Bean.MessageEvent;
 import com.example.bckj.projectbcb.Bean.PersonDataBean;
 import com.example.bckj.projectbcb.Bean.ReActiveUserBean;
 import com.example.bckj.projectbcb.Presenter.PresenterLayer;
@@ -17,6 +21,8 @@ import com.example.bckj.projectbcb.ViewLayer.PersonDataView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
+
+import de.greenrobot.event.EventBus;
 
 public class PersonDataActivity extends BaseActivity implements PersonDataView{
 
@@ -28,13 +34,16 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
     private TextView details_again;
     private String token;
     private ImageView personhead;
+    private LinearLayout modify_ll;
+    private LinearLayout logout_ll;
+    private SharedUtils instance;
 
     @Override
     public void initView() {
         setContentView(R.layout.activity_person_data);
         setToolBar("",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
         //得到登陆后的token值
-        SharedUtils instance = SharedUtils.getInstance();
+        instance = SharedUtils.getInstance();
         token = (String) instance.getData(this, "token", "");
     }
 
@@ -52,6 +61,10 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         modifypic = (TextView) findViewById(R.id.modifypic);
         //得到重新获取的控件
         details_again = (TextView) findViewById(R.id.details_again);
+        //修改密码控件组
+        modify_ll = (LinearLayout) findViewById(R.id.modify_ll);
+        //退出控件组
+        logout_ll = (LinearLayout) findViewById(R.id.logout_ll);
     }
 
     @Override
@@ -69,6 +82,24 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
                 Log.d("zzz", "details_again=" + token);
                 //调起得到重新激活邮件
                 presenterLayer.setreActiveUser(token);
+            }
+        });
+        //退出监听
+        logout_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //得到登录的token值
+                String token = (String) instance.getData(PersonDataActivity.this, "token", "");
+                Log.d("zzz", "logout=" + token);
+                //调起退出
+                presenterLayer.setLogout(token);
+            }
+        });
+        //修改密码
+        modify_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(PersonDataActivity.this,ModifyActivity.class));
             }
         });
     }
@@ -92,6 +123,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             }
         });
     }
+
     //得到个人信息
     @Override
     public void personData(PersonDataBean personDataBean) {
@@ -132,6 +164,22 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             finish();
         }else {
             Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    //退出登录信息
+    @Override
+    public void getLogout(LogoutBean logoutBean) {
+        int code = logoutBean.getCode();
+        String msg = logoutBean.getMsg();
+        String msg_en = logoutBean.getMsg_en();
+        if(code==1){
+            Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+            //退出成功后传值
+            EventBus.getDefault().post(new MessageEvent(false));
+            startActivity(new Intent(PersonDataActivity.this,MainActivity.class));
+        }else {
+            Toast.makeText(this,  msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
         }
     }
 

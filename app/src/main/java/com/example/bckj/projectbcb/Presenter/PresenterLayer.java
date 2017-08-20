@@ -238,7 +238,7 @@ public class PresenterLayer {
                     @Override
                     public void onNext(LogoutBean logoutBean) {
                         Log.d("zzz", logoutBean.getMsg() + "vddddddddd");
-                        mainView.getLogout(logoutBean);
+                        personDataView.getLogout(logoutBean);
                         Log.d("zzz", "2");
                     }
 

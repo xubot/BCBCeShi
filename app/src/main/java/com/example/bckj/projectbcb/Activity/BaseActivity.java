@@ -3,7 +3,7 @@ package com.example.bckj.projectbcb.Activity;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.bckj.projectbcb.R;
@@ -26,12 +26,12 @@ public abstract class BaseActivity extends Activity {
         //设置ToolBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView title= (TextView) findViewById(R.id.titleName);
-        ImageView img1= (ImageView) findViewById(R.id.img);
+        LinearLayout img1= (LinearLayout) findViewById(R.id.img);
         onClike(img1);
         title.setText(name);
         toolbar.setBackgroundColor(color);
+        toolbar.getBackground().setAlpha(100);
         toolbar.inflateMenu(menuitem);
-        //toolbar.setNavigationIcon(img);
     }
-    public void onClike(ImageView img1) {}
+    public void onClike(LinearLayout img1) {}
 }

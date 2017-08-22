@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -64,7 +64,7 @@ public class ForgetActivity extends BaseActivity implements ForgetView{
     }
 
     @Override
-    public void onClike(ImageView img1) {
+    public void onClike(LinearLayout img1) {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

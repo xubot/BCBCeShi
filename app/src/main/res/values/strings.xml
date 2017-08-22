@@ -28,4 +28,11 @@
     <string name="taxi_msg">请输入信息</string>
     <string name="taxi_pic">请输入图形验证码</string>
     <string name="taxi_renovate">看不清？点击刷新</string>
+    <string name="taxi_sens">打车服务</string>
+    <string name="adl">警告:</string>
+    <string name="adl_title">你确定要退出吗？</string>
+    <string name="adl_positive">确定</string>
+    <string name="adl_negative">取消</string>
+    <string name="adl_msg">很高兴继续为您服务</string>
+    <string name="jihuo">未激活</string>
 </resources>

@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -42,29 +43,34 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensitize);
-
-        ImageView back= (ImageView) findViewById(R.id.sensitizze_back);
-        ImageView close= (ImageView) findViewById(R.id.sensitize_close);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SensitizeActivity.this,LoginActivity.class));
-                finish();
-            }
-        });
-        close.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-        sensitize_car = (TextView) findViewById(R.id.sensitize_car);
         //得到注册的token值
         instance = SharedUtils.getInstance();
-        logintoken = (String) instance.getData(this, "logintoken", "");
-        Log.d("zzz", "logintoken=" + logintoken);
-
-        load();
+        int code = (int) instance.getData(this, "code", 0);
+        if(code==1){
+            LinearLayout back= (LinearLayout) findViewById(R.id.sensitizze_back);
+            ImageView close= (ImageView) findViewById(R.id.sensitize_close);
+            back.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            close.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            sensitize_car = (TextView) findViewById(R.id.sensitize_car);
+            //得到token值
+            logintoken = (String) instance.getData(this, "token", "");
+            Log.d("zzz", "logintoken=" + logintoken);
+            //开启请求
+            load();
+        }else {
+            startActivity(new Intent(SensitizeActivity.this,LogActivity.class));
+            this.finish();
+        }
     }
 
     public void load(){
@@ -261,7 +267,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         popupWindow.setOutsideTouchable(false);
         popupWindow.setFocusable(true);
     }
-
+    //是否激活了本App
     @Override
     public void status(StatusBean statusBean) {
         int code = statusBean.getCode();
@@ -273,7 +279,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             Toast.makeText(context, "本APP是否激活（1：是；0：否）：\n"+data, Toast.LENGTH_SHORT).show();
             if(data==1){
                 //打开弹出框点击监听
-                 setSensOnClickCar();
+                setSensOnClickCar();
             }else {
                 Toast.makeText(context, "请去邮箱激活此APP，方可激活服务", Toast.LENGTH_SHORT).show();
             }
@@ -281,5 +287,10 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             Log.d("zzz", "sensitize=" + msg + "\n" + msg_en);
             Toast.makeText(context, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
         }
+    }
+    //是否注册过滴滴账号
+    @Override
+    public void ifRegister() {
+
     }
 }

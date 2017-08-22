@@ -9,18 +9,25 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:layout_height="44dp">
-        <ImageView
+        <LinearLayout
             android:id="@+id/sensitizze_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/back_02"
-            android:layout_marginLeft="15dp"/>
+            android:layout_width="45dp"
+            android:layout_height="40dp">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@mipmap/back_02"
+                android:layout_marginLeft="15dp"/>
+        </LinearLayout>
+
 
         <ImageView
             android:id="@+id/sensitize_close"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/close_01"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:layout_marginRight="15dp"/>
     </RelativeLayout>
@@ -33,6 +40,6 @@
         android:layout_height="wrap_content"
         android:textSize="26sp"
         android:textColor="#fff"
-        android:text="打车服务"/>
+        android:text="@string/taxi_sens"/>
 
 </RelativeLayout>

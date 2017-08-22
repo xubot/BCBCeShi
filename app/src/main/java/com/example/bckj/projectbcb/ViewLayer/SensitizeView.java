@@ -10,4 +10,6 @@ import com.example.bckj.projectbcb.Bean.StatusBean;
 public interface SensitizeView {
     //激活自身App
     void status(StatusBean statusBean);
+    //是否注册
+    void  ifRegister();
 }

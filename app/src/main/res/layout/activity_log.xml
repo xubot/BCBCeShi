@@ -34,6 +34,8 @@
             android:layout_height="30dp"
             android:background="@null"
             android:hint="@string/hiht_user"
+            android:gravity="center_vertical|center"
+            android:textCursorDrawable="@null"
             android:textSize="14sp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="35dp"
@@ -53,6 +55,8 @@
                 android:layout_marginBottom="10dp"
                 android:textSize="14sp"
                 android:hint="@string/hiht_pwd"
+                android:gravity="center_vertical|center"
+                android:textCursorDrawable="@null"
                 android:background="@null"
                 android:textColorHint="#a9a9a9a9"
                 android:inputType="textPassword"/>

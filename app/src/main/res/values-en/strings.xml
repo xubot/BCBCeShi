@@ -28,4 +28,11 @@
     <string name="taxi_msg">Please input information</string>
     <string name="taxi_pic">Please enter the graphical verification code</string>
     <string name="taxi_renovate">Can\'t see clearly? Click refresh</string>
+    <string name="taxi_sens">Taxi service</string>
+    <string name="adl">warn:</string>
+    <string name="adl_title">Are you sure you want to quit?</string>
+    <string name="adl_positive">confirm</string>
+    <string name="adl_negative">cancel</string>
+    <string name="adl_msg">It is my pleasure to continue to serve you</string>
+    <string name="jihuo">not active</string>
 </resources>

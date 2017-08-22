@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,7 +81,7 @@ public class LogActivity extends BaseActivity implements LogView{
     }
     //返回按钮监听
     @Override
-    public void onClike(ImageView img1) {
+    public void onClike(LinearLayout img1) {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -105,6 +105,7 @@ public class LogActivity extends BaseActivity implements LogView{
             String token = logBean.getData().getToken();
             //存入登陆后的token值
             instance.saveData(LogActivity.this,"token",token);
+            instance.saveData(LogActivity.this,"code",1);
             Toast.makeText(this, msg + "\n" + msg_en, Toast.LENGTH_SHORT).show();
             Log.d("zzz", code + "\n" + msg + "\n" + msg_en+"\n"+token);
             //发送EventBus标示

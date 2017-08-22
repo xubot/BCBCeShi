@@ -48,6 +48,7 @@ public class MainActivity extends BaseActivity implements MainView{
     private String url_en="http://118.190.91.24:8080/freewifi/app/index.html?id=en";
     private long exitTime=0;
     private LinearLayout yuyan_ll;
+    private LinearLayout ssss_ll;
 
     //初始化布局
     @Override
@@ -59,6 +60,7 @@ public class MainActivity extends BaseActivity implements MainView{
         meunlog = (TextView) findViewById(R.id.meunlog);
         //显示控件
         yuyan_ll.setVisibility(ViewGroup.VISIBLE);
+
         instance = SharedUtils.getInstance();
         //加载html页面
         setWebViewH5();
@@ -72,11 +74,8 @@ public class MainActivity extends BaseActivity implements MainView{
         flag = eventBus.getFlag();
         Log.d("sxd", flag +"");
         if(flag){
-            meunlog.setText("默认用户名");
-            String token = (String) instance.getData(MainActivity.this, "token", "");
-            Log.d("xxx", "eventbus=" + token);
-            //得打个人数据
-            presenterLayer.setData(token);
+            //请求得到用户名的方法
+            mainDataLogName();
             //登陆后点击调到个人信息
             meunlog_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -85,15 +84,29 @@ public class MainActivity extends BaseActivity implements MainView{
                     startActivity(new Intent(MainActivity.this,PersonDataActivity.class));
                 }
             });
+            /*//打车服务的点击监听
+            ssss_ll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this,SensitizeActivity.class));
+                }
+            });*/
         }else {
             meunlog.setText(R.string.menu_log);
             Log.d("sxd1", "走这了");
             meunlog_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this,PersonDataActivity.class));
+                    startActivity(new Intent(MainActivity.this,LogActivity.class));
                 }
             });
+            /*//打车服务的点击监听
+            ssss_ll.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this,LogActivity.class));
+                }
+            });*/
         }
     }
 
@@ -107,6 +120,7 @@ public class MainActivity extends BaseActivity implements MainView{
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //侧滑页里面的登录控件
         meunlog_ll = (LinearLayout)findViewById(R.id.ll);
+        ssss_ll = (LinearLayout) findViewById(R.id.ssss_ll);
     }
     //控件的点击事件
     @Override
@@ -123,11 +137,20 @@ public class MainActivity extends BaseActivity implements MainView{
              @Override
              public void onClick(View v) {
                  String CH = china.getText().toString();
-                 china.setTextColor(Color.BLUE);
-                 //#00a3ff
+                 china.setTextColor(getResources().getColor(R.color.textcolor));
                  englsh.setTextColor(Color.BLACK);
-                 updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
-                 instance.saveData(MainActivity.this,"yuyan",CH);
+                 china.setBackgroundResource(R.drawable.p_1);
+                 englsh.setBackgroundResource(R.drawable.p1);
+                 if(flag){
+                     //请求得到用户名的方法
+                     mainDataLogName();
+                     updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
+                     instance.saveData(MainActivity.this,"yuyan",CH);
+
+                 }else{
+                     updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
+                     instance.saveData(MainActivity.this,"yuyan",CH);
+                 }
              }
          });
         //英文点击监听
@@ -136,9 +159,18 @@ public class MainActivity extends BaseActivity implements MainView{
             public void onClick(View v) {
                 String EN = englsh.getText().toString();
                 china.setTextColor(Color.BLACK);
-                englsh.setTextColor(Color.BLUE);
-                updateLange(Locale.ENGLISH,url_en);
-                instance.saveData(MainActivity.this,"yuyan",EN);
+                englsh.setTextColor(getResources().getColor(R.color.textcolor));
+                china.setBackgroundResource(R.drawable.p);
+                englsh.setBackgroundResource(R.drawable.p1_1);
+                if(flag){
+                    //请求得到用户名的方法
+                    mainDataLogName();
+                    updateLange(Locale.ENGLISH,url_en);
+                    instance.saveData(MainActivity.this,"yuyan",EN);
+                }else{
+                    updateLange(Locale.ENGLISH,url_en);
+                    instance.saveData(MainActivity.this,"yuyan",EN);
+                }
             }
         });
 
@@ -149,6 +181,13 @@ public class MainActivity extends BaseActivity implements MainView{
                 startActivity(new Intent(MainActivity.this,LogActivity.class));
             }
         });
+        //打车服务的点击监听
+        ssss_ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this,SensitizeActivity.class));
+            }
+        });
 
     }
     //请求数据
@@ -156,6 +195,15 @@ public class MainActivity extends BaseActivity implements MainView{
     protected void load() {
         presenterLayer = new PresenterLayer();
         presenterLayer.setMainView(this);
+    }
+
+    //请求得到用户名的方法
+    private void mainDataLogName() {
+        //得到登录的token值
+        String token= (String) instance.getData(MainActivity.this, "token", "");
+        Log.d("xxx", "eventbus=" + token);
+        //得打个人数据
+        presenterLayer.setData(token);
     }
     //得到用户名
     @Override
@@ -199,16 +247,22 @@ public class MainActivity extends BaseActivity implements MainView{
         webSettings.setDefaultTextEncodingName("utf-8");
         //进入时判断
         if(yuyan.equals("")){
-            china.setTextColor(Color.RED);
+            china.setTextColor(getResources().getColor(R.color.textcolor));
             englsh.setTextColor(Color.BLACK);
+            china.setBackgroundResource(R.drawable.p_1);
+            englsh.setBackgroundResource(R.drawable.p1);
             updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
         }else if(yuyan.equals("中文")){
-            china.setTextColor(Color.RED);
+            china.setTextColor(getResources().getColor(R.color.textcolor));
             englsh.setTextColor(Color.BLACK);
+            china.setBackgroundResource(R.drawable.p_1);
+            englsh.setBackgroundResource(R.drawable.p1);
             updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
-        }else if(yuyan.equals("EN")){
+        }else if(yuyan.equals("英文")){
             china.setTextColor(Color.BLACK);
-            englsh.setTextColor(Color.RED);
+            englsh.setTextColor(getResources().getColor(R.color.textcolor));
+            china.setBackgroundResource(R.drawable.p);
+            englsh.setBackgroundResource(R.drawable.p1_1);
             updateLange(Locale.ENGLISH,url_en);
         }
         myWebView.addJavascriptInterface(new JS(), "android");
@@ -277,6 +331,7 @@ public class MainActivity extends BaseActivity implements MainView{
     public void refresh(String url) {
         myWebView.loadUrl(url);
         meunlog.setText(R.string.menu_log);
+
     }
 
     // 此按键监听的是返回键，能够返回到上一个网页（通过网页的hostlistery）

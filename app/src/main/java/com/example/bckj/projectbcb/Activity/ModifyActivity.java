@@ -3,7 +3,7 @@ package com.example.bckj.projectbcb.Activity;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -52,7 +52,7 @@ public class ModifyActivity extends BaseActivity implements ModifyView{
     }
 
     @Override
-    public void onClike(ImageView img1) {
+    public void onClike(LinearLayout img1) {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

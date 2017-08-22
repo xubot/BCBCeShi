@@ -31,13 +31,13 @@ public class ShowActivity extends AppCompatActivity {
         Log.d("aasd", flag);
         if(flag.equals("中文")){
             init1(path);
-        }else if(flag.equals("EN")){
+        }else if(flag.equals("英文")){
             init(path);
         }
         show_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(ShowActivity.this,MainActivity.class));
+                //startActivity(new Intent(ShowActivity.this,MainActivity.class));
                 finish();
             }
         });
@@ -93,6 +93,8 @@ public class ShowActivity extends AppCompatActivity {
                 view.loadUrl("javascript:$('.common-widget-footer').css('display','none')");
                 view.loadUrl("javascript:$('#scope_streetview').css('display','none')");
                 view.loadUrl("javascript:$('.captain-img').attr('data-href','#')");
+                view.loadUrl("javascript:$('#MicrosoftTranslatorWidget').click(function(){$('#WidgetFloaterPanels').css('top','95%').css('left','0')})");
+                view.loadUrl("javascript:$('#WidgetFloaterPanels').css('top','95%').css('left','0')");
                 Log.d("zzzz", 12344566 + "");
             }
             @Override
@@ -137,11 +139,6 @@ public class ShowActivity extends AppCompatActivity {
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
-               /* String insertJavaScript = "javascript:setTimeout(function(){{var s=document.createElement('script');s.type='text/javascript';s.charset='UTF-8';s.src=((location && location.href && location.href.indexOf('https') == 0)?'https://ssl.microsofttranslator.com':'http://www.microsofttranslator.com')+'/ajax/v3/WidgetV3.ashx?siteData=ueOIGRSKkd965FeEGM5JtQ**&ctf=False&ui=true&settings=undefined&from=zh-CHS';var p=document.getElementsByTagName('head')[0]||document.documentElement;p.insertBefore(s,p.firstChild); }},0)";
-                //添加翻译的按钮
-                view.loadUrl("javascript:$('.scope-address').attr('id','MicrosoftTranslatorWidget')");
-                //添加翻译的脚本
-                view.loadUrl(insertJavaScript);*/
                 //删除某些元素
                 view.loadUrl("javascript:$('.captain-bar').css('display','none')");
                 view.loadUrl("javascript:$('#nav_maplink').css('display','none!important')");

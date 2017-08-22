@@ -5,7 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.bckj.projectbcb.Bean.LoginBean;
@@ -69,7 +69,7 @@ public class LoginActivity extends BaseActivity implements LoginView{
     }
 
     @Override
-    public void onClike(ImageView img1) {
+    public void onClike(LinearLayout img1) {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

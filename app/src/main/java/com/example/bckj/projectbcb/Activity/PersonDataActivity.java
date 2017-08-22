@@ -118,7 +118,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
 
     //返回按钮监听
     @Override
-    public void onClike(ImageView img1) {
+    public void onClike(LinearLayout img1) {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -178,10 +178,9 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         String msg_en = logoutBean.getMsg_en();
         if(code==1){
             Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
-            //normalDialog();
             //退出成功后传值
             EventBus.getDefault().post(new MessageEvent(false));
-            startActivity(new Intent(PersonDataActivity.this,MainActivity.class));
+            finish();
         }else {
             Toast.makeText(this,  msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
         }
@@ -199,18 +198,18 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
                 .build();
     }
 
-
+    //退出时弹出的对话框-
     private void normalDialog() {
         // 1.创建出一个对话框的构造器
         AlertDialog.Builder builder = new AlertDialog.Builder(PersonDataActivity.this);
         // 设置标题
-        builder.setTitle("警告:");
+        builder.setTitle(R.string.adl);
         // 设置图标
         builder.setIcon(R.mipmap.ic_launcher);
         // 设置内容
-        builder.setMessage("您确定要退出吗");
+        builder.setMessage(R.string.adl_title);
         // 设置确定按钮
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.adl_positive, new DialogInterface.OnClickListener() {
               @Override
               public void onClick(DialogInterface dialog, int which) {
                   //得到登录的token值
@@ -221,11 +220,11 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
               }
         });
         // 设置取消按钮
-        builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.adl_negative, new DialogInterface.OnClickListener() {
              @Override
              public void onClick(DialogInterface dialog, int which) {
                  // TODO Auto-generated method stub
-                 Toast.makeText(PersonDataActivity.this, "很高兴继续为您服务",Toast.LENGTH_SHORT).show();
+                 Toast.makeText(PersonDataActivity.this,R.string.adl_msg,Toast.LENGTH_SHORT).show();
              }
         });
         // 创建出对话框 并显示出来

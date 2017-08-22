@@ -12,8 +12,8 @@
         android:right="5dp"
         android:bottom="5dp"/><!-- 各方向的间隔 -->
     <corners
-        android:topLeftRadius="100dip"
-        android:topRightRadius="1dip"
-        android:bottomLeftRadius="100dip"
-        android:bottomRightRadius="1dip" />
+        android:topLeftRadius="1dip"
+        android:topRightRadius="100dip"
+        android:bottomLeftRadius="1dip"
+        android:bottomRightRadius="100dip" />
 </shape>

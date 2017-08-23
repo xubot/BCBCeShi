@@ -61,7 +61,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#a9a9a9"
+            android:background="#d6d6d6"
             android:id="@+id/view"/>
         <RelativeLayout
             android:layout_width="wrap_content"
@@ -99,7 +99,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#a9a9a9"
+            android:background="#d6d6d6"
             android:id="@+id/view1"/>
         <RelativeLayout
             android:id="@+id/details_user"
@@ -124,58 +124,50 @@
                 android:textSize="12dp"
                 android:text="13051672112"/>
         </RelativeLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#d6d6d6"
+            android:id="@+id/view1"/>
+        <RelativeLayout
+            android:id="@+id/modify_rr"
+            android:layout_width="match_parent"
+            android:layout_height="45dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14dp"
+                android:textColor="#333333"
+                android:layout_marginLeft="15dp"
+                android:layout_centerVertical="true"
+                android:text="@string/menu_change"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="15dp"
+                android:src="@mipmap/next"/>
+        </RelativeLayout>
     </LinearLayout>
 
     <RelativeLayout
+        android:id="@+id/logout_rr"
         android:layout_width="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="40dp"
-        android:layout_height="30dp"
-        android:background="#fff">
-        <LinearLayout
-            android:id="@+id/logout_ll"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_height="45dp"
+        android:background="@drawable/sp">
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="12dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/icon_14"/>
-
-            <TextView
-                android:id="@+id/edit"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
-                android:textSize="13sp"
-                android:textColor="#333333"
-                android:text="@string/menu_logout"/>
-        </LinearLayout>
-        <LinearLayout
-            android:id="@+id/modify_ll"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/icon_130"/>
-
-            <TextView
-                android:id="@+id/modify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="6dp"
-                android:layout_gravity="center"
-                android:textSize="13sp"
-                android:textColor="#333333"
-                android:text="@string/menu_change"/>
-        </LinearLayout>
+            android:layout_centerHorizontal="true"
+            android:textSize="16dp"
+            android:textColor="#fff"
+            android:text="退出我的账户"/>
     </RelativeLayout>
 
 </RelativeLayout>

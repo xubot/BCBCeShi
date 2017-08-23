@@ -38,7 +38,7 @@ import de.greenrobot.event.ThreadMode;
 public class MainActivity extends BaseActivity implements MainView{
     private DrawerLayout mDrawerLayout;
     private LinearLayout meunlog_ll;
-    private PresenterLayer presenterLayer;
+    private PresenterLayer presenterLayer = new PresenterLayer();;
     private SharedUtils instance;
     private WebView myWebView;
     private Button home_img;
@@ -49,24 +49,52 @@ public class MainActivity extends BaseActivity implements MainView{
     private long exitTime=0;
     private LinearLayout yuyan_ll;
     private LinearLayout ssss_ll;
+    private TextView taxi_meun_sens;
+    private TextView taxi_meun_jihuo;
+    private int code;
 
     //初始化布局
     @Override
     public void initView() {
         setContentView(R.layout.activity_main);
+        //得到存储对象
+        instance = SharedUtils.getInstance();
+        //得到存储的标示
+        code = (int) instance.getData(this, "code", 0);
+        Log.d("zzz", "code+" + code);
+        //得到语言切换的控件组
         yuyan_ll = (LinearLayout) findViewById(R.id.yuyan_ll);
-        china = (TextView) findViewById(R.id.ch);
-        englsh = (TextView) findViewById(R.id.en);
-        meunlog = (TextView) findViewById(R.id.meunlog);
         //显示控件
         yuyan_ll.setVisibility(ViewGroup.VISIBLE);
-
-        instance = SharedUtils.getInstance();
+        //得到中文控件
+        china = (TextView) findViewById(R.id.ch);
+        //得到英文控件
+        englsh = (TextView) findViewById(R.id.en);
+        //得到登录按钮
+        meunlog = (TextView) findViewById(R.id.meunlog);
+        //得到服务控件
+        taxi_meun_sens = (TextView) findViewById(R.id.taxi_meun_sens);
+        //得到激活控件
+        taxi_meun_jihuo = (TextView) findViewById(R.id.taxi_meun_jihuo);
         //加载html页面
         setWebViewH5();
+        //判断关闭app时是否是登录状态
+        if(code ==1){
+            Log.d("zzz", "code+" + code);
+            //请求得到用户名的方法
+            mainDataLogName();
+            //点击进入详情信息
+            meunlog.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MainActivity.this,PersonDataActivity.class));
+                }
+            });
+        }
         //初始化EventBus
         EventBus.getDefault().register(this);
     }
+
     //得到登录成功时的唯一标示共供期判断（逻辑出现问题）
     @Subscribe(threadMode = ThreadMode.MainThread)
     public void setEventBus(MessageEvent eventBus){
@@ -84,29 +112,17 @@ public class MainActivity extends BaseActivity implements MainView{
                     startActivity(new Intent(MainActivity.this,PersonDataActivity.class));
                 }
             });
-            /*//打车服务的点击监听
-            ssss_ll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this,SensitizeActivity.class));
-                }
-            });*/
         }else {
+            //给登录控件赋值
             meunlog.setText(R.string.menu_log);
             Log.d("sxd1", "走这了");
+            //点击跳到登录页面
             meunlog_ll.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     startActivity(new Intent(MainActivity.this,LogActivity.class));
                 }
             });
-            /*//打车服务的点击监听
-            ssss_ll.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    startActivity(new Intent(MainActivity.this,LogActivity.class));
-                }
-            });*/
         }
     }
 
@@ -115,11 +131,11 @@ public class MainActivity extends BaseActivity implements MainView{
     protected void init() {
         //侧滑按钮控件
         home_img = (Button) findViewById(R.id.home_img);
-        home_img.setVisibility(ViewGroup.VISIBLE);
         //得到侧滑页
         mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
         //侧滑页里面的登录控件
         meunlog_ll = (LinearLayout)findViewById(R.id.ll);
+        //激活服务的控件
         ssss_ll = (LinearLayout) findViewById(R.id.ssss_ll);
     }
     //控件的点击事件
@@ -138,16 +154,16 @@ public class MainActivity extends BaseActivity implements MainView{
              public void onClick(View v) {
                  String CH = china.getText().toString();
                  china.setTextColor(getResources().getColor(R.color.textcolor));
-                 englsh.setTextColor(Color.BLACK);
+                 englsh.setTextColor(Color.WHITE);
                  china.setBackgroundResource(R.drawable.p_1);
                  englsh.setBackgroundResource(R.drawable.p1);
-                 if(flag){
+                 if(flag||code==1){
                      //请求得到用户名的方法
                      mainDataLogName();
                      updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
                      instance.saveData(MainActivity.this,"yuyan",CH);
 
-                 }else{
+                 }else if(flag||code==0){
                      updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
                      instance.saveData(MainActivity.this,"yuyan",CH);
                  }
@@ -158,22 +174,22 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onClick(View v) {
                 String EN = englsh.getText().toString();
-                china.setTextColor(Color.BLACK);
+                Log.d("xzxzx", EN);
+                china.setTextColor(Color.WHITE);
                 englsh.setTextColor(getResources().getColor(R.color.textcolor));
                 china.setBackgroundResource(R.drawable.p);
                 englsh.setBackgroundResource(R.drawable.p1_1);
-                if(flag){
+                if(flag||code==1){
                     //请求得到用户名的方法
                     mainDataLogName();
                     updateLange(Locale.ENGLISH,url_en);
                     instance.saveData(MainActivity.this,"yuyan",EN);
-                }else{
+                }else if(flag||code==0){
                     updateLange(Locale.ENGLISH,url_en);
                     instance.saveData(MainActivity.this,"yuyan",EN);
                 }
             }
         });
-
         //登录监听
         meunlog_ll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -193,7 +209,7 @@ public class MainActivity extends BaseActivity implements MainView{
     //请求数据
     @Override
     protected void load() {
-        presenterLayer = new PresenterLayer();
+        //presenterLayer = new PresenterLayer();
         presenterLayer.setMainView(this);
     }
 
@@ -237,6 +253,8 @@ public class MainActivity extends BaseActivity implements MainView{
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
         webSettings.setGeolocationEnabled(true);
+
+        webSettings.setLayoutAlgorithm(WebSettings.LayoutAlgorithm.NORMAL);
         //设置定位的数据库路径
         String dir = this.getApplicationContext().getDir("database", Context.MODE_PRIVATE).getPath();
         webSettings.setGeolocationDatabasePath(dir);
@@ -248,18 +266,18 @@ public class MainActivity extends BaseActivity implements MainView{
         //进入时判断
         if(yuyan.equals("")){
             china.setTextColor(getResources().getColor(R.color.textcolor));
-            englsh.setTextColor(Color.BLACK);
+            englsh.setTextColor(Color.WHITE);
             china.setBackgroundResource(R.drawable.p_1);
             englsh.setBackgroundResource(R.drawable.p1);
             updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
         }else if(yuyan.equals("中文")){
             china.setTextColor(getResources().getColor(R.color.textcolor));
-            englsh.setTextColor(Color.BLACK);
+            englsh.setTextColor(Color.WHITE);
             china.setBackgroundResource(R.drawable.p_1);
             englsh.setBackgroundResource(R.drawable.p1);
             updateLange(Locale.SIMPLIFIED_CHINESE,url_ch);
-        }else if(yuyan.equals("英文")){
-            china.setTextColor(Color.BLACK);
+        }else if(yuyan.equals(" E N")){
+            china.setTextColor(Color.WHITE);
             englsh.setTextColor(getResources().getColor(R.color.textcolor));
             china.setBackgroundResource(R.drawable.p);
             englsh.setBackgroundResource(R.drawable.p1_1);
@@ -287,9 +305,8 @@ public class MainActivity extends BaseActivity implements MainView{
         @JavascriptInterface
         public void get(String path){
             System.out.println("打印"+path);
-            Intent intent = new Intent();
+            Intent intent = new Intent(MainActivity.this, ShowActivity.class);
             intent.putExtra("url",path);
-            intent.setClass(MainActivity.this, ShowActivity.class);
             startActivity(intent);
         }
         //叫起打车调到原生界面
@@ -331,7 +348,8 @@ public class MainActivity extends BaseActivity implements MainView{
     public void refresh(String url) {
         myWebView.loadUrl(url);
         meunlog.setText(R.string.menu_log);
-
+        taxi_meun_sens.setText(R.string.taxi_sens);
+        taxi_meun_jihuo.setText(R.string.jihuo);
     }
 
     // 此按键监听的是返回键，能够返回到上一个网页（通过网页的hostlistery）

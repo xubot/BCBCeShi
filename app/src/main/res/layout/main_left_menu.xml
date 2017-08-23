@@ -43,21 +43,23 @@
             android:layout_gravity="center"
             android:src="@mipmap/icon_15"/>
         <TextView
+            android:id="@+id/taxi_meun_sens"
             android:layout_marginLeft="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:textSize="18sp"
             android:textColor="#333333"
-            android:text="打车服务"/>
+            android:text="@string/taxi_sens"/>
         <TextView
+            android:id="@+id/taxi_meun_jihuo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="19dp"
             android:layout_gravity="center"
             android:textSize="12sp"
             android:textColor="#b6b6b6"
-            android:text="未激活"/>
+            android:text="@string/jihuo"/>
     </LinearLayout>
 
 </RelativeLayout>

@@ -42,4 +42,43 @@
         android:textColor="#fff"
         android:text="@string/taxi_sens"/>
 
+    <LinearLayout
+        android:orientation="vertical"
+        android:background="#fff"
+        android:layout_width="290dp"
+        android:layout_height="174dp"
+        android:layout_below="@+id/sensitize_car"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="125dp">
+
+        <EditText
+            android:id="@+id/sens_edit_phone"
+            android:layout_width="250dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="15dp"
+            android:layout_gravity="center"
+            android:background="@null"
+            android:hint="@string/pop_phone"
+            android:inputType="number"
+            android:textSize="14sp"
+            android:textColorHint="#a9a9a9a9"/>
+
+        <View
+            style="@style/Home_View"
+            android:layout_gravity="center"
+            android:id="@+id/view2"/>
+
+        <Button
+            android:id="@+id/sensitize_s"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:text="@string/pop_next"
+            android:textSize="18sp"
+            android:textColor="#ffffff"
+            android:background="@drawable/sp"
+            android:layout_marginTop="35dp"
+            android:layout_gravity="center"/>
+    </LinearLayout>
+
 </RelativeLayout>

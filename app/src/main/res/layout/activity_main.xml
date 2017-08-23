@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="20sp"
                     android:background="@drawable/p1"
-                    android:text="英文"/>
+                    android:text=" E N"/>
             </LinearLayout>
 
 

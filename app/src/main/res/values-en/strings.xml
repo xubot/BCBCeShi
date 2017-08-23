@@ -11,7 +11,7 @@
     <string name="forget_emil">Email Address</string>
     <string name="forget_Edcode">Enter verfication code</string>
     <string name="forget_repwd">confirm password</string>
-    <string name="forget_find">Fimd</string>
+    <string name="forget_find">Find</string>
     <string name="fotget_getcode">Resend</string>
     <string name="sign_user">Username</string>
     <string name="sign_phone">phone number (can fill)</string>
@@ -22,7 +22,7 @@
     <string name="pop_phone">Phone number</string>
     <string name="pop_next">Next</string>
     <string name="pop_setpwd">Set login password (8-16 bits)</string>
-    <string name="pop_all">Must contain numbers, letters, symbols, at least 2 elements, \n password length 8-16 bits</string>
+    <string name="pop_all">Must contain numbers,letters,symbols, at least 2 elements,password length 8-16 bits</string>
     <string name="pop_sure">confirm</string>
     <string name="taxi_cancel">cancel the trip</string>
     <string name="taxi_msg">Please input information</string>

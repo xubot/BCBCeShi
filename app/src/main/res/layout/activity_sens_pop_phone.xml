@@ -29,11 +29,11 @@
         android:id="@+id/sensitize_s"
         android:layout_width="240dp"
         android:layout_height="40dp"
-        android:text="@string/pop_next"
-        android:textSize="18sp"
-        android:textColor="#ffffff"
-        android:background="@drawable/sp"
+        android:layout_gravity="center"
         android:layout_marginTop="35dp"
-        android:layout_gravity="center"/>
+        android:background="@drawable/sp"
+        android:text="@string/pop_next"
+        android:textColor="#ffffff"
+        android:textSize="18sp"/>
 
 </LinearLayout>

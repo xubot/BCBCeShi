@@ -31,13 +31,12 @@ public class ShowActivity extends AppCompatActivity {
         Log.d("aasd", flag);
         if(flag.equals("中文")){
             init1(path);
-        }else if(flag.equals("英文")){
+        }else if(flag.equals(" E N")){
             init(path);
         }
         show_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(ShowActivity.this,MainActivity.class));
                 finish();
             }
         });
@@ -68,7 +67,8 @@ public class ShowActivity extends AppCompatActivity {
                     if (!url.startsWith("http") && !url.startsWith("https")){
                         return false;
                     }
-                } catch (Exception e) { //防止crash (如果手机上没有安装处理某个scheme开头的url的APP, 会导致crash)
+                } catch (Exception e) {
+                    //防止crash (如果手机上没有安装处理某个scheme开头的url的APP, 会导致crash)
                     return false;
                 }
                 view.loadUrl(url);
@@ -92,7 +92,9 @@ public class ShowActivity extends AppCompatActivity {
                 view.loadUrl("javascript:$('.common-footer-widget').css('display','none !important')");
                 view.loadUrl("javascript:$('.common-widget-footer').css('display','none')");
                 view.loadUrl("javascript:$('#scope_streetview').css('display','none')");
+                view.loadUrl("javascript:$('.needsclick').css('display','none !important')");
                 view.loadUrl("javascript:$('.captain-img').attr('data-href','#')");
+                view.loadUrl("javascript:function tim(){ $('#MicrosoftTranslatorWidget').click();$('#WidgetFloaterPanels').css('top','95%').css('left','0'); };setTimeout('tim()',4000);");
                 view.loadUrl("javascript:$('#MicrosoftTranslatorWidget').click(function(){$('#WidgetFloaterPanels').css('top','95%').css('left','0')})");
                 view.loadUrl("javascript:$('#WidgetFloaterPanels').css('top','95%').css('left','0')");
                 Log.d("zzzz", 12344566 + "");
@@ -149,6 +151,7 @@ public class ShowActivity extends AppCompatActivity {
                 view.loadUrl("javascript:$('.common-widget-footer').css('display','none')");
                 view.loadUrl("javascript:$('#scope_streetview').css('display','none')");
                 view.loadUrl("javascript:$('.captain-img').attr('data-href','#')");
+                view.loadUrl("javascript:$('.needsclick').css('display','none !important')");
                 Log.d("zzzz", 12344566 + "");
             }
 

@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,8 +37,8 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
     private TextView details_again;
     private String token;
     private ImageView personhead;
-    private LinearLayout modify_ll;
-    private LinearLayout logout_ll;
+    private RelativeLayout modify_rr;
+    private RelativeLayout logout_rr;
     private SharedUtils instance;
 
     @Override
@@ -64,9 +65,9 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         //得到重新获取的控件
         details_again = (TextView) findViewById(R.id.details_again);
         //修改密码控件组
-        modify_ll = (LinearLayout) findViewById(R.id.modify_ll);
+        modify_rr = (RelativeLayout) findViewById(R.id.modify_rr);
         //退出控件组
-        logout_ll = (LinearLayout) findViewById(R.id.logout_ll);
+        logout_rr = (RelativeLayout) findViewById(R.id.logout_rr);
     }
 
     @Override
@@ -87,19 +88,14 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             }
         });
         //退出监听
-        logout_ll.setOnClickListener(new View.OnClickListener() {
+        logout_rr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*//得到登录的token值
-                String token = (String) instance.getData(PersonDataActivity.this, "token", "");
-                Log.d("zzz", "logout=" + token);
-                //调起退出
-                presenterLayer.setLogout(token);*/
                 normalDialog();
             }
         });
         //修改密码
-        modify_ll.setOnClickListener(new View.OnClickListener() {
+        modify_rr.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(PersonDataActivity.this,ModifyActivity.class));
@@ -178,6 +174,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         String msg_en = logoutBean.getMsg_en();
         if(code==1){
             Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+            instance.saveData(PersonDataActivity.this,"code",0);
             //退出成功后传值
             EventBus.getDefault().post(new MessageEvent(false));
             finish();

@@ -1,6 +1,8 @@
 package com.example.bckj.projectbcb.ViewLayer;
 
 
+import com.example.bckj.projectbcb.Bean.ReActiveUserBean;
+import com.example.bckj.projectbcb.Bean.SensitizeBean;
 import com.example.bckj.projectbcb.Bean.StatusBean;
 
 /**
@@ -10,6 +12,7 @@ import com.example.bckj.projectbcb.Bean.StatusBean;
 public interface SensitizeView {
     //激活自身App
     void status(StatusBean statusBean);
-    //是否注册
-    void  ifRegister();
+    //重新激活
+    void reActiveData(ReActiveUserBean reActiveUserBean);
+    void getSensitize(SensitizeBean sensitizeBean);
 }

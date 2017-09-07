@@ -48,6 +48,7 @@
                 android:textColorHint="#999999"
                 android:textSize="14sp"
                 android:layout_marginLeft="50dp"
+                android:inputType="textPassword"
                 android:gravity="center_vertical|right"
                 android:textCursorDrawable="@null"
                 android:hint="@string/modify_ed"/>
@@ -77,6 +78,7 @@
                 android:textColorHint="#999999"
                 android:textSize="14sp"
                 android:layout_marginLeft="50dp"
+                android:inputType="textPassword"
                 android:gravity="center_vertical|right"
                 android:textCursorDrawable="@null"
                 android:hint="@string/modify_ed"/>
@@ -107,6 +109,7 @@
                 android:layout_marginLeft="38dp"
                 android:background="@null"
                 android:hint="@string/modify_ed"
+                android:inputType="textPassword"
                 android:gravity="center_vertical|right"
                 android:textCursorDrawable="@null"
                 android:textColorHint="#999999"

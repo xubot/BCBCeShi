@@ -35,7 +35,6 @@
                 android:layout_gravity="right"
                 android:layout_marginRight="15dp"
                 android:layout_marginTop="10dp"
-
                 android:layout_height="wrap_content">
                 <TextView
                     android:id="@+id/ch"
@@ -53,8 +52,11 @@
                     android:background="@drawable/p1"
                     android:text=" E N"/>
             </LinearLayout>
-
-
+            <ImageView
+                android:id="@+id/imgguide"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"/>
         </FrameLayout>
 
         <RelativeLayout

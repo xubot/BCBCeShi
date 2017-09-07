@@ -4,8 +4,8 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:background="#fff"
-    android:layout_width="302dp"
-    android:layout_height="211dp">
+    android:layout_width="290dp"
+    android:layout_height="250dp">
 
     <TextView
         android:id="@+id/codephone"
@@ -28,6 +28,7 @@
    <LinearLayout
        android:layout_width="wrap_content"
        android:layout_marginTop="30dp"
+       android:layout_marginBottom="23dp"
        android:orientation="horizontal"
        android:layout_gravity="center"
        android:layout_height="48dp">
@@ -36,24 +37,36 @@
            android:id="@+id/e_one"
            android:layout_width="48dp"
            android:layout_height="48dp"
+           android:gravity="center_vertical|center"
+           android:textCursorDrawable="@null"
+           android:inputType="number"
            android:background="@drawable/s"/>
        <EditText
            android:id="@+id/e_twe"
            android:layout_width="48dp"
            android:layout_height="48dp"
            android:layout_marginLeft="18dp"
+           android:gravity="center_vertical|center"
+           android:textCursorDrawable="@null"
+           android:inputType="number"
            android:background="@drawable/s"/>
        <EditText
            android:id="@+id/e_three"
            android:layout_width="48dp"
            android:layout_height="48dp"
            android:layout_marginLeft="18dp"
+           android:gravity="center_vertical|center"
+           android:textCursorDrawable="@null"
+           android:inputType="number"
            android:background="@drawable/s"/>
        <EditText
            android:id="@+id/e_frou"
            android:layout_width="48dp"
            android:layout_height="48dp"
            android:layout_marginLeft="18dp"
+           android:gravity="center_vertical|center"
+           android:textCursorDrawable="@null"
+           android:inputType="number"
            android:background="@drawable/s"/>
    </LinearLayout>
 

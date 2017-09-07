@@ -15,7 +15,7 @@
         android:layout_height="60dp"
         android:layout_marginTop="30dp"
         android:layout_centerHorizontal="true"
-        android:src="@mipmap/img_01"/>
+        android:src="@mipmap/img_04"/>
     <TextView
         android:id="@+id/modifypic"
         android:layout_below="@id/personhead"
@@ -25,7 +25,7 @@
         android:textColor="#fff"
         android:layout_marginTop="15dp"
         android:layout_centerHorizontal="true"
-        android:text=""/>
+        android:text="@string/person_change"/>
 
     <LinearLayout
         android:id="@+id/person_ll"
@@ -33,19 +33,20 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/shp"
+        android:background="#fff"
         android:layout_marginTop="30dp">
         <RelativeLayout
+            android:id="@+id/urse_rrr"
             android:layout_width="match_parent"
             android:layout_height="45dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textColor="#333333"
                 android:layout_marginLeft="15dp"
                 android:layout_centerVertical="true"
-                android:text="用户名"/>
+                android:text="@string/person_user"/>
             <TextView
                 android:id="@+id/details_name"
                 android:layout_width="wrap_content"
@@ -53,9 +54,9 @@
                 android:textColor="#333333"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="15dp"
-                android:textSize="12dp"
-                android:text="xubotao"/>
+                android:layout_marginRight="20dp"
+                android:textSize="12sp"
+                android:hint="xubotao"/>
         </RelativeLayout>
 
         <View
@@ -66,22 +67,22 @@
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="45dp"
-            android:id="@+id/log_pwd">
+            android:id="@+id/emil_rrr">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textColor="#333333"
                 android:layout_marginLeft="15dp"
                 android:layout_centerVertical="true"
-                android:text="邮箱"/>
+                android:text="@string/person_emil"/>
             <TextView
                 android:id="@+id/details_emal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="#333333"
-                android:textSize="11dp"
+                android:textSize="11sp"
                 android:text="goldov@163.com"
                 android:layout_marginRight="15dp"
                 android:layout_alignBottom="@+id/details_again"
@@ -93,7 +94,7 @@
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="15dp"
-                android:text="重新激活"
+                android:text="@string/adl_Reactivate"
                 android:id="@+id/details_again"/>
         </RelativeLayout>
         <View
@@ -102,17 +103,17 @@
             android:background="#d6d6d6"
             android:id="@+id/view1"/>
         <RelativeLayout
-            android:id="@+id/details_user"
+            android:id="@+id/phone_rrr"
             android:layout_width="match_parent"
             android:layout_height="45dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="14dp"
+                android:textSize="14sp"
                 android:textColor="#333333"
                 android:layout_marginLeft="15dp"
                 android:layout_centerVertical="true"
-                android:text="手机号"/>
+                android:text="@string/person_phone"/>
             <TextView
                 android:id="@+id/details_phone"
                 android:layout_width="wrap_content"
@@ -120,15 +121,14 @@
                 android:textColor="#333333"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="15dp"
-                android:textSize="12dp"
-                android:text="13051672112"/>
+                android:layout_marginRight="20dp"
+                android:textSize="12sp"
+                android:hint="13051672112"/>
         </RelativeLayout>
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="#d6d6d6"
-            android:id="@+id/view1"/>
+            android:background="#d6d6d6"/>
         <RelativeLayout
             android:id="@+id/modify_rr"
             android:layout_width="match_parent"
@@ -165,9 +165,9 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:textSize="16dp"
+            android:textSize="16sp"
             android:textColor="#fff"
-            android:text="退出我的账户"/>
+            android:text="@string/person_logout"/>
     </RelativeLayout>
 
 </RelativeLayout>

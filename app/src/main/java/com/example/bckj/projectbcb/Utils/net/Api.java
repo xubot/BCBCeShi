@@ -9,7 +9,10 @@ import com.example.bckj.projectbcb.Bean.LogoutBean;
 import com.example.bckj.projectbcb.Bean.Modifypwd;
 import com.example.bckj.projectbcb.Bean.PersonDataBean;
 import com.example.bckj.projectbcb.Bean.ReActiveUserBean;
+import com.example.bckj.projectbcb.Bean.SensitizeBean;
+import com.example.bckj.projectbcb.Bean.SensitizelistBean;
 import com.example.bckj.projectbcb.Bean.StatusBean;
+import com.example.bckj.projectbcb.Bean.UpdateInfoBean;
 
 import io.reactivex.Observable;
 import retrofit2.http.Field;
@@ -74,11 +77,29 @@ public interface Api {
                                     @Field("password")String password,
                                     @Field("repassword")String repassword,
                                     @Field("token")String token);
+
+    //得到修改信息
+    @POST("sc/index.php?s=/home/user/updateInfo")
+    @FormUrlEncoded
+    Observable<UpdateInfoBean> updateInfoAll(@Field("username")String username,
+                                             @Field("mobile")String mobile,
+                                             @Field("picType")String picType,
+                                             @Field("headpic")String headpic,
+                                             @Field("token")String token);
+
+    //得到修改信息
+    @POST("sc/index.php?s=/home/user/updateInfo")
+    @FormUrlEncoded
+    Observable<UpdateInfoBean> updateInfo(@Field("username")String username,
+                                          @Field("mobile")String mobile,
+                                          @Field("token")String token);
+
     //得到发送邮件
     @POST("sc/index.php?s=/home/user/sendMail")
     @FormUrlEncoded
     Observable<CodeBean> getcode(@Field("email")String email,
-                                 @Field("type")int type);
+                                 @Field("type")int type,
+                                 @Field("lang") int lang);
     //得到找回
     @POST("sc/index.php?s=/home/user/retrieve")
     @FormUrlEncoded
@@ -87,16 +108,16 @@ public interface Api {
                                  @Field("password")String password,
                                  @Field("repassword")String repassword);
 
-    /*//激活服务
-    @POST("/home/active/index")
+    //激活服务
+    @POST("sc/index.php?s=/home/active/activate")
     @FormUrlEncoded
-    Observable<Object> sensitize(@Field("type") String type,
-                                 @Field("atype") String atype,
-                                 @Field("password") String password,
-                                 @Field("account") String account);
+    Observable<SensitizeBean> sensitize(@Field("type") String type,
+                                        @Field("atype") int atype,
+                                        @Field("password") String password,
+                                        @Field("account") String account,
+                                        @Field("token")String token);
 
     //激活服务列表
-    @POST("/home/active/index")
-    @FormUrlEncoded
-    Observable<Object> sensitizelist();*/
+    @GET("sc/index.php?s=/home/active/index/token")
+    Observable<SensitizelistBean> sensitizelist(@Query("token")String token);
 }

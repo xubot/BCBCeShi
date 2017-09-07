@@ -18,6 +18,9 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="android.permission.CHANGE_CONFIGURATION"/>
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS"/>
 
     <application
         android:name=".Utils.ImagerApp"
@@ -28,7 +31,14 @@
         android:roundIcon="@mipmap/img_01"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.MainActivity">
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="9ade960ed9fa2b236ea148ed1189742c"/>
+
+        <service android:name="com.amap.api.location.APSService">
+        </service>
+
+        <activity android:name=".Activity.GuideActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
@@ -52,6 +62,12 @@
         <activity android:name=".Activity.ForgetActivity">
         </activity>
         <activity android:name=".Activity.ShowActivity">
+        </activity>
+        <activity android:name=".Activity.MainActivity">
+        </activity>
+        <activity android:name=".Activity.ModifyDataActivity">
+        </activity>
+        <activity android:name=".Activity.TaxiImActivity">
         </activity>
     </application>
 

@@ -5,7 +5,7 @@
     android:layout_gravity="center"
     android:background="#fff"
     android:layout_width="290dp"
-    android:layout_height="243dp">
+    android:layout_height="250dp">
 
     <TextView
         android:layout_width="wrap_content"
@@ -37,6 +37,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_marginTop="15dp"
+        android:layout_marginBottom="23dp"
         android:orientation="horizontal"
         android:layout_gravity="center"
         android:layout_height="48dp">
@@ -45,23 +46,31 @@
             android:id="@+id/pice_one"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:gravity="center_vertical|center"
+            android:textCursorDrawable="@null"
             android:background="@drawable/s"/>
         <EditText
             android:id="@+id/pice_twe"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:gravity="center_vertical|center"
+            android:textCursorDrawable="@null"
             android:layout_marginLeft="18dp"
             android:background="@drawable/s"/>
         <EditText
             android:id="@+id/pice_three"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:gravity="center_vertical|center"
+            android:textCursorDrawable="@null"
             android:layout_marginLeft="18dp"
             android:background="@drawable/s"/>
         <EditText
             android:id="@+id/pice_frou"
             android:layout_width="48dp"
             android:layout_height="48dp"
+            android:gravity="center_vertical|center"
+            android:textCursorDrawable="@null"
             android:layout_marginLeft="18dp"
             android:background="@drawable/s"/>
     </LinearLayout>

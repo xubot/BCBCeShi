@@ -35,4 +35,23 @@
     <string name="adl_negative">cancel</string>
     <string name="adl_msg">It is my pleasure to continue to serve you</string>
     <string name="jihuo">not active</string>
+    <string name="yijihuo">Activated</string>
+    <string name="adl_twetitle">You have not activated this application yet. Sorry, we can not provide you with the following services</string>
+    <string name="adl_tweMsg">Go to the mailbox and then click OK to activate</string>
+    <string name="adl_tweMsg_t">You can click on the service side slip after activation page to activate, if there is no personal information can receive e-mail Click the Send button again</string>
+    <string name="adl_Reactivate">Reactivate</string>
+    <string name="person_user">user name</string>
+    <string name="person_emil">mailbox</string>
+    <string name="person_phone">phone</string>
+    <string name="person_logout">Quit my account</string>
+    <string name="person_change">Modify head sculpture</string>
+    <string name="mainquit_again">Press the exit program again</string>
+    <string name="mainjihuo">You are activated without the need to reactivate</string>
+    <string name="panNull">Your information has not been filled. Please check it</string>
+    <string name="panPwd">Password must not be less than 6 bits</string>
+    <string name="panTwePwd">The two password is inconsistent. Please check it</string>
+    <string name="panEmail">Please enter the correct mailbox format</string>
+    <string name="panPhone">Please enter the correct cell phone number</string>
+    <string name="panNewAndRenew">The new password cannot be the same as the old one</string>
+    <string name="edNull">Input cannot be empty</string>
 </resources>

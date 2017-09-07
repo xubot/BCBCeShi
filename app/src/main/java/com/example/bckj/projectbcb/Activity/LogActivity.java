@@ -1,6 +1,7 @@
 package com.example.bckj.projectbcb.Activity;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -27,6 +28,8 @@ public class LogActivity extends BaseActivity implements LogView{
     private TextView forget;
     private PresenterLayer presenterLayer;
     private SharedUtils instance;
+    private String usre;
+    private String pwd;
 
     @Override
     public void initView() {
@@ -56,11 +59,22 @@ public class LogActivity extends BaseActivity implements LogView{
             @Override
             public void onClick(View v) {
                 //得到账号
-                String usre = log_usre.getText().toString();
+                usre = log_usre.getText().toString();
                 //得到密码
-                String pwd = log_pwd.getText().toString();
-                //发起登录请求
-                presenterLayer.setLog(usre,pwd);
+                pwd = log_pwd.getText().toString();
+                boolean username = TextUtils.isEmpty(usre);
+                boolean password = TextUtils.isEmpty(pwd);
+                if(username||password) {
+                    Toast.makeText(LogActivity.this, R.string.panNull, Toast.LENGTH_SHORT).show();
+                }else {
+                    //判断密码不能小于6位
+                    if(pwd.length()>=6){
+                        //发起登录请求
+                        presenterLayer.setLog(usre, pwd);
+                    }else {
+                        Toast.makeText(LogActivity.this,R.string.panPwd, Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
         //注册监听
@@ -105,16 +119,24 @@ public class LogActivity extends BaseActivity implements LogView{
             String token = logBean.getData().getToken();
             //存入登陆后的token值
             instance.saveData(LogActivity.this,"token",token);
-            instance.saveData(LogActivity.this,"code",1);
+
+            Log.d("zzz", "log  得到用户名和密码值："+usre + "===" + pwd);
+            //将用户名和密码存入本地
+            instance.saveData(LogActivity.this,"usre",usre);
+            instance.saveData(LogActivity.this,"pwd",pwd);
+
+            Log.d("zzz", "log  登录状态码："+code);
+            //将登录成功的code值存入本地存储对象中
+            instance.saveData(LogActivity.this,"mainLogCode",code);
+
             Toast.makeText(this, msg + "\n" + msg_en, Toast.LENGTH_SHORT).show();
-            Log.d("zzz", code + "\n" + msg + "\n" + msg_en+"\n"+token);
+            Log.d("zzz","登录状态：\n"+ code + "\n" + msg + "\n" + msg_en+"\n"+token);
             //发送EventBus标示
             EventBus.getDefault().post(new MessageEvent(true));
             finish();
         }else {
             Toast.makeText(this, msg + "\n" + msg_en, Toast.LENGTH_SHORT).show();
-            Log.d("zzz", code + "\n" + msg + "\n" + msg_en);
+            Log.d("zzz", "登录状态：\n"+code + "\n" + msg + "\n" + msg_en);
         }
-
     }
 }

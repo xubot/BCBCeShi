@@ -19,6 +19,7 @@ import com.example.bckj.projectbcb.Bean.PersonDataBean;
 import com.example.bckj.projectbcb.Bean.ReActiveUserBean;
 import com.example.bckj.projectbcb.Presenter.PresenterLayer;
 import com.example.bckj.projectbcb.R;
+import com.example.bckj.projectbcb.Utils.CountDownTimerUtils;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.example.bckj.projectbcb.ViewLayer.PersonDataView;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
@@ -72,17 +73,18 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
 
     @Override
     public void cheked() {
-        //修改头像监听
+        //修改信息监听
         modifypic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(PersonDataActivity.this, "已点击修改头像,", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(PersonDataActivity.this,ModifyDataActivity.class));
             }
         });
+        ////重新获取的监听事件
         details_again.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("zzz", "details_again=" + token);
+                Log.d("zzz", "details_again  控件的token值" + token);
                 //调起得到重新激活邮件
                 presenterLayer.setreActiveUser(token);
             }
@@ -105,7 +107,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
 
     @Override
     protected void load() {
-        Log.d("zzz", "load=" + token);
+        Log.d("zzz", "load  得到的token值" + token);
         presenterLayer = new PresenterLayer();
         presenterLayer.setPersonDataView(this);
         //调起得到个人信息
@@ -134,7 +136,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         final String mobile = data.getMobile();
         String status = data.getStatus();
         final String username = data.getUsername();
-        Log.d("zzz", "person=" + msg + "\n" + username + "\n" + email+"\n"+headpic);
+        Log.d("zzz", "persondata   查看个人的信息情况：" + msg + "\n" + username + "\n" + email+"\n"+headpic);
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -158,28 +160,32 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         int code = reActiveUserBean.getCode();
         String msg = reActiveUserBean.getMsg();
         String msg_en = reActiveUserBean.getMsg_en();
+        Log.d("zzz", "persondata   重新激活的链接发送情况：" + msg + "\n" + code + "\n" + msg_en);
         if(code==1){
-            Toast.makeText(this, "重新激活的链接已发送:"+msg+"\n The reactivated link has been sent:"+msg_en, Toast.LENGTH_SHORT).show();
-            finish();
+            Toast.makeText(this,msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+            //开启倒计时
+            CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(details_again, 60000, 1000);
+            mCountDownTimerUtils.start();
         }else {
-            Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, msg+"\n"+msg_en+"\n"+code, Toast.LENGTH_SHORT).show();
         }
     }
-
     //退出登录信息
     @Override
     public void getLogout(LogoutBean logoutBean) {
         int code = logoutBean.getCode();
         String msg = logoutBean.getMsg();
         String msg_en = logoutBean.getMsg_en();
+        Log.d("zzz", "persondata   退出情况：" + msg + "\n" + code + "\n" + msg_en);
         if(code==1){
-            Toast.makeText(this, msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
-            instance.saveData(PersonDataActivity.this,"code",0);
+            Toast.makeText(this,msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
             //退出成功后传值
             EventBus.getDefault().post(new MessageEvent(false));
+            //startActivity(new Intent(PersonDataActivity.this,MainActivity.class));
+            instance.clear(PersonDataActivity.this);
             finish();
         }else {
-            Toast.makeText(this,  msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this,msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -195,14 +201,14 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
                 .build();
     }
 
-    //退出时弹出的对话框-
+    //退出时弹出的对话框
     private void normalDialog() {
         // 1.创建出一个对话框的构造器
         AlertDialog.Builder builder = new AlertDialog.Builder(PersonDataActivity.this);
         // 设置标题
         builder.setTitle(R.string.adl);
         // 设置图标
-        builder.setIcon(R.mipmap.ic_launcher);
+        builder.setIcon(R.mipmap.img_01);
         // 设置内容
         builder.setMessage(R.string.adl_title);
         // 设置确定按钮
@@ -211,7 +217,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
               public void onClick(DialogInterface dialog, int which) {
                   //得到登录的token值
                   String token = (String) instance.getData(PersonDataActivity.this, "token", "");
-                  Log.d("zzz", "logout=" + token);
+                  Log.d("zzz", "persondata   将要用的的值" + token);
                   //调起退出
                   presenterLayer.setLogout(token);
               }

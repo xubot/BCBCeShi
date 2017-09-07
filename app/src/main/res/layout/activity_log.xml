@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<ScrollView
     android:layout_height="match_parent"
-    android:background="@mipmap/bg"
-    tools:context="com.example.bckj.projectbcb.Activity.LogActivity">
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@mipmap/bg">
+
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <include
         android:id="@+id/base"
@@ -98,3 +100,4 @@
             android:layout_alignEnd="@+id/log"/>
     </RelativeLayout>
 </RelativeLayout>
+</ScrollView>

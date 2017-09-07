@@ -15,7 +15,6 @@ public class TaxiActivity extends BaseActivity {
     private ImageView taxiim;
     private ImageView taxicall;
     private TextView cancel;
-
     @Override
     public void initView() {
         setContentView(R.layout.activity_taxi);
@@ -38,17 +37,7 @@ public class TaxiActivity extends BaseActivity {
         taxiim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                setContentView(R.layout.activity_taxi_view);
-                setToolBar("等待应答",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
-                //调起打电话的控件监听
-                ImageView taxi_view_call= (ImageView) findViewById(R.id.taxi_view_call);
-                taxi_view_call.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent tn = new Intent("android.intent.action.CALL", Uri.parse("tel:"+"18513433864"));
-                        startActivity(tn);
-                    }
-                });
+                startActivity(new Intent(TaxiActivity.this,TaxiImActivity.class));
             }
         });
         //调起打电话的控件监听
@@ -63,8 +52,8 @@ public class TaxiActivity extends BaseActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(TaxiActivity.this,MainActivity.class));
                 Toast.makeText(TaxiActivity.this, "已取消", Toast.LENGTH_SHORT).show();
-                finish();
             }
         });
     }
@@ -79,7 +68,6 @@ public class TaxiActivity extends BaseActivity {
             }
         });
     }
-
     @Override
     protected void load() {
 

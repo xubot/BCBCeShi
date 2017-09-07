@@ -19,12 +19,21 @@
             android:src="@mipmap/img_04"/>
         <TextView
             android:id="@+id/meunlog"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:text="@string/menu_log"
-            android:textSize="17dp"
+            android:textSize="17sp"
+            android:textColor="#333333"/>
+        <ImageView
+            android:id="@+id/meunlogin"
+            android:layout_width="0dp"
+            android:layout_height="25dp"
+            android:layout_weight="1"
+            android:layout_gravity="center"
+            android:src="@mipmap/next"
             android:textColor="#333333"/>
     </LinearLayout>
 
@@ -34,12 +43,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp"
-        android:layout_marginLeft="23dp"
+        android:layout_marginLeft="20dp"
         android:layout_below="@id/ll">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="18dp"
+            android:layout_height="18dp"
             android:layout_gravity="center"
             android:src="@mipmap/icon_15"/>
         <TextView
@@ -48,7 +57,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:textColor="#333333"
             android:text="@string/taxi_sens"/>
         <TextView

@@ -70,4 +70,14 @@ public class SharedUtils {
         }
         return null;
     }
+
+    public void clear(Context mContext){
+        SharedPreferences s=mContext.getSharedPreferences(FILE_NAME, mContext.MODE_PRIVATE);
+
+        SharedPreferences.Editor editor=s.edit();
+
+        editor.clear();
+        editor.commit();
+
+    }
 }

@@ -11,11 +11,10 @@
         android:id="@+id/webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
-    <ImageView
+    <pl.droidsonroids.gif.GifImageView
         android:id="@+id/show_back"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:background="#f2f2f2"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/loading"
+        android:background="#fff"/>
 </RelativeLayout>

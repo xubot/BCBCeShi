@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">拔草吧</string>
+    <string name="app_name">拔草吧 -0.11</string>
     <string name="yuyan">中文</string>
     <string name="menu_log">登录</string>
     <string name="menu_change">修改密码</string>
@@ -35,4 +35,23 @@
     <string name="adl_negative">取消</string>
     <string name="adl_msg">很高兴继续为您服务</string>
     <string name="jihuo">未激活</string>
+    <string name="yijihuo">已激活</string>
+    <string name="adl_twetitle">您还没有激活本应用，很抱歉不能为您提供下面的服务,请去邮箱里激活，如果没有收到请点击重新激活来获取邮件</string>
+    <string name="adl_tweMsg">请到邮箱激活后再来点击确认</string>
+    <string name="adl_tweMsg_t">你可以在激活后点击侧滑页的服务来激活,如果没有没有收到邮件可个人信息点击重新发送按钮</string>
+    <string name="adl_Reactivate">重新发送激活邮件</string>
+    <string name="person_user">用户名</string>
+    <string name="person_emil">邮箱</string>
+    <string name="person_phone">手机号</string>
+    <string name="person_logout">退出我的账号</string>
+    <string name="person_change">修改信息</string>
+    <string name="mainquit_again">再按一次退出程序</string>
+    <string name="mainjihuo">你已经激活无需重新激活</string>
+    <string name="panNull">你的有没填的,请查实</string>
+    <string name="panPwd">密码不能少于6位</string>
+    <string name="panTwePwd">两次密码不一致，请核实</string>
+    <string name="panEmail">请输入正确的邮箱格式</string>
+    <string name="panPhone">请输入正确的手机号</string>
+    <string name="panNewAndRenew">新密码不可以和旧密码相同</string>
+    <string name="edNull">输入不能为空</string>
 </resources>

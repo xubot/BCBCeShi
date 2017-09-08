@@ -54,6 +54,7 @@ import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiFourParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiTweParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.PathUrl;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
+import com.example.bckj.projectbcb.Utils.update.UpdateVersionController;
 import com.example.bckj.projectbcb.ViewLayer.MainView;
 import com.google.gson.Gson;
 
@@ -159,11 +160,13 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         }
     };
+    private UpdateVersionController controller;
 
     //初始化布局
     @Override
     public void initView() {
         setContentView(R.layout.activity_main);
+
         PathUrl.getIp(MainActivity.this);
         //得到刚进入就要用的控件方法
         initFindView();
@@ -197,6 +200,13 @@ public class MainActivity extends BaseActivity implements MainView{
             //有就直接登录
             presenterLayer.setMainLog(usre,pwd);
         }
+
+        //创建出更新版本的对象
+        if (null == controller) {
+            controller = UpdateVersionController.getInstance(this);
+        }
+        //版本更新的方法
+        controller.normalCheckUpdateInfo();
     }
 
     //得到刚进入就要用的控件方法

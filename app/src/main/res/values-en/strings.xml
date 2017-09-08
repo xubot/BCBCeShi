@@ -54,4 +54,15 @@
     <string name="panPhone">Please enter the correct cell phone number</string>
     <string name="panNewAndRenew">The new password cannot be the same as the old one</string>
     <string name="edNull">Input cannot be empty</string>
+
+
+
+    <string name="app_updater_download_later">Not renewed</string>
+    <string name="app_updater_download_now">Download and install</string>
+    <string name="app_updater_app_market">Application market</string>
+    <string name="app_updater_downloading">Downloading...</string>
+    <string name="app_updater_download_failed">Download failed:%d</string>
+    <string name="app_updater_dir_not_found">The download directory could not be found -%s</string>
+    <string name="app_updater_install">install</string>
+    <string name="app_updater_retry">retry</string>
 </resources>

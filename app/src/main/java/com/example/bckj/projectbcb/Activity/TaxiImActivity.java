@@ -20,7 +20,6 @@ import java.util.Date;
 import java.util.List;
 
 public class TaxiImActivity extends BaseActivity {
-    private ImageView taxi_view_im;
     private List<ListViewBean_1> lvb_1=new ArrayList<>();
     private ImageView taxi_view_call;
     private ListView taxi_lv;
@@ -63,7 +62,7 @@ public class TaxiImActivity extends BaseActivity {
                 String messgee = messge.getText().toString();
                 Log.d("messgee", "taxi  输入的信息："+messgee.length());
                 if(messgee.length()==0){
-                    Toast.makeText(TaxiImActivity.this,"输入不能为空",Toast.LENGTH_SHORT).show();    //弹出一个自动消失的提示框
+                    Toast.makeText(TaxiImActivity.this,"输入不能为空",Toast.LENGTH_SHORT).show();
                 }else {
                     Date date = new Date();
                     SimpleDateFormat format = new SimpleDateFormat("hh : mm");

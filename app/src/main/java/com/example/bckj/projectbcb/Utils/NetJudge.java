@@ -9,27 +9,26 @@ import android.net.NetworkInfo;
  */
 
 public class NetJudge {
-    public boolean isNetworkConnected(Context context) {
-        if (context != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo();
-            if (mNetworkInfo != null) {
-                return mNetworkInfo.isAvailable();
-            }
+    public static boolean isNet(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        //判断是否联网
+        if(networkInfo!=null&&networkInfo.getType() == connectivityManager.TYPE_MOBILE) {
+            return true;
+        } else {
+            return false;
         }
-        return false;
     }
-    public boolean isWifiConnected(Context context) {
-        if (context != null) {
-            ConnectivityManager mConnectivityManager = (ConnectivityManager) context
-                    .getSystemService(Context.CONNECTIVITY_SERVICE);
-            NetworkInfo mWiFiNetworkInfo = mConnectivityManager
-                    .getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-            if (mWiFiNetworkInfo != null) {
-                return mWiFiNetworkInfo.isAvailable();
-            }
+    public static boolean isWife(Context context) {
+        ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        //networkInfo.getType() == connectivityManager.TYPE_WIFI
+        //判断是否联网
+        if(networkInfo!=null&&networkInfo.getType() == connectivityManager.TYPE_WIFI) {
+            return true;
         }
-        return false;
+        else {
+            return false;
+        }
     }
 }

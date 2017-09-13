@@ -9,23 +9,23 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 /**
- * Created by Administrator on 2017/8/30.
+ * Created by Administrator on 2017/9/12.
  */
 
-public class DiDiFourParameter {
+public class LiaoTianUtils {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public Call okUitls(String startAddress,String endAddress,String slat,String slng,String elat,String elng){
+    public Call okUitls(String methodName, String msg, String did,String oid,String skey,String name){
         OkHttpClient client = new OkHttpClient();
         String json="{\n" +
                 "  \"androidId\": \"d81e4d43835c5dbb\",\n" +
                 "  \"pkgName\": \"com.sdu.didi.psnger\",\n" +
                 "  \"versionName\": \"5.1.4\",\n" +
-                "  \"methodName\": \"callTaxi\",\n" +
-                "  \"argsJSONStr\": \"{\\\"uId1\\\":\\\"\\\",\\\"uId2\\\":\\\"\\\",\\\"displayName1\\\":\\\""+startAddress+"\\\",\\\"displayName2\\\":\\\""+endAddress+"\\\",\\\"lat1\\\":"+slat+",\\\"lat2\\\":"+elat+",\\\"lng1\\\":"+slng+",\\\"lng2\\\":"+elng+"}\"\n" +
+                "  \"methodName\": \""+methodName+"\",\n" +
+                "  \"argsJSONStr\": \"{\\\"message\\\":\\\""+msg+"\\\",\\\"did\\\":\\\""+did+"\\\",\\\"orderId\\\":\\\""+oid+"\\\",\\\"sKey\\\":\\\""+skey+"\\\",\\\"dName\\\":\\\""+name+"\\\"}\"\n" +
                 "}";
-        Log.d("zzz333", json);
+
+        Log.d("zzz", "请求返回的请求体："+json);
         RequestBody body = RequestBody.create(JSON, json);
-        Log.d("zzz22", body+"");
         Request request = new Request.Builder()
                 .addHeader("Accept","*/*")
                 .url(new PathUrl().URLTASK)
@@ -37,14 +37,14 @@ public class DiDiFourParameter {
 
 
     public Call okUitls1(String taskId){
-        Log.d("zzz1", taskId);
+        Log.d("zzz", "请求下来的taskid:"+taskId);
         String path=new PathUrl().URLDATA+taskId+"";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .addHeader("Accept","*/*")
                 .url(path)
                 .build();
-        Log.d("zzz2",path);
+        Log.d("zzz","最终的url:"+path);
         Call call = client.newCall(request);
         return call;
     }

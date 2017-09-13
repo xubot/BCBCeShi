@@ -23,6 +23,7 @@
             android:layout_centerVertical="true"
             android:src="@mipmap/img_01"/>
         <TextView
+            android:id="@+id/taxi_im_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_toRightOf="@+id/taxi_view_img"

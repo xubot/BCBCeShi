@@ -16,6 +16,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.ActivityCompat;
@@ -42,9 +43,10 @@ import com.amap.api.location.AMapLocationClient;
 import com.amap.api.location.AMapLocationClientOption;
 import com.amap.api.location.AMapLocationListener;
 import com.example.bckj.projectbcb.Bean.DataNameBean;
+import com.example.bckj.projectbcb.Bean.DiDiBean.DaCheSuccessBeanData;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiTaskIdBean;
-import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiTaxiBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiZhuCeBean;
+import com.example.bckj.projectbcb.Bean.DiDiBean.H5BeanData;
 import com.example.bckj.projectbcb.Bean.LogBean;
 import com.example.bckj.projectbcb.Bean.MessageEvent;
 import com.example.bckj.projectbcb.Bean.SensitizelistBean;
@@ -97,7 +99,8 @@ public class MainActivity extends BaseActivity implements MainView{
     private String APP_CACAHE_DIRNAME="/data/data/package_name/database/webviewCache.db";
     private WebView myWebView;
     private double[] doubles;
-    private ImageView imgguide;
+    private UpdateVersionController controller;
+    private boolean flags=true;
 
     //登录handler对象
     Handler logHandler=new Handler(){
@@ -111,6 +114,24 @@ public class MainActivity extends BaseActivity implements MainView{
         }
     };
     //打车的handler对象
+    Handler taxiorderHandler=new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            //取出消息内容
+            Object what = msg.obj;
+            Log.d("zzz", "sensitize  --将要为订单状态传过去的oid是："+ what);
+            if(what!=null){
+                Log.d("zzz", "Main   将要为订单状态传过去的oid是：" + what);
+                //打车成功跳到等待应答页面
+                Intent intent = new Intent(MainActivity.this, TaxiActivity.class);
+                intent.putExtra("oid",what+"");
+                startActivity(intent);
+                Toast.makeText(MainActivity.this, "您有一笔未完成的叫车订单,将为您恢复。请等待", Toast.LENGTH_SHORT).show();
+            }
+        }
+    };
+
+    //打车的handler对象
     Handler taxiHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
@@ -120,21 +141,23 @@ public class MainActivity extends BaseActivity implements MainView{
             Toast.makeText(MainActivity.this, "打车的错误信息："+what, Toast.LENGTH_SHORT).show();
         }
     };
+
     //打车的handler对象
     Handler taxisuccessHandler=new Handler(){
         @Override
         public void handleMessage(Message msg) {
             //取出消息内容
-            int what = (int) msg.obj;
-            if(what==0){
+            Object what =msg.obj;
+            if(what!=null){
+                Log.d("zzz", "main 得到打车成功的oid:" +what);
                 Toast.makeText(MainActivity.this, "打车成功", Toast.LENGTH_SHORT).show();
-                //跳到等待应答页面
+                //打车成功跳到等待应答页面
                 Intent intent = new Intent(MainActivity.this, TaxiActivity.class);
+                intent.putExtra("oid",what+"");
                 startActivity(intent);
             }
         }
     };
-
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -160,27 +183,28 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         }
     };
-    private UpdateVersionController controller;
 
     //初始化布局
     @Override
     public void initView() {
         setContentView(R.layout.activity_main);
-
-        PathUrl.getIp(MainActivity.this);
         //得到刚进入就要用的控件方法
         initFindView();
+
+        PathUrl.getIp(MainActivity.this);
         //初始化EventBus
         EventBus.getDefault().register(this);
+
         //判断Android版本是否大于23
         if (Build.VERSION.SDK_INT >= 23) {
             //判断用户是否开启权限
             if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
                     || ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    || ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    || ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED
+                    ||ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_WIFI_STATE) != PackageManager.PERMISSION_GRANTED) {
 
                 ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
-                                Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CALL_PHONE},
+                                Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CALL_PHONE,Manifest.permission.ACCESS_WIFI_STATE},
                         REQUEST_CODE);
             } else {
                 location();
@@ -189,6 +213,7 @@ public class MainActivity extends BaseActivity implements MainView{
         }
         //开启定位
         location();
+
         //得到本地储存对象
         instance = SharedUtils.getInstance();
         //得到存储的标示
@@ -227,8 +252,6 @@ public class MainActivity extends BaseActivity implements MainView{
         taxi_meun_sens = (TextView) findViewById(R.id.taxi_meun_sens);
         //得到激活控件
         taxi_meun_jihuo = (TextView) findViewById(R.id.taxi_meun_jihuo);
-        //得到引导页图片
-        imgguide = (ImageView) findViewById(R.id.imgguide);
     }
 
     //得到登录成功时的唯一标示共供期判断（逻辑出现问题）
@@ -616,7 +639,7 @@ public class MainActivity extends BaseActivity implements MainView{
         }
         //叫起打车调到原生界面
         @JavascriptInterface
-        public void forTaxi() {
+        public void forTaxi(String json) {
             int mainLogCode = (int) instance.getData(MainActivity.this, "mainLogCode", 0);
             Log.d("zzz", "main  主页面从存储对象中得到的登录状态码：" + mainLogCode);
             if(mainLogCode==1){
@@ -625,14 +648,22 @@ public class MainActivity extends BaseActivity implements MainView{
                 String taxicode = (String) instance.getData(MainActivity.this, "taxicode", "");
                 Log.d("zzz", "main  主页面从存储对象中得到的服务激活的状态码：" + active+"--"+taxicode);
                 if(active.equals("1")){
-                    /*//得到起点位置
-                    String start = stringToUnicode("北京大学西门");
+                    Gson gson = new Gson();
+                    H5BeanData h5BeanData = gson.fromJson(json, H5BeanData.class);
+                    String endAddre = h5BeanData.getEndAddre();
+                    String endLat = h5BeanData.getEndLat();
+                    String endLng = h5BeanData.getEndLng();
+                    String startAddre = h5BeanData.getStartAddre();
+                    String startLat = h5BeanData.getStartLat();
+                    String startLng = h5BeanData.getStartLng();
+                    //得到起点位置
+                    String start = stringToUnicode(startAddre);
                     //得到终点位置
-                    String end = stringToUnicode("颐和园");
+                    String end = stringToUnicode(endAddre);
                     //调起滴滴打车功能
-                    callTaxiTaskIDRequest(new DiDiFourParameter(),"callTaxi","startAddress","endAddress",start,end);*/
+                    callTaxiTaskIDRequest(new DiDiFourParameter(),start,end,startLat,startLng,endLat,endLng);
                     //调起延迟跳转
-                    enterHome();
+                    //enterHome();
                 }else {
                     Toast.makeText(context, "你还没有激活", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(MainActivity.this,SensitizeActivity.class));
@@ -662,20 +693,20 @@ public class MainActivity extends BaseActivity implements MainView{
                 @Override
                 public void run() {
                     startActivity(intent);
-                    finish();
+                    //finish();
                 }
             };
             time.schedule(tk, 3000);
         }
         //调起得到打车 滴滴的TaskId的请求方法
-        private void callTaxiTaskIDRequest(final DiDiFourParameter diDiFourParameter,String modle, String startAddress, String endAddress, String sAddress, String eAddress) {
-            Call oneCall = diDiFourParameter.okUitls(modle, startAddress, endAddress,sAddress,eAddress);
+        private void callTaxiTaskIDRequest(final DiDiFourParameter diDiFourParameter,String startAddress,String endAddress,String slat,String slng,String elat,String elng) {
+            Call oneCall = diDiFourParameter.okUitls(startAddress, endAddress,slat,slng,elat,elng);
             //开始请求
             oneCall.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    backgroundThreadShortToast(context,"找不到网关地址,请重启设备");
                     Log.d("zzz", "请求过程中错误的信息：" + e.toString());
-                    Toast.makeText(context, "找不到网关地址", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -737,43 +768,43 @@ public class MainActivity extends BaseActivity implements MainView{
                             Log.d("zzz", "当前的状态值：" + status);
                             return;
                         }
-                    }
-                    Log.d("zzz", "当前的状态值：" + status);
-                    Log.d("zzz", "终于到了done:" + returnJSONStr);
 
-                    StringBuilder sb = new StringBuilder(returnJSONStr);
-                    //sb.delete(0,3);
-                    sb.delete(0,5);
-                    sb.deleteCharAt(sb.length()-1);
-                    for(int i = 0; i<sb.length() ; ){
-                        if(sb.charAt(i) == '"'){
-                            sb.deleteCharAt(i-1);
-                        } else {
-                            i++;
+                        Log.d("zzz", "当前的状态值：" + status);
+                        Log.d("zzz", "终于到了done:" + returnJSONStr);
+
+                        StringBuilder sb = new StringBuilder(returnJSONStr);
+
+                        Log.d("zzz", "main   打车要解析的字符串：" + sb.toString());
+                        DaCheSuccessBeanData daCheSuccessBeanData = gson.fromJson(sb.toString(), DaCheSuccessBeanData.class);
+                        String oid = daCheSuccessBeanData.getOid();
+                        int errno = daCheSuccessBeanData.getErrno();
+                        String errmsg = daCheSuccessBeanData.getErrmsg();
+                        //将打车成功的oid存到本地
+                        instance.saveData(MainActivity.this,"taxiOid",oid);
+                        Log.d("zzz", "main   解析处理的oid : " + oid   );
+                        Log.d("zzz", "main  解析出来的errno : " + errno  );
+                        Log.d("zzz", "main  解析出来的errmsg : " + errmsg  );
+
+                        if(errno==0){
+                            Message obtain = Message.obtain();
+                            obtain.obj=oid;
+                            taxisuccessHandler.sendMessage(obtain);
+                            Log.d("zzz", "main   成功的信息 : " + errno   );
+                        }else if(errno==101){
+                            String taxiaccount = (String) instance.getData(MainActivity.this, "taxiaccount", "");
+                            String taxipass = (String) instance.getData(MainActivity.this, "taxipass", "");
+                            Log.d("zzz","Main   如果登录退出将自动登录滴滴的账号信息："+taxiaccount+"=="+taxipass);
+                            logInTaskIDRequest(new DiDiTweParameter(),"login",taxiaccount,taxipass);
+                        }else if(errno==1018){
+                            String taxiOid = (String) instance.getData(MainActivity.this, "taxiOid", "");
+                            Message obtain = Message.obtain();
+                            obtain.obj=taxiOid;
+                            taxiorderHandler.sendMessage(obtain);
+                        }else {
+                            Message obtain = Message.obtain();
+                            obtain.obj=errmsg;
+                            taxiHandler.sendMessage(obtain);
                         }
-                    }
-                    Log.d("zzz", "main   打车要解析的字符串：" + sb.toString());
-                    DiDiTaxiBean diDiTaxiBean = gson.fromJson(sb.toString(), DiDiTaxiBean.class);
-
-                    int errno = diDiTaxiBean.getErrno();
-                    String errmsg = diDiTaxiBean.getErrmsg();
-                    Log.d("zzz", "main   解析处理的errmsg : " + errmsg   );
-                    Log.d("zzz", "main  解析出来的errno : " + errno  );
-
-                    if(errno==0){
-                        Message obtain = Message.obtain();
-                        obtain.obj=errno;
-                        taxisuccessHandler.sendMessage(obtain);
-                        Log.d("zzz", "main   成功的信息 : " + errno   );
-                    }else if(errno==101){
-                        String taxiaccount = (String) instance.getData(MainActivity.this, "taxiaccount", "");
-                        String taxipass = (String) instance.getData(MainActivity.this, "taxipass", "");
-                        Log.d("zzz","Main   如果登录退出将自动登录滴滴的账号信息："+taxiaccount+"=="+taxipass);
-                        logInTaskIDRequest(new DiDiTweParameter(),"login",taxiaccount,taxipass);
-                    }else {
-                        Message obtain = Message.obtain();
-                        obtain.obj=errmsg;
-                        taxiHandler.sendMessage(obtain);
                     }
                 }
             });
@@ -786,8 +817,8 @@ public class MainActivity extends BaseActivity implements MainView{
             oneCall.enqueue(new Callback() {
                 @Override
                 public void onFailure(Call call, IOException e) {
+                    backgroundThreadShortToast(context,"找不到网关地址,请重启设备");
                     Log.d("zzz", "请求过程中错误的信息：" + e.toString());
-                    Toast.makeText(context, "找不到网关地址", Toast.LENGTH_SHORT).show();
                 }
 
                 @Override
@@ -849,18 +880,33 @@ public class MainActivity extends BaseActivity implements MainView{
                             Log.d("zzz", "当前的状态值：" + status);
                             return;
                         }
-                    }
-                    Log.d("zzz", "当前的状态值：" + status);
-                    Log.d("zzz", "终于到了done:" + returnJSONStr);
-                    if(returnJSONStr.equals("success")){
-                        Message obtain = Message.obtain();
-                        obtain.obj=returnJSONStr;
-                        logHandler.sendMessage(obtain);
-                    }else {
-                        //错误的信息
+
+                        Log.d("zzz", "当前的状态值：" + status);
+                        Log.d("zzz", "终于到了done:" + returnJSONStr);
+                        if(returnJSONStr.equals("success")){
+                            Message obtain = Message.obtain();
+                            obtain.obj=returnJSONStr;
+                            logHandler.sendMessage(obtain);
+                        }else {
+                            //错误的信息
+                        }
                     }
                 }
             });
+        }
+
+
+        //解决在子线程中吐司的方法
+        public  void backgroundThreadShortToast(final Context context, final String msg) {
+            if (context != null && msg != null) {
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
 
         @JavascriptInterface
@@ -877,6 +923,7 @@ public class MainActivity extends BaseActivity implements MainView{
                     .setDuration(500)
                     .start();
             System.out.println("打印:"+"走了雷锋精神浪费");
+            flags=false;
 
         }
         @JavascriptInterface
@@ -893,6 +940,7 @@ public class MainActivity extends BaseActivity implements MainView{
                     .setDuration(500)
                     .start();
             System.out.println("打印:"+"ssss走了雷锋精神浪费");
+            flags=true;
         }
     }
 
@@ -941,7 +989,11 @@ public class MainActivity extends BaseActivity implements MainView{
     // 此按键监听的是返回键，能够返回到上一个网页（通过网页的hostlistery）
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
-            exit();
+            if(flags){
+                exit();
+            }else {
+                myWebView.loadUrl("javascript:hideTip()");
+            }
             return false;
         }
         return super.onKeyDown(keyCode, event);

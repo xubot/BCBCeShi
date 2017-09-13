@@ -25,6 +25,7 @@ public class PathUrl {
         ip = intToIp(ipAddress);
         Log.d("zzz","得到ip地址是："+ip);
     }
+
     //将得到的int类型的IP转换为String类型
     private static String intToIp(int i) {
         return (i & 0xFF ) + "." +
@@ -32,6 +33,6 @@ public class PathUrl {
                 ((i >> 16 ) & 0xFF) + "." +
                 ( i >> 24 & 0xFF) ;
     }
-    public String URLTASK="http://"+ip+":2805/tasks";
-    public String URLDATA="http://"+ip+":2805/tasks/";
+    public String URLTASK="http://192.168.1.108:2805/tasks";
+    public String URLDATA="http://192.168.1.108:2805/tasks/";
 }

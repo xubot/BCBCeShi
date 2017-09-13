@@ -30,7 +30,7 @@
             android:id="@+id/taxi_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="王师傅"
+            android:text=""
             android:layout_marginTop="25dp"
             android:layout_toRightOf="@+id/taxiimg"
             android:layout_toEndOf="@+id/taxiimg"
@@ -85,7 +85,7 @@
             android:layout_toEndOf="@+id/taxiimg"
             android:layout_marginLeft="30dp"
             android:layout_marginTop="7dp"
-            android:text="2500单"/>
+            android:text=""/>
         <TextView
             android:id="@+id/taxinumer"
             android:layout_below="@id/taxiimg"
@@ -94,7 +94,7 @@
             android:layout_marginTop="26dp"
             android:textSize="25dp"
             android:layout_centerHorizontal="true"
-            android:text="京BN1231"/>
+            android:text=""/>
 
         <ImageView
             android:id="@+id/taxicall"

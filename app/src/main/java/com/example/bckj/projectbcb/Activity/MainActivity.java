@@ -174,7 +174,8 @@ public class MainActivity extends BaseActivity implements MainView{
                     //纬度
                     double latitude = aMapLocation.getLatitude();
                     doubles = gaoDeToBaidu(longitude,latitude);
-                    setWebViewH5();
+                    Log.d("zzz", "实时定位的坐标值：" + doubles[0]+doubles[1]);
+                    //setWebViewH5();
                 }else {
                    //错误日志
                     int errorCode = aMapLocation.getErrorCode();
@@ -190,7 +191,9 @@ public class MainActivity extends BaseActivity implements MainView{
         setContentView(R.layout.activity_main);
         //得到刚进入就要用的控件方法
         initFindView();
-
+        //得到本地储存对象
+        instance = SharedUtils.getInstance();
+        //得到WiFi的ip值
         PathUrl.getIp(MainActivity.this);
         //初始化EventBus
         EventBus.getDefault().register(this);
@@ -213,9 +216,8 @@ public class MainActivity extends BaseActivity implements MainView{
         }
         //开启定位
         location();
+        setWebViewH5();
 
-        //得到本地储存对象
-        instance = SharedUtils.getInstance();
         //得到存储的标示
         String usre = (String) instance.getData(this, "usre", "");
         String pwd = (String) instance.getData(this, "pwd", "");
@@ -1032,10 +1034,10 @@ public class MainActivity extends BaseActivity implements MainView{
         mLocationClient.setLocationListener(mLocationListener);
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         //定时刷新
-        //mLocationOption.setInterval(5000);
+        mLocationOption.setInterval(5000);
         //获取一次定位结果：
         //该方法默认为false。
-        mLocationOption.setOnceLocation(true);
+        //mLocationOption.setOnceLocation(true);
         //给定位客户端对象设置定位参数
         mLocationClient.setLocationOption(mLocationOption);
         //启动定位

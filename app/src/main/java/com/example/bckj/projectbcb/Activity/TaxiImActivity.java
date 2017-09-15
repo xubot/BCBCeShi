@@ -17,8 +17,10 @@ import android.widget.Toast;
 import com.example.bckj.projectbcb.Adapter.Mylv1Adapter;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiTaskIdBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiZhuCeBean;
+import com.example.bckj.projectbcb.Bean.DiDiBean.FaXiaoXiBeanData;
 import com.example.bckj.projectbcb.Bean.ListViewBean_1;
 import com.example.bckj.projectbcb.R;
+import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiOneParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.LiaoTianUtils;
 import com.google.gson.Gson;
 
@@ -142,7 +144,6 @@ public class TaxiImActivity extends BaseActivity {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(TaxiImActivity.this,TaxiActivity.class));
                 finish();
             }
         });
@@ -221,10 +222,105 @@ public class TaxiImActivity extends BaseActivity {
                     }
                     Log.d("zzz", "聊天的状态当前的状态值：" + status);
                     Log.d("zzz", "聊天得到终于到了done:" + returnJSONStr);
+                    FaXiaoXiBeanData faXiaoXiBeanData = gson.fromJson(returnJSONStr, FaXiaoXiBeanData.class);
+                    FaXiaoXiBeanData.ResultBean result = faXiaoXiBeanData.getResult();
+                    int code = result.getCode();
+                    FaXiaoXiBeanData.ResultBean.ResponseBean response1 = result.getResponse();
+                    int errno = response1.getErrno();
+                    String errmsg = response1.getErrmsg();
+                    Log.d("zzz", "TaxiIm   得的发送信息的返回值:" + code + "---" + errno + "===" + errmsg);
+                    if(errno==0){
+                        backgroundThreadShortToast(TaxiImActivity.this,"发送成功");
+                        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                        getDBChatHistoryTaskIDRequest(diDiOneParameter,"getDBChatHistory","dId",did);
+                    }else {
+                        backgroundThreadShortToast(TaxiImActivity.this,errmsg);
+                    }
                 }
             }
         });
     }
+
+
+
+    //调起得到司机回复的信息   滴滴的TaskId的请求方法
+    private void getDBChatHistoryTaskIDRequest(final DiDiOneParameter diDiOneParameter, String modle, String parameter, String vaule) {
+        Call oneCall = diDiOneParameter.okUitls(modle,parameter,vaule);
+        //开始请求
+        oneCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                backgroundThreadShortToast(TaxiImActivity.this,"找不到网关地址,请重启设备");
+                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //得到gson对象
+                Gson gson = new Gson();
+                //得到bean类
+                DiDiTaskIdBean taskIdBean = gson.fromJson(data, DiDiTaskIdBean.class);
+                //得到bean类里面的值
+                String taskId = taskIdBean.getTaskId();
+                //调起请求数据的方法
+                getDBChatHistoryDataRequest(diDiOneParameter,taskId);
+            }
+        });
+    }
+    //调起得到司机回复的信息 滴滴的数据请求的方法
+    private void getDBChatHistoryDataRequest(final DiDiOneParameter diDiOneParameter, final String taskId) {
+        Call tweCall = diDiOneParameter.okUitls1(taskId);
+        tweCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
+                Toast.makeText(TaxiImActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onResponse(final Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //解析数据
+                Gson gson = new Gson();
+                //得到解析的bean
+                DiDiZhuCeBean dataBean = gson.fromJson(data, DiDiZhuCeBean.class);
+                //得到值
+                String status = dataBean.getStatus();
+                String returnJSONStr = dataBean.getReturnJSONStr();
+
+                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
+                if(status.equals("fail")){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(TaxiImActivity.this, "滴滴没有开启", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    while (!status.equals("done")) {
+                        try {
+                            sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //调起请求数据的方法
+                        getDBChatHistoryDataRequest(diDiOneParameter,taskId);
+                        Log.d("zzz", "当前的状态值：" + status);
+                        return;
+                    }
+                    Log.d("zzz", "聊天的状态当前的状态值：" + status);
+                    Log.d("zzz", "聊天得到终于到了done:" + returnJSONStr);
+
+                }
+            }
+        });
+    }
+
 
 
     //解决在子线程中吐司的方法

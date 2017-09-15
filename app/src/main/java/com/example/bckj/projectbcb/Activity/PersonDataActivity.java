@@ -181,9 +181,9 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             Toast.makeText(this,msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
             //退出成功后传值
             EventBus.getDefault().post(new MessageEvent(false));
-            //startActivity(new Intent(PersonDataActivity.this,MainActivity.class));
+            startActivity(new Intent(PersonDataActivity.this,MainActivity.class));
             instance.clear(PersonDataActivity.this);
-            finish();
+            //finish();
         }else {
             Toast.makeText(this,msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
         }

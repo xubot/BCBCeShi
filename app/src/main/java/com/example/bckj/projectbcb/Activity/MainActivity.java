@@ -248,8 +248,6 @@ public class MainActivity extends BaseActivity implements MainView{
         englsh = (TextView) findViewById(R.id.en);
         //得到登录按钮
         meunlog = (TextView) findViewById(R.id.meunlog);
-        //得到注册控件
-        meunlogin = (ImageView) findViewById(R.id.meunlogin);
         //得到服务控件
         taxi_meun_sens = (TextView) findViewById(R.id.taxi_meun_sens);
         //得到激活控件
@@ -374,13 +372,6 @@ public class MainActivity extends BaseActivity implements MainView{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this,LogActivity.class));
-            }
-        });
-        meunlogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //跳到注册页面
-                startActivity(new Intent(MainActivity.this,LoginActivity.class));
             }
         });
         //打车服务的点击监听

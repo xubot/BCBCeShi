@@ -19,21 +19,12 @@
             android:src="@mipmap/img_04"/>
         <TextView
             android:id="@+id/meunlog"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:layout_gravity="center"
             android:layout_marginLeft="15dp"
             android:text="@string/menu_log"
             android:textSize="17sp"
-            android:textColor="#333333"/>
-        <ImageView
-            android:id="@+id/meunlogin"
-            android:layout_width="0dp"
-            android:layout_height="25dp"
-            android:layout_weight="1"
-            android:layout_gravity="center"
-            android:src="@mipmap/next"
             android:textColor="#333333"/>
     </LinearLayout>
 

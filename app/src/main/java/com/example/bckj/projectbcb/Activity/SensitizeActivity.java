@@ -24,6 +24,8 @@ import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiCodeBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiTaskIdBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiZhuCeBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.HuoQuYanZhengMaBeanData;
+import com.example.bckj.projectbcb.Bean.DiDiBean.SheZhiMiMaBeanData;
+import com.example.bckj.projectbcb.Bean.DiDiBean.SheZhiMiMaSuccessBeanData;
 import com.example.bckj.projectbcb.Bean.DiDiBean.ZhuCeBeanData;
 import com.example.bckj.projectbcb.Bean.ReActiveUserBean;
 import com.example.bckj.projectbcb.Bean.SensitizeBean;
@@ -131,7 +133,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                 String token = (String) instance.getData(context, "token", "");
                 //滴滴登录成功后将滴滴信息存入到数据库
                 Log.d("zzz", "sensitize  得到要用的token值：" + token);
-                //presenterLayer.setSensitize("taxi",2,pwd,log_edit_phone,token);
+                presenterLayer.setSensitize("taxi",2,pwd,log_edit_phone,token);
                 finish();
             }else {
                 Toast.makeText(context, "登录失败：" + what, Toast.LENGTH_SHORT).show();
@@ -804,20 +806,23 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                     }
                     Log.d("zzz", "当前的状态值：" + status);
                     Log.d("zzz", "终于到了done:" + returnJSONStr);
-
-                    //得到最终要解析的值
-                    DiDiCodeBean diDiCodeBean = gson.fromJson(returnJSONStr, DiDiCodeBean.class);
-                    String errno = diDiCodeBean.getErrno();
-                    String error = diDiCodeBean.getError();
-                    Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
-                    if(errno.equals("0")){
-                        Message obtain = Message.obtain();
-                        obtain.obj=error;
-                        codeHandler.sendMessage(obtain);
+                    if(returnJSONStr.equals("none")){
+                        return;
                     }else {
-                        Message obtain = Message.obtain();
-                        obtain.obj=errno;
-                        codeHandler1.sendMessage(obtain);
+                        //得到最终要解析的值
+                        DiDiCodeBean diDiCodeBean = gson.fromJson(returnJSONStr, DiDiCodeBean.class);
+                        String errno = diDiCodeBean.getErrno();
+                        String error = diDiCodeBean.getError();
+                        Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
+                        if(errno.equals("0")){
+                            Message obtain = Message.obtain();
+                            obtain.obj=error;
+                            codeHandler.sendMessage(obtain);
+                        }else {
+                            Message obtain = Message.obtain();
+                            obtain.obj=errno;
+                            codeHandler1.sendMessage(obtain);
+                        }
                     }
                 }
             }
@@ -897,7 +902,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                     }
                     Log.d("zzz", "当前的状态值：" + status);
                     Log.d("zzz", "终于到了done:" + returnJSONStr);
-                    /* SheZhiMiMaBeanData sheZhiMiMaBeanData = gson.fromJson(returnJSONStr, SheZhiMiMaBeanData.class);
+                    SheZhiMiMaBeanData sheZhiMiMaBeanData = gson.fromJson(returnJSONStr, SheZhiMiMaBeanData.class);
                     String result = sheZhiMiMaBeanData.getResult();
                     Log.d("zzz", "终于到了result:" + result);
                     SheZhiMiMaSuccessBeanData sheZhiMiMaSuccessBeanData = gson.fromJson(result, SheZhiMiMaSuccessBeanData.class);
@@ -912,12 +917,11 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                         Message obtain = Message.obtain();
                         obtain.obj=error;
                         setLoginHandler.sendMessage(obtain);
-                    }*/
+                    }
                 }
             }
         });
     }
-
 
 
     //调起得到发送图形验证码 滴滴的TaskId的请求方法
@@ -1081,7 +1085,6 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         et_three = (EditText) view.findViewById(R.id.e_three);
         et_four = (EditText) view.findViewById(R.id.e_frou);
     }
-
 
 
 

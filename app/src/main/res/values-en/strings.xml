@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">ChinaOrEn</string>
     <string name="yuyan">En</string>
-    <string name="menu_log">Log In</string>
+    <string name="menu_log">Log In/Sign Up</string>
     <string name="menu_change">Change password</string>
     <string name="menu_logout">Exit</string>
     <string name="log_forget">Forget Password</string>

@@ -14,14 +14,14 @@ import okhttp3.RequestBody;
 
 public class QuXiaoDingDaiUtils {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public Call okUitls(String oid,String phone,int vaule){
+    public Call okUitls(String oid,String time){
         OkHttpClient client = new OkHttpClient();
         String json="{\n" +
                 "     \"androidId\": \"d81e4d43835c5dbb\",\n" +
                 "     \"pkgName\": \"com.sdu.didi.psnger\",\n" +
                 "     \"versionName\": \"5.1.4\",\n" +
-                "     \"methodName\": \"getCancelOrder\",\n" +
-                "     \"argsJSONStr\": \"{\\\"oid\\\":\\\""+oid+"\\\",\\\"phoneNo\\\":\\\""+phone+"\\\",\\\"pcomplaintType\\\":\\\""+vaule+"\\\"}\"\n" +
+                "     \"methodName\": \"cancelOrderForCallNow\",\n" +
+                "     \"argsJSONStr\": \"{\\\"orderId\\\":\\\""+oid+"\\\",\\\"driverLateTime\\\":\\\""+time+"\\\"}\"\n" +
                 " }";
 
 

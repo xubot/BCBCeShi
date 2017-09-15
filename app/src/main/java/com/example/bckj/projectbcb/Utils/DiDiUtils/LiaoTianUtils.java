@@ -21,7 +21,7 @@ public class LiaoTianUtils {
                 "  \"pkgName\": \"com.sdu.didi.psnger\",\n" +
                 "  \"versionName\": \"5.1.4\",\n" +
                 "  \"methodName\": \""+methodName+"\",\n" +
-                "  \"argsJSONStr\": \"{\\\"message\\\":\\\""+msg+"\\\",\\\"did\\\":\\\""+did+"\\\",\\\"orderId\\\":\\\""+oid+"\\\",\\\"sKey\\\":\\\""+skey+"\\\",\\\"dName\\\":\\\""+name+"\\\"}\"\n" +
+                "  \"argsJSONStr\": \"{\\\"message\\\":\\\""+msg+"\\\",\\\"dId\\\":\\\""+did+"\\\",\\\"orderId\\\":\\\""+oid+"\\\",\\\"sKey\\\":\\\""+skey+"\\\",\\\"dName\\\":\\\""+name+"\\\"}\"\n" +
                 "}";
 
         Log.d("zzz", "请求返回的请求体："+json);

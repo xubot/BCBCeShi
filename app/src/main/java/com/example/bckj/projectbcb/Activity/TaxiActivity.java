@@ -1,12 +1,11 @@
 package com.example.bckj.projectbcb.Activity;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,6 +23,8 @@ import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -36,7 +37,6 @@ public class TaxiActivity extends BaseActivity {
     private ImageView taxiim;
     private ImageView taxicall;
     private TextView cancel;
-    private AlertDialog alertDialog;
     private String oid;
     private TextView taxi_name;
     private ImageView star_one;
@@ -48,14 +48,15 @@ public class TaxiActivity extends BaseActivity {
     private TextView taxinumer;
     private SharedUtils instance;
 
-    //发送图片code  handler对象
+    //取消订单的  handler对象
     Handler getCancelOrderHandler=new Handler(){
         public void handleMessage(android.os.Message msg) {
             //取出消息内容
             Object what = msg.obj;
             Log.d("zzz1", (String) what);
             if(what.equals("success")) {
-                alertDialog.dismiss();
+                Toast.makeText(TaxiActivity.this, "你已成功取消行程", Toast.LENGTH_SHORT).show();
+                finish();
             }
         }
     };
@@ -124,7 +125,7 @@ public class TaxiActivity extends BaseActivity {
                 intent.putExtra("driverName",driverName);
                 intent.putExtra("driverOid",driverOid);
                 intent.putExtra("driverSkey",driverSkey);
-
+                //启动跳转
                 startActivity(intent);
             }
         });
@@ -143,35 +144,16 @@ public class TaxiActivity extends BaseActivity {
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String[] items = {"与司机协商一致取消","因我的原因，不用车了","投诉司机没来接我"};
-                AlertDialog.Builder alertBuilder = new AlertDialog.Builder(TaxiActivity.this);
-                alertBuilder.setTitle("取消的原因");
-                alertBuilder.setSingleChoiceItems(items,-1, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int index) {
-                        Log.d("zzz", "TaxiActivity   从打车成功页面得到的oidxxx:" + oid);
+                //得到取消订单的工具类
+                QuXiaoDingDaiUtils quXiaoDingDaiUtils = new QuXiaoDingDaiUtils();
+                //得到当前时间，在当前时间的基础上加5分钟
+                Date date = new Date();
+                Date afterDate= new Date(date.getTime()+300000);
+                SimpleDateFormat format = new SimpleDateFormat("hh : mm");
+                String format1 = format.format(afterDate);
+                //请求取消等待的方法
+                getCancelOrderTaskIDRequest(quXiaoDingDaiUtils,oid,format1);
 
-                        //得到手机司机手机号
-                        String driverPhone = (String) instance.getData(TaxiActivity.this, "driverPhone", "");
-                        Log.d("zzz", "TaxiActivity   得到取消的司机的手机号：" + driverPhone);
-                        //得到取消订单的工具类
-                        QuXiaoDingDaiUtils quXiaoDingDaiUtils = new QuXiaoDingDaiUtils();
-                        //请求取消等待的方法
-                        getCancelOrderTaskIDRequest(quXiaoDingDaiUtils,oid,driverPhone,index);
-                        Toast.makeText(TaxiActivity.this, items[index]+"=="+index, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface arg0, int arg1) {
-                        // TODO 业务逻辑代码
-                        // 关闭提示框
-                        alertDialog.dismiss();
-                    }
-                });
-                alertDialog = alertBuilder.create();
-                alertDialog.setCanceledOnTouchOutside(false);
-                alertDialog.show();
             }
         });
     }
@@ -238,7 +220,7 @@ public class TaxiActivity extends BaseActivity {
                 }else {
                     while (!status.equals("done")) {
                         try {
-                            sleep(2000);
+                            sleep(500);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -266,6 +248,7 @@ public class TaxiActivity extends BaseActivity {
                         String skey = imInfo.getSkey();
                         instance.saveData(TaxiActivity.this,"driverSkey",skey);
                         String uname = imInfo.getUname();
+                        String uid = imInfo.getUid();
                         DingDaiLieBiaoBeanData.TaxiDriverBean taxiDriver = dingDaiLieBiaoBeanData.getTaxiDriver();
                         if(taxiDriver!=null){
                             final String card = taxiDriver.getCard();
@@ -278,7 +261,7 @@ public class TaxiActivity extends BaseActivity {
 
                             //将后面需要的值存起来
                             instance.saveData(TaxiActivity.this,"driverPhone",phone);
-                            instance.saveData(TaxiActivity.this,"driverDid",did);
+                            instance.saveData(TaxiActivity.this,"driverDid",uid);
                             instance.saveData(TaxiActivity.this,"driverName",uname);
                             runOnUiThread(new Runnable() {
                                 @Override
@@ -318,8 +301,8 @@ public class TaxiActivity extends BaseActivity {
 
 
     //调起取消订单 滴滴的TaskId的请求方法
-    private void getCancelOrderTaskIDRequest(final QuXiaoDingDaiUtils quXiaoDingDaiUtils,String oid,String phoneNo,int vaule) {
-        Call oneCall = quXiaoDingDaiUtils.okUitls(oid,phoneNo,vaule);
+    private void getCancelOrderTaskIDRequest(final QuXiaoDingDaiUtils quXiaoDingDaiUtils,String oid,String time) {
+        Call oneCall = quXiaoDingDaiUtils.okUitls(oid,time);
         //开始请求
         oneCall.enqueue(new Callback() {
             @Override
@@ -389,9 +372,9 @@ public class TaxiActivity extends BaseActivity {
                     }
                     Log.d("zzz", "当前的状态值：" + status);
                     Log.d("zzz", "终于到了done:" + returnJSONStr);
-                    /*Message obtain = Message.obtain();
+                    Message obtain = Message.obtain();
                     obtain.obj=returnJSONStr;
-                    getCancelOrderHandler.sendMessage(obtain);*/
+                    getCancelOrderHandler.sendMessage(obtain);
                 }
             }
         });

@@ -8,6 +8,16 @@ public class ListViewBean_1 {
     private String title;
     private String time;
     private int img;
+    private long lTime;
+
+    public long getlTime() {
+        return lTime;
+    }
+
+    public void setlTime(long lTime) {
+        this.lTime = lTime;
+    }
+
 
     public int getImg() {
         return img;
@@ -31,11 +41,5 @@ public class ListViewBean_1 {
 
     public void setTime(String time) {
         this.time = time;
-    }
-
-    public ListViewBean_1(String title, String time, int img) {
-        this.title = title;
-        this.time = time;
-        this.img = img;
     }
 }

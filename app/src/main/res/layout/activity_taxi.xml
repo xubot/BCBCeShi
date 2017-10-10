@@ -101,18 +101,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@mipmap/icon_04"
+            android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
-            android:layout_alignLeft="@+id/taxiimg"
-            android:layout_alignStart="@+id/taxiimg"
             android:layout_marginBottom="14dp"/>
-        <ImageView
-            android:id="@+id/taxiim"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@mipmap/icon_06"
-            android:layout_alignTop="@+id/taxicall"
-            android:layout_alignLeft="@+id/bill"
-            android:layout_alignStart="@+id/bill"/>
     </RelativeLayout>
     <TextView
         android:id="@+id/cancel"

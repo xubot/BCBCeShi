@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,6 +79,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(PersonDataActivity.this,ModifyDataActivity.class));
+                finish();
             }
         });
         ////重新获取的监听事件
@@ -101,6 +103,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(PersonDataActivity.this,ModifyActivity.class));
+                finish();
             }
         });
     }
@@ -120,6 +123,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(PersonDataActivity.this,MainActivity.class));
                 finish();
             }
         });
@@ -142,7 +146,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             public void run() {
                 details_name.setText(username);
                 details_emal.setText(email);
-                if(mobile==null){
+                if(mobile.isEmpty()&&mobile.length()==0){
                     details_phone.setText("未填写");
                 }else {
                     details_phone.setText(mobile);
@@ -183,7 +187,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             EventBus.getDefault().post(new MessageEvent(false));
             startActivity(new Intent(PersonDataActivity.this,MainActivity.class));
             instance.clear(PersonDataActivity.this);
-            //finish();
+            finish();
         }else {
             Toast.makeText(this,msg+"\n"+msg_en, Toast.LENGTH_SHORT).show();
         }
@@ -232,5 +236,15 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         });
         // 创建出对话框 并显示出来
         builder.create().show();
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            System.out.println("按下了back键   onKeyDown()");
+            startActivity(new Intent(PersonDataActivity.this,MainActivity.class));
+            finish();
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
 }

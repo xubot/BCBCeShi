@@ -78,7 +78,8 @@ public class ModifyDataActivity extends BaseActivity implements MadifyDataView {
         Log.d("zzz", "ModifyData   修改信息情况：" + msg + "\n" + code + "\n" + msg_en);
         if(code==1){
             Toast.makeText(this, "修改信息成功", Toast.LENGTH_SHORT).show();
-            startActivity(new Intent(ModifyDataActivity.this,MainActivity.class));
+            startActivity(new Intent(ModifyDataActivity.this,PersonDataActivity.class));
+            finish();
         }else {
             Toast.makeText(this,msg+"/n"+msg_en, Toast.LENGTH_SHORT).show();
         }

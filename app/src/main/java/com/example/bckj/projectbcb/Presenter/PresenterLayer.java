@@ -281,8 +281,12 @@ public class PresenterLayer {
                     @Override
                     public void onNext(DataNameBean dataNameBean) {
                         Log.d("zzz", "maindata  main得到信息："+dataNameBean.getMsg());
-                        mainView.getDataName(dataNameBean);
-                        Log.d("zzz", "maindata  成功");
+                        if(dataNameBean.getMsg().equals("更新登录状态失败")){
+                            return;
+                        }else {
+                            mainView.getDataName(dataNameBean);
+                            Log.d("zzz", "maindata  成功");
+                        }
                     }
 
                     @Override
@@ -345,8 +349,12 @@ public class PresenterLayer {
                     @Override
                     public void onNext(SensitizelistBean sensitizelistBean) {
                         Log.d("zzz2", "sensitzelist  激活列表的信息："+sensitizelistBean.getMsg());
-                        mainView.getsensitizelistBean(sensitizelistBean);
-                        Log.d("zzz2", "sensitzelist  成功");
+                        if(sensitizelistBean.getMsg().equals("更新登录状态失败")){
+                            return;
+                        }else {
+                            mainView.getsensitizelistBean(sensitizelistBean);
+                            Log.d("zzz2", "sensitzelist  成功");
+                        }
                     }
 
                     @Override

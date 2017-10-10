@@ -3,6 +3,7 @@ package com.example.bckj.projectbcb.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -99,6 +100,7 @@ public class LogActivity extends BaseActivity implements LogView{
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(LogActivity.this,MainActivity.class));
                 finish();
             }
         });
@@ -133,10 +135,22 @@ public class LogActivity extends BaseActivity implements LogView{
             Log.d("zzz","登录状态：\n"+ code + "\n" + msg + "\n" + msg_en+"\n"+token);
             //发送EventBus标示
             EventBus.getDefault().post(new MessageEvent(true));
+            startActivity(new Intent(LogActivity.this,MainActivity.class));
             finish();
         }else {
             Toast.makeText(this, msg + "\n" + msg_en, Toast.LENGTH_SHORT).show();
             Log.d("zzz", "登录状态：\n"+code + "\n" + msg + "\n" + msg_en);
+        }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            System.out.println("按下了back键   onKeyDown()");
+            startActivity(new Intent(LogActivity.this,MainActivity.class));
+            finish();
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
         }
     }
 }

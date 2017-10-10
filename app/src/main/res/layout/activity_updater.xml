@@ -18,6 +18,8 @@
         android:id="@+id/content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
         android:textColor="@color/colorAccent"
         android:layout_below="@+id/title" />
 
@@ -29,6 +31,8 @@
         android:layout_alignParentRight="true"
         android:layout_below="@id/content"
         android:textColor="@color/colorAccent"
+        android:layout_marginLeft="15dp"
+        android:background="@null"
         android:theme="@style/Theme.AppCompat.Light"
         android:text="@string/app_updater_download_now" />
 
@@ -41,6 +45,7 @@
         android:layout_toLeftOf="@+id/ok"
         android:layout_toStartOf="@+id/ok"
         android:textColor="@color/colorAccent"
+        android:background="@null"
         android:theme="@style/Theme.AppCompat.Light"
         android:text="@string/app_updater_download_later" />
 

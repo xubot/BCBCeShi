@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/lv_twe_img"
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:text="ok"
         android:background="@drawable/sap"
-        android:layout_marginTop="43dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="33dp"
         android:layout_marginEnd="33dp"
         android:layout_alignParentTop="true"
@@ -36,7 +36,7 @@
         android:textSize="13sp"
         android:textColor="#fff"
         android:layout_below="@+id/lv_twe_img"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_alignRight="@+id/lv_twe_xinxi"
         android:layout_alignEnd="@+id/lv_twe_xinxi"/>
 </RelativeLayout>

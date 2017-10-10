@@ -1,28 +1,19 @@
 package com.example.bckj.projectbcb.Bean.DiDiBean;
 
-import java.util.List;
-
 /**
  * Created by Administrator on 2017/9/15.
  */
 
 public class FaXiaoXiBeanData {
+    private  String errorCode;
+    private  String errorMessage;
+    private  Result result;
 
-    /**
-     * errorCode : 0
-     * errorMessage : Success
-     * result : {"code":0,"response":{"body":{"mids":[13],"time":1505367342003},"dataversion":"1.1","errmsg":"","errno":0,"product":257}}
-     */
-
-    private int errorCode;
-    private String errorMessage;
-    private ResultBean result;
-
-    public int getErrorCode() {
+    public String getErrorCode() {
         return errorCode;
     }
 
-    public void setErrorCode(int errorCode) {
+    public void setErrorCode(String errorCode) {
         this.errorCode = errorCode;
     }
 
@@ -34,119 +25,32 @@ public class FaXiaoXiBeanData {
         this.errorMessage = errorMessage;
     }
 
-    public ResultBean getResult() {
+    public Result getResult() {
         return result;
     }
 
-    public void setResult(ResultBean result) {
+    public void setResult(Result result) {
         this.result = result;
     }
 
-    public static class ResultBean {
-        /**
-         * code : 0
-         * response : {"body":{"mids":[13],"time":1505367342003},"dataversion":"1.1","errmsg":"","errno":0,"product":257}
-         */
+    public class Result{
+        private  String code;
+        private  String response;
 
-        private int code;
-        private ResponseBean response;
-
-        public int getCode() {
+        public String getCode() {
             return code;
         }
 
-        public void setCode(int code) {
+        public void setCode(String code) {
             this.code = code;
         }
 
-        public ResponseBean getResponse() {
+        public String getResponse() {
             return response;
         }
 
-        public void setResponse(ResponseBean response) {
+        public void setResponse(String response) {
             this.response = response;
-        }
-
-        public static class ResponseBean {
-            /**
-             * body : {"mids":[13],"time":1505367342003}
-             * dataversion : 1.1
-             * errmsg :
-             * errno : 0
-             * product : 257
-             */
-
-            private BodyBean body;
-            private String dataversion;
-            private String errmsg;
-            private int errno;
-            private int product;
-
-            public BodyBean getBody() {
-                return body;
-            }
-
-            public void setBody(BodyBean body) {
-                this.body = body;
-            }
-
-            public String getDataversion() {
-                return dataversion;
-            }
-
-            public void setDataversion(String dataversion) {
-                this.dataversion = dataversion;
-            }
-
-            public String getErrmsg() {
-                return errmsg;
-            }
-
-            public void setErrmsg(String errmsg) {
-                this.errmsg = errmsg;
-            }
-
-            public int getErrno() {
-                return errno;
-            }
-
-            public void setErrno(int errno) {
-                this.errno = errno;
-            }
-
-            public int getProduct() {
-                return product;
-            }
-
-            public void setProduct(int product) {
-                this.product = product;
-            }
-
-            public static class BodyBean {
-                /**
-                 * mids : [13]
-                 * time : 1505367342003
-                 */
-
-                private long time;
-                private List<Integer> mids;
-
-                public long getTime() {
-                    return time;
-                }
-
-                public void setTime(long time) {
-                    this.time = time;
-                }
-
-                public List<Integer> getMids() {
-                    return mids;
-                }
-
-                public void setMids(List<Integer> mids) {
-                    this.mids = mids;
-                }
-            }
         }
     }
 }

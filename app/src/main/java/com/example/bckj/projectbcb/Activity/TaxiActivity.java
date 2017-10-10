@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -25,6 +24,8 @@ import com.google.gson.Gson;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -33,59 +34,19 @@ import okhttp3.Response;
 import static java.lang.Thread.sleep;
 
 public class TaxiActivity extends BaseActivity {
+    private SharedUtils instance = SharedUtils.getInstance();
+    private Timer timer=new Timer();
 
-    private ImageView taxiim;
-    private ImageView taxicall;
-    private TextView cancel;
-    private String oid;
-    private TextView taxi_name;
-    private ImageView star_one;
-    private ImageView star_twe;
-    private ImageView star_three;
-    private ImageView star_frou;
-    private TextView bill;
-    private ImageView star_five;
-    private TextView taxinumer;
-    private SharedUtils instance;
+    private int driverOrderCount,status1, driverLeve;
+    private TextView cancel, taxi_name, bill, taxinumer;
+    private String driverDid,driverPhone,driverName, driverOid, driverSkey,driverCard;
+    private ImageView taxiim, taxicall, star_one, star_twe,star_three, star_frou,star_five;
 
-    //取消订单的  handler对象
-    Handler getCancelOrderHandler=new Handler(){
-        public void handleMessage(android.os.Message msg) {
-            //取出消息内容
-            Object what = msg.obj;
-            Log.d("zzz1", (String) what);
-            if(what.equals("success")) {
-                Toast.makeText(TaxiActivity.this, "你已成功取消行程", Toast.LENGTH_SHORT).show();
-                finish();
-            }
-        }
-    };
 
     @Override
     public void initView() {
         setContentView(R.layout.activity_taxi);
-        //得到存储信息的工具类
-        instance = SharedUtils.getInstance();
-        Intent intent = getIntent();
-        oid = intent.getStringExtra("oid");
-        Log.d("zzz", "从打车成功页面得到的oid:" + oid);
 
-        //得到一个参数的对象
-        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
-        //查看司机信息
-        getTaxiOrderTaskIDRequest(diDiOneParameter,"getTaxiOrder","orderId",oid);
-
-        setToolBar("等待应答",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
-    }
-
-    @Override
-    protected void init() {
-        //得到聊天的控件
-        taxiim = (ImageView) findViewById(R.id.taxiim);
-        //打电话控件
-        taxicall = (ImageView) findViewById(R.id.taxicall);
-        //取消控件
-        cancel = (TextView) findViewById(R.id.cancel);
         //司机的信息的控件
         taxi_name = (TextView) findViewById(R.id.taxi_name);
         star_one = (ImageView) findViewById(R.id.star_one);
@@ -95,40 +56,101 @@ public class TaxiActivity extends BaseActivity {
         star_five = (ImageView) findViewById(R.id.star_five);
         bill = (TextView) findViewById(R.id.bill);
         taxinumer = (TextView) findViewById(R.id.taxinumer);
+
+
+        //得到手机司机did
+        driverDid = (String) instance.getData(TaxiActivity.this, "driverDid", "");
+        Log.d("zzz", "TaxiActivity    得到的司机的Did：" + driverDid);
+        //得到手机司机手机号
+        driverPhone = (String) instance.getData(TaxiActivity.this, "driverPhone", "");
+        Log.d("zzz", "TaxiActivity   得到的司机的手机号：" + driverPhone);
+        //得到手机司机名字
+        driverName = (String) instance.getData(TaxiActivity.this, "driverName", "");
+        Log.d("zzz", "TaxiActivity   得到的司机的手机号：" + driverName);
+        //得到司机的oid
+        driverOid = (String) instance.getData(TaxiActivity.this, "driveroid", "");
+        Log.d("zzz", "TaxiActivity   得到的司机的oid：" + driverOid);
+        //得到司机的Skey
+        driverSkey = (String) instance.getData(TaxiActivity.this, "driverSkey", "");
+        Log.d("zzz", "TaxiActivity   得到的司机的Skey：" + driverSkey);
+        //得到司机的车牌
+        driverCard = (String) instance.getData(TaxiActivity.this, "driverCard", "");
+        Log.d("zzz", "TaxiActivity   得到的司机的driverCard：" + driverCard);
+        //得到司机的评分
+        driverLeve = (int) instance.getData(TaxiActivity.this, "driverLevel", 0);
+        Log.d("zzz", "TaxiActivity   得到的司机的driverLevel：" + this.driverLeve);
+        //得到司机的接单数
+        driverOrderCount = (int) instance.getData(TaxiActivity.this, "driverOrderCount", 0);
+        Log.d("zzz", "TaxiActivity   得到的司机的driverOrderCount：" + driverOrderCount);
+        status1 = (int) instance.getData(TaxiActivity.this, "status1",0);
+        Log.d("zzz", "TaxiActivity   得到的司机的status1：" + status1);
+
+        if(status1==4){
+            //给控件赋值
+            taxi_name.setText(driverName);
+            taxinumer.setText(driverCard);
+            bill.setText(driverOrderCount+"单");
+            if(this.driverLeve ==1){
+                star_one.setImageResource(R.mipmap.icon_08);
+            }else if(this.driverLeve ==2){
+                star_twe.setImageResource(R.mipmap.icon_08);
+                star_one.setImageResource(R.mipmap.icon_08);
+            }else if(this.driverLeve ==3){
+                star_twe.setImageResource(R.mipmap.icon_08);
+                star_one.setImageResource(R.mipmap.icon_08);
+                star_three.setImageResource(R.mipmap.icon_08);
+            }else if(this.driverLeve ==4){
+                star_twe.setImageResource(R.mipmap.icon_08);
+                star_one.setImageResource(R.mipmap.icon_08);
+                star_three.setImageResource(R.mipmap.icon_08);
+                star_frou.setImageResource(R.mipmap.icon_08);
+            }else {
+                star_twe.setImageResource(R.mipmap.icon_08);
+                star_one.setImageResource(R.mipmap.icon_08);
+                star_three.setImageResource(R.mipmap.icon_08);
+                star_frou.setImageResource(R.mipmap.icon_08);
+                star_five.setImageResource(R.mipmap.icon_08);
+            }
+        }
+        //得到一个参数的对象
+        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+        //查看司机信息
+        getTaxiOrderTaskIDRequest(diDiOneParameter,"getTaxiOrder","orderId",driverOid);
+
+        setToolBar("等待应答",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+    }
+
+    @Override
+    protected void init() {
+        //得到聊天的控件
+        //taxiim = (ImageView) findViewById(R.id.taxiim);
+        //打电话控件
+        taxicall = (ImageView) findViewById(R.id.taxicall);
+        //取消控件
+        cancel = (TextView) findViewById(R.id.cancel);
     }
     //控件的点击事件
     @Override
     public void cheked(){
-        //调起聊天按钮监听
+       /* //调起聊天按钮监听
         taxiim.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //得到手机司机did
-                String driverDid = (String) instance.getData(TaxiActivity.this, "driverDid", "");
-                Log.d("zzz", "TaxiActivity    得到的司机的Did：" + driverDid);
-                //得到手机司机手机号
-                String driverPhone = (String) instance.getData(TaxiActivity.this, "driverPhone", "");
-                Log.d("zzz", "TaxiActivity   得到的司机的手机号：" + driverPhone);
-                //得到手机司机名字
-                String driverName = (String) instance.getData(TaxiActivity.this, "driverName", "");
-                Log.d("zzz", "TaxiActivity   得到的司机的手机号：" + driverName);
-
-                String driverOid = (String) instance.getData(TaxiActivity.this, "driverOid", "");
-                Log.d("zzz", "TaxiActivity   得到的司机的oid：" + driverOid);
-
-                String driverSkey = (String) instance.getData(TaxiActivity.this, "driverSkey", "");
-                Log.d("zzz", "TaxiActivity   得到的司机的Skey：" + driverSkey);
-
                 Intent intent = new Intent(TaxiActivity.this, TaxiImActivity.class);
-                intent.putExtra("did",driverDid);
-                intent.putExtra("driverPhone",driverPhone);
-                intent.putExtra("driverName",driverName);
-                intent.putExtra("driverOid",driverOid);
-                intent.putExtra("driverSkey",driverSkey);
-                //启动跳转
-                startActivity(intent);
+                if(driverName.isEmpty()&&driverPhone.isEmpty()&&driverDid.isEmpty()&&driverSkey.isEmpty()&&driverOid.isEmpty()){
+                    return;
+                }else {
+                    intent.putExtra("did",driverDid);
+                    intent.putExtra("driverPhone",driverPhone);
+                    intent.putExtra("driverName",driverName);
+                    intent.putExtra("driverOid",driverOid);
+                    intent.putExtra("driverSkey",driverSkey);
+                    //启动跳转
+                    startActivity(intent);
+                }
+                //Toast.makeText(TaxiActivity.this, "正在更新中。。。。。。", Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
         //调起打电话的控件监听
         taxicall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -149,11 +171,21 @@ public class TaxiActivity extends BaseActivity {
                 //得到当前时间，在当前时间的基础上加5分钟
                 Date date = new Date();
                 Date afterDate= new Date(date.getTime()+300000);
-                SimpleDateFormat format = new SimpleDateFormat("hh : mm");
+                SimpleDateFormat format = new SimpleDateFormat("HH : mm");
                 String format1 = format.format(afterDate);
+                Log.d("zzz", "得到当前的24进制时间：" + format1);
                 //请求取消等待的方法
-                getCancelOrderTaskIDRequest(quXiaoDingDaiUtils,oid,format1);
+                getCancelOrderTaskIDRequest(quXiaoDingDaiUtils,driverOid,format1);
+            }
+        });
+    }
 
+    @Override
+    public void onClike(LinearLayout img1) {
+        img1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
             }
         });
     }
@@ -166,7 +198,7 @@ public class TaxiActivity extends BaseActivity {
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(TaxiActivity.this,"找不到网关地址,请重启设备");
+                threadToast(TaxiActivity.this,"找不到网关地址,请重启设备");
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -193,7 +225,7 @@ public class TaxiActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("zzz", "TaxiActivity  请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(TaxiActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                threadToast(TaxiActivity.this,"连接超时，请重试");
             }
 
             @Override
@@ -220,7 +252,7 @@ public class TaxiActivity extends BaseActivity {
                 }else {
                     while (!status.equals("done")) {
                         try {
-                            sleep(500);
+                            sleep(1000);
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
@@ -232,66 +264,44 @@ public class TaxiActivity extends BaseActivity {
 
                     Log.d("zzz", "TaxiActivity   当前的状态值：" + status);
                     Log.d("zzz", "TaxiActivity   终于到了done:" + returnJSONStr);
-                    //得到司机的数据
-                    DingDaiLieBiaoBeanData dingDaiLieBiaoBeanData = gson.fromJson(returnJSONStr, DingDaiLieBiaoBeanData.class);
-                    int status1 = dingDaiLieBiaoBeanData.getStatus();
-                    String oid = dingDaiLieBiaoBeanData.getOid();
 
-                    instance.saveData(TaxiActivity.this,"driverOid",oid);
-
-                    if(status1==5){
-                        Log.d("zzzstatus1", "TaxiActivity   得到订单的状态码："+status1);
+                    if(returnJSONStr.equals("Listener")){
                         //调起请求数据的方法
-                        getTaxiOrderTaskIDRequest(diDiOneParameter,"getTaxiOrder","orderId", TaxiActivity.this.oid);
-                    }else if(status1==4){
-                        DingDaiLieBiaoBeanData.ImInfoBean imInfo = dingDaiLieBiaoBeanData.getImInfo();
-                        String skey = imInfo.getSkey();
-                        instance.saveData(TaxiActivity.this,"driverSkey",skey);
-                        String uname = imInfo.getUname();
-                        String uid = imInfo.getUid();
-                        DingDaiLieBiaoBeanData.TaxiDriverBean taxiDriver = dingDaiLieBiaoBeanData.getTaxiDriver();
-                        if(taxiDriver!=null){
-                            final String card = taxiDriver.getCard();
-                            final String name = taxiDriver.getName();
-                            String phone = taxiDriver.getPhone();
-                            final int level = taxiDriver.getLevel();
-                            final int orderCount = taxiDriver.getOrderCount();
-                            String did = taxiDriver.getDid();
-                            Log.d("zzz", "TaxiActivity   得到的司机信息时"+card+"--"+uname+"=="+phone+"==="+level+"---"+orderCount+"--"+did);
-
-                            //将后面需要的值存起来
-                            instance.saveData(TaxiActivity.this,"driverPhone",phone);
-                            instance.saveData(TaxiActivity.this,"driverDid",uid);
-                            instance.saveData(TaxiActivity.this,"driverName",uname);
-                            runOnUiThread(new Runnable() {
+                        getTaxiOrderTaskIDRequest(diDiOneParameter,"getTaxiOrder","orderId", driverOid);
+                        threadToast(TaxiActivity.this,"异常");
+                    }else {
+                        //得到司机的数据
+                        DingDaiLieBiaoBeanData dingDaiLieBiaoBeanData = gson.fromJson(returnJSONStr, DingDaiLieBiaoBeanData.class);
+                        int status1 = dingDaiLieBiaoBeanData.getStatus();
+                        if(status1==2){
+                            timer.cancel();
+                            threadToast(TaxiActivity.this,"订单已关闭");
+                            finish();
+                        }else if(status1==3){
+                            timer.cancel();
+                            threadToast(TaxiActivity.this,"行程已完成");
+                            finish();
+                        }else if(status1==4){
+                            timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
-                                    taxi_name.setText(name);
-                                    taxinumer.setText(card);
-                                    bill.setText(orderCount+"单");
-                                    if(level==1){
-                                        star_one.setImageResource(R.mipmap.icon_08);
-                                    }else if(level==2){
-                                        star_twe.setImageResource(R.mipmap.icon_08);
-                                        star_one.setImageResource(R.mipmap.icon_08);
-                                    }else if(level==3){
-                                        star_twe.setImageResource(R.mipmap.icon_08);
-                                        star_one.setImageResource(R.mipmap.icon_08);
-                                        star_three.setImageResource(R.mipmap.icon_08);
-                                    }else if(level==4){
-                                        star_twe.setImageResource(R.mipmap.icon_08);
-                                        star_one.setImageResource(R.mipmap.icon_08);
-                                        star_three.setImageResource(R.mipmap.icon_08);
-                                        star_frou.setImageResource(R.mipmap.icon_08);
-                                    }else {
-                                        star_twe.setImageResource(R.mipmap.icon_08);
-                                        star_one.setImageResource(R.mipmap.icon_08);
-                                        star_three.setImageResource(R.mipmap.icon_08);
-                                        star_frou.setImageResource(R.mipmap.icon_08);
-                                        star_five.setImageResource(R.mipmap.icon_08);
-                                    }
+                                    //得到一个参数的对象
+                                    DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                                    //查看司机信息
+                                    getTaxiOrderTaskIDRequest(diDiOneParameter,"getTaxiOrder","orderId",driverOid);
                                 }
-                            });
+                            },5000);
+                        }else {
+                            timer.cancel();
+                            timer.schedule(new TimerTask() {
+                                @Override
+                                public void run() {
+                                    //得到一个参数的对象
+                                    DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                                    //查看司机信息
+                                    getTaxiOrderTaskIDRequest(diDiOneParameter,"getTaxiOrder","orderId",driverOid);
+                                }
+                            },5000);
                         }
                     }
                 }
@@ -307,7 +317,7 @@ public class TaxiActivity extends BaseActivity {
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(TaxiActivity.this,"找不到网关地址,请重启设备");
+                threadToast(TaxiActivity.this,"找不到网关地址,请重启设备");
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -334,7 +344,7 @@ public class TaxiActivity extends BaseActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(TaxiActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                threadToast(TaxiActivity.this,"连接超时，请重试");
             }
 
             @Override
@@ -372,16 +382,36 @@ public class TaxiActivity extends BaseActivity {
                     }
                     Log.d("zzz", "当前的状态值：" + status);
                     Log.d("zzz", "终于到了done:" + returnJSONStr);
-                    Message obtain = Message.obtain();
-                    obtain.obj=returnJSONStr;
-                    getCancelOrderHandler.sendMessage(obtain);
+                    if(returnJSONStr.equals("success")){
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                Toast.makeText(TaxiActivity.this, "你已成功取消行程", Toast.LENGTH_SHORT).show();
+                                timer.cancel();
+                                finish();
+                            }
+                        });
+                    }else {
+                        //得到取消订单的工具类
+                        QuXiaoDingDaiUtils quXiaoDingDaiUtils = new QuXiaoDingDaiUtils();
+                        //得到当前时间，在当前时间的基础上加5分钟
+                        Date date = new Date();
+                        Date afterDate= new Date(date.getTime()+300000);
+                        SimpleDateFormat format = new SimpleDateFormat("HH : mm");
+                        String format1 = format.format(afterDate);
+                        Log.d("zzz", "得到当前的24进制时间：" + format1);
+                        //请求取消等待的方法
+                        getCancelOrderTaskIDRequest(quXiaoDingDaiUtils,driverOid,format1);
+                        //threadToast(TaxiActivity.this,"请重新点击取消");
+                    }
                 }
             }
         });
     }
 
     //解决在子线程中吐司的方法
-    public  void backgroundThreadShortToast(final Context context, final String msg) {
+    public  void threadToast(final Context context, final String msg) {
         if (context != null && msg != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
 
@@ -394,16 +424,5 @@ public class TaxiActivity extends BaseActivity {
     }
 
     @Override
-    public void onClike(LinearLayout img1) {
-        img1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
-    @Override
-    protected void load() {
-
-    }
+    protected void load() {}
 }

@@ -89,8 +89,8 @@ public class ShowActivity extends AppCompatActivity {
                 Log.d("zzz", "打算加载js插件");
                 String insertJavaScript = "javascript:setTimeout(function(){{var s=document.createElement('script');s.type='text/javascript';s.charset='UTF-8';s.src=((location && location.href && location.href.indexOf('https') == 0)?'https://ssl.microsofttranslator.com':'http://www.microsofttranslator.com')+'/ajax/v3/WidgetV3.ashx?siteData=ueOIGRSKkd965FeEGM5JtQ**&ctf=False&ui=true&settings=undefined&from=zh-CHS';var p=document.getElementsByTagName('head')[0]||document.documentElement;p.insertBefore(s,p.firstChild); }},0)";
                 //添加翻译的按钮
-                view.loadUrl("javascript:$('.scope-page-detail').append('<button   style=\"position:absolute;left:50%;margin:12px 0 12px -65px;height:27px;padding:0 0 30px 0;overflow:hidden;border:3px solid #00a3ff;border-radius:4px;background:#fff;color:#00a3ff\" id=\"MicrosoftTranslatorWidget\"></button>')");
-                view.loadUrl("javascript:$('.place-page-detail').append('<button   style=\"position:absolute;left:50%;margin:12px 0 12px -65px;height:27px;padding:0 0 30px 0;overflow:hidden;border:3px solid #00a3ff;border-radius:4px;background:#fff;color:#00a3ff\" id=\"MicrosoftTranslatorWidget\"></button>')");
+                view.loadUrl("javascript:$('.scope-page-detail').append('<button   style=\"opacity: 0;position:absolute;left:50%;margin:12px 0 12px -65px;height:27px;padding:0 0 30px 0;overflow:hidden;border:3px solid #00a3ff;border-radius:4px;background:#fff;color:#00a3ff\" id=\"MicrosoftTranslatorWidget\"></button>')");
+                view.loadUrl("javascript:$('.place-page-detail').append('<button   style=\"opacity: 0;position:absolute;left:50%;margin:12px 0 12px -65px;height:27px;padding:0 0 30px 0;overflow:hidden;border:3px solid #00a3ff;border-radius:4px;background:#fff;color:#00a3ff\" id=\"MicrosoftTranslatorWidget\"></button>')");
                 //添加翻译的脚本
                 view.loadUrl(insertJavaScript);
                 Log.d("zzz", "添加成功");
@@ -106,7 +106,7 @@ public class ShowActivity extends AppCompatActivity {
                 view.loadUrl("javascript:$('.needsclick').css('display','none !important')");
                 view.loadUrl("javascript:$('.captain-img').attr('data-href','#')");
                 view.loadUrl("javascript:function tim(){ if(document.getElementById(\"MicrosoftTranslatorWidget\")){\n" +
-                        "$('#MicrosoftTranslatorWidget').click();$('#WidgetFloaterPanels').hide()} };setInterval('tim()',200)");
+                        "$('#TranslateSpan').click();$('#WidgetFloaterPanels').hide();$('#MicrosoftTranslatorWidget').hide()} };setInterval('tim()',200)");
                 Log.d("zzzz", "结束");
                 /*view.loadUrl("javascript:$('#MicrosoftTranslatorWidget').click(function(){$('#WidgetFloaterPanels').css('top','95%').css('left','0')})");
                 view.loadUrl("javascript:$('#WidgetFloaterPanels').css('top','95%').css('left','0')");*/

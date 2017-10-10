@@ -121,9 +121,8 @@
                 android:textColor="#333333"
                 android:layout_centerVertical="true"
                 android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:textSize="12sp"
-                android:hint="13051672112"/>
+                android:layout_marginRight="15dp"
+                android:textSize="12sp"/>
         </RelativeLayout>
         <View
             android:layout_width="match_parent"

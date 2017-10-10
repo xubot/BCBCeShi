@@ -14,14 +14,14 @@ import okhttp3.RequestBody;
 
 public class LiaoTianUtils {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    public Call okUitls(String methodName, String msg, String did,String oid,String skey,String name){
+    public Call okUitls(String methodName, String msg, String did,String oid,String skey,String name,String phone){
         OkHttpClient client = new OkHttpClient();
         String json="{\n" +
                 "  \"androidId\": \"d81e4d43835c5dbb\",\n" +
                 "  \"pkgName\": \"com.sdu.didi.psnger\",\n" +
                 "  \"versionName\": \"5.1.4\",\n" +
                 "  \"methodName\": \""+methodName+"\",\n" +
-                "  \"argsJSONStr\": \"{\\\"message\\\":\\\""+msg+"\\\",\\\"dId\\\":\\\""+did+"\\\",\\\"orderId\\\":\\\""+oid+"\\\",\\\"sKey\\\":\\\""+skey+"\\\",\\\"dName\\\":\\\""+name+"\\\"}\"\n" +
+                "  \"argsJSONStr\": \"{\\\"message\\\":\\\""+msg+"\\\",\\\"dId\\\":\\\""+did+"\\\",\\\"orderId\\\":\\\""+oid+"\\\",\\\"sKey\\\":\\\""+skey+"\\\",\\\"dName\\\":\\\""+name+"\\\",\\\"cityId\\\":\\\"1\\\",\\\"phoneNum\\\":\\\""+phone+"\\\"}\"\n" +
                 "}";
 
         Log.d("zzz", "请求返回的请求体："+json);

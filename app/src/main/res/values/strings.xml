@@ -2,6 +2,7 @@
     <string name="app_name">拔草吧 -0.11</string>
     <string name="yuyan">中文</string>
     <string name="menu_log">登录/注册</string>
+    <string name="log">登录</string>
     <string name="menu_change">修改密码</string>
     <string name="menu_logout">退出</string>
     <string name="log_forget">忘记密码</string>

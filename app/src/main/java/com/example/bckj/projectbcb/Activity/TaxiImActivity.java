@@ -17,11 +17,14 @@ import android.widget.Toast;
 import com.example.bckj.projectbcb.Adapter.Mylv1Adapter;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiTaskIdBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiZhuCeBean;
+import com.example.bckj.projectbcb.Bean.DiDiBean.FaXiaoXiBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.FaXiaoXiBeanData;
+import com.example.bckj.projectbcb.Bean.DiDiBean.ShouXiaoXiBeanData;
 import com.example.bckj.projectbcb.Bean.ListViewBean_1;
 import com.example.bckj.projectbcb.R;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiOneParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.LiaoTianUtils;
+import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.google.gson.Gson;
 
 import java.io.IOException;
@@ -29,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -37,21 +41,22 @@ import okhttp3.Response;
 import static java.lang.Thread.sleep;
 
 public class TaxiImActivity extends BaseActivity {
+    private SharedUtils instance = SharedUtils.getInstance();
+    private Timer timer = new Timer();
     private List<ListViewBean_1> lvb_1=new ArrayList<>();
-    private ImageView taxi_view_call;
+    private int i=0;
+    private TextView taxi_im_name;
     private ListView taxi_lv;
     private EditText messge;
-    private ImageView msg;
-    private String driverPhone;
-    private String did;
-    private TextView taxi_im_name;
-    private String driverSkey;
-    private String driverOid;
-    private String dName;
+    private ImageView msg, taxi_view_call;
+    private String driverPhone, did, driverSkey,driverOid,dName;
+
+
 
     @Override
     public void initView() {
         setContentView(R.layout.activity_taxi_im);
+
         //得到司机师傅名字的控件
         taxi_im_name = (TextView) findViewById(R.id.taxi_im_name);
         setToolBar("等待应答",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
@@ -67,6 +72,11 @@ public class TaxiImActivity extends BaseActivity {
         Log.d("zzz", "TaxiImActivity   得到的跳过来司机的Did：" + did +"===="+ driverPhone+"----"+driverName +"=="+driverSkey+"--"+driverOid);
         //给司机名字控件赋值
         taxi_im_name.setText(driverName);
+
+        /*//调起得到司机回复的信息的接口
+        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+        getReceiveMessageTaskIDRequest(diDiOneParameter,"receiveMessage","dId",did);
+        Log.d("zzzTaxi", "现在已经调起了接收司机回复的消息接口");*/
     }
 
     @Override
@@ -102,22 +112,32 @@ public class TaxiImActivity extends BaseActivity {
                     Toast.makeText(TaxiImActivity.this,"输入不能为空",Toast.LENGTH_SHORT).show();
                 }else {
                     Date date = new Date();
-                    SimpleDateFormat format = new SimpleDateFormat("hh : mm");
+                    SimpleDateFormat format = new SimpleDateFormat("HH : mm");
                     String format1 = format.format(date);
-                    ListViewBean_1 listViewBean_1 = new ListViewBean_1(messgee,format1,R.mipmap.img_01);
+                    ListViewBean_1 listViewBean_1 = new ListViewBean_1();
+                    listViewBean_1.setImg(R.mipmap.img_01);
+                    listViewBean_1.setTitle(messgee);
+                    listViewBean_1.setTime(format1);
                     lvb_1.add(listViewBean_1);
                     //得到listview的适配器
                     Mylv1Adapter mylv1Adapter = new Mylv1Adapter(TaxiImActivity.this, lvb_1);
-                    taxi_lv.setAdapter(mylv1Adapter);
                     //listview实时刷新
                     mylv1Adapter.notifyDataSetChanged();
+                    taxi_lv.setAdapter(mylv1Adapter);
+
                     messge.setText("");
                     String vaule = stringToUnicode(messgee);
                     
                     //得到一个参数的对象
                     LiaoTianUtils liaoTianUtils = new LiaoTianUtils();
-                    //发送消息
-                    sendMessageTaskIDRequest(liaoTianUtils,"sendMessage",vaule,did,driverOid,driverSkey,dName);
+                    String taxiaccount = (String) instance.getData(TaxiImActivity.this, "taxiaccount", "");
+                    Log.d("zzz", "得到自己的手机号：" + taxiaccount);
+                    if(did.isEmpty()&&driverOid.isEmpty()&&driverSkey.isEmpty()&&dName.isEmpty()&&taxiaccount.isEmpty()){
+                        return;
+                    }else {
+                        //发送消息
+                        sendMessageTaskIDRequest(liaoTianUtils,"sendMessage",vaule,did,driverOid,driverSkey,dName,taxiaccount);
+                    }
                 }
             }
         });
@@ -135,15 +155,13 @@ public class TaxiImActivity extends BaseActivity {
         }
         return str;
     }
-    @Override
-    protected void load() {
 
-    }
     @Override
     public void onClike(LinearLayout img1) {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                timer.cancel();
                 finish();
             }
         });
@@ -151,13 +169,13 @@ public class TaxiImActivity extends BaseActivity {
 
 
     //调起得到与司机聊天   滴滴的TaskId的请求方法
-    private void sendMessageTaskIDRequest(final LiaoTianUtils liaoTianUtils, String modle, String parameter, String vaule,String oid,String skey,String name) {
-        Call oneCall = liaoTianUtils.okUitls(modle,parameter,vaule,oid,skey,name);
+    private void sendMessageTaskIDRequest(final LiaoTianUtils liaoTianUtils, String modle, String parameter, String vaule,String oid,String skey,String name,String phone) {
+        Call oneCall = liaoTianUtils.okUitls(modle,parameter,vaule,oid,skey,name,phone);
         //开始请求
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(TaxiImActivity.this,"找不到网关地址,请重启设备");
+                threadToast(TaxiImActivity.this,"找不到网关地址,请重启设备");
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -183,15 +201,14 @@ public class TaxiImActivity extends BaseActivity {
         tweCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(TaxiImActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("zzzTaxi", "请求过程中错误的信息：--" + e.toString());
+                threadToast(TaxiImActivity.this,"连接超时，请重试");
             }
-
             @Override
             public void onResponse(final Call call, Response response) throws IOException {
                 //得到请求返回的值
                 String data = response.body().string();
-                Log.d("zzz","得到值是："+data);
+                Log.d("zzzTaxi","得到值是："+data);
                 //解析数据
                 Gson gson = new Gson();
                 //得到解析的bean
@@ -200,7 +217,7 @@ public class TaxiImActivity extends BaseActivity {
                 String status = dataBean.getStatus();
                 String returnJSONStr = dataBean.getReturnJSONStr();
 
-                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
+                Log.d("zzzTaxi","得到值是："+status+"------"+returnJSONStr);
                 if(status.equals("fail")){
                     runOnUiThread(new Runnable() {
                         @Override
@@ -217,30 +234,31 @@ public class TaxiImActivity extends BaseActivity {
                         }
                         //调起请求数据的方法
                         sendMessageDataRequest(liaoTianUtils,taskId);
-                        Log.d("zzz", "当前的状态值：" + status);
+                        Log.d("zzzTaxi", "当前的状态值：" + status);
                         return;
                     }
-                    Log.d("zzz", "聊天的状态当前的状态值：" + status);
-                    Log.d("zzz", "聊天得到终于到了done:" + returnJSONStr);
+                    Log.d("zzzTaxi", "聊天的状态当前的状态值：" + status);
+                    Log.d("zzzTaxi", "聊天得到终于到了done:" + returnJSONStr);
                     FaXiaoXiBeanData faXiaoXiBeanData = gson.fromJson(returnJSONStr, FaXiaoXiBeanData.class);
-                    FaXiaoXiBeanData.ResultBean result = faXiaoXiBeanData.getResult();
-                    int code = result.getCode();
-                    FaXiaoXiBeanData.ResultBean.ResponseBean response1 = result.getResponse();
-                    int errno = response1.getErrno();
-                    String errmsg = response1.getErrmsg();
-                    Log.d("zzz", "TaxiIm   得的发送信息的返回值:" + code + "---" + errno + "===" + errmsg);
-                    if(errno==0){
-                        backgroundThreadShortToast(TaxiImActivity.this,"发送成功");
-                        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
-                        getDBChatHistoryTaskIDRequest(diDiOneParameter,"getDBChatHistory","dId",did);
+                    String errorCode = faXiaoXiBeanData.getErrorCode();
+                    String errorMessage = faXiaoXiBeanData.getErrorMessage();
+                    if(errorCode.equals("0")){
+                        FaXiaoXiBeanData.Result result = faXiaoXiBeanData.getResult();
+                        String response1 = result.getResponse();
+                        FaXiaoXiBean faXiaoXiBean = gson.fromJson(response1, FaXiaoXiBean.class);
+                        int errno = faXiaoXiBean.getErrno();
+                        if(errno==0){
+                            DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                            getDBChatHistoryTaskIDRequest(diDiOneParameter,"receiveMessage","dId",did);
+                            Log.d("zzzTaxi", "现在已经调起了接收司机回复的消息接口");
+                        }
                     }else {
-                        backgroundThreadShortToast(TaxiImActivity.this,errmsg);
+                        threadToast(TaxiImActivity.this,errorMessage);
                     }
                 }
             }
         });
     }
-
 
 
     //调起得到司机回复的信息   滴滴的TaskId的请求方法
@@ -250,15 +268,15 @@ public class TaxiImActivity extends BaseActivity {
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(TaxiImActivity.this,"找不到网关地址,请重启设备");
-                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
+                threadToast(TaxiImActivity.this,"找不到网关地址,请重启设备");
+                Log.d("zzzTaxi", "请求过程中错误的信息：" + e.toString());
             }
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 //得到请求返回的值
                 String data = response.body().string();
-                Log.d("zzz","得到值是："+data);
+                Log.d("zzzTaxi","得到值是："+data);
                 //得到gson对象
                 Gson gson = new Gson();
                 //得到bean类
@@ -276,15 +294,14 @@ public class TaxiImActivity extends BaseActivity {
         tweCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(TaxiImActivity.this, e.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("zzzTaxi", "请求过程中错误的信息：--" + e.toString());
+                threadToast(TaxiImActivity.this,"连接超时，请重试");
             }
-
             @Override
             public void onResponse(final Call call, Response response) throws IOException {
                 //得到请求返回的值
                 String data = response.body().string();
-                Log.d("zzz","得到值是："+data);
+                Log.d("zzzTaxi","得到值是："+data);
                 //解析数据
                 Gson gson = new Gson();
                 //得到解析的bean
@@ -293,7 +310,7 @@ public class TaxiImActivity extends BaseActivity {
                 String status = dataBean.getStatus();
                 String returnJSONStr = dataBean.getReturnJSONStr();
 
-                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
+                Log.d("zzzTaxi","得到值是："+status+"------"+returnJSONStr);
                 if(status.equals("fail")){
                     runOnUiThread(new Runnable() {
                         @Override
@@ -310,12 +327,22 @@ public class TaxiImActivity extends BaseActivity {
                         }
                         //调起请求数据的方法
                         getDBChatHistoryDataRequest(diDiOneParameter,taskId);
-                        Log.d("zzz", "当前的状态值：" + status);
+                        Log.d("zzzTaxi", "当前的状态值：" + status);
                         return;
                     }
-                    Log.d("zzz", "聊天的状态当前的状态值：" + status);
-                    Log.d("zzz", "聊天得到终于到了done:" + returnJSONStr);
-
+                    Log.d("zzzTaxi", "聊天的状态当前的状态值：" + status);
+                    Log.d("zzzTaxi", "聊天得到终于到了done:" + returnJSONStr);
+                    ShouXiaoXiBeanData shouXiaoXiBeanData = gson.fromJson(returnJSONStr, ShouXiaoXiBeanData.class);
+                    String errorCode = shouXiaoXiBeanData.getErrorCode();
+                    String errorMessage = shouXiaoXiBeanData.getErrorMessage();
+                    String result = shouXiaoXiBeanData.getResult();
+                    if(result.equals("No Data")){
+                        Log.d("zzzTaxi","现在会返回的集合还是空啊，太让人郁闷了----------------");
+                        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                        getDBChatHistoryTaskIDRequest(diDiOneParameter,"receiveMessage","dId",did);
+                    }else {
+                        Log.d("zzzTaxi", "司机信息的集合终于不是空了:"+result);
+                    }
                 }
             }
         });
@@ -324,7 +351,7 @@ public class TaxiImActivity extends BaseActivity {
 
 
     //解决在子线程中吐司的方法
-    public  void backgroundThreadShortToast(final Context context, final String msg) {
+    public  void threadToast(final Context context, final String msg) {
         if (context != null && msg != null) {
             new Handler(Looper.getMainLooper()).post(new Runnable() {
 
@@ -335,5 +362,27 @@ public class TaxiImActivity extends BaseActivity {
             });
         }
     }
+    //得到司机信息赋值的方法
+    public  void backgroundThreadShort() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Log.d("zzzTaxi", "开始给司机赋值...." );
+                for(ListViewBean_1 lv1:lvb_1){
+                    int img = lv1.getImg();
+                    String time = lv1.getTime();
+                    String title = lv1.getTitle();
+                    Log.d("zzzTaxi", "得到司机返回消息的集合里面的信息："+img + "--" + time + "===" + title);
+                }
+                //得到listview的适配器
+                Mylv1Adapter mylv1Adapter = new Mylv1Adapter(TaxiImActivity.this, lvb_1);
+                //listview实时刷新
+                mylv1Adapter.notifyDataSetChanged();
+                taxi_lv.setAdapter(mylv1Adapter);
+            }
+        });
+    }
 
+    @Override
+    protected void load() {}
 }

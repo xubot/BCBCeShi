@@ -8,44 +8,71 @@ public class DaCheSuccessBeanData {
 
 
     /**
-     * errno : 0
-     * createTime : 2017-09-09 17:34:25
-     * oid : TWpFeE1UVXlNemMyTnpjM09UQTI=
+     * errorCode : 0
+     * errorMessage :
+     * result : {"errno":103,"errmsg":"乘客被禁用"}
      */
 
-    private int errno;
-    private String createTime;
-    private String oid;
-    private String errmsg;
+    private String errorCode;
+    private String errorMessage;
+    private ResultBean result;
 
-    public int getErrno() {
-        return errno;
+    public String getErrorCode() {
+        return errorCode;
     }
 
-    public void setErrno(int errno) {
-        this.errno = errno;
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
     }
 
-    public String getCreateTime() {
-        return createTime;
+    public String getErrorMessage() {
+        return errorMessage;
     }
 
-    public void setCreateTime(String createTime) {
-        this.createTime = createTime;
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
     }
 
-    public String getOid() {
-        return oid;
+    public ResultBean getResult() {
+        return result;
     }
 
-    public void setOid(String oid) {
-        this.oid = oid;
-    }
-    public String getErrmsg() {
-        return errmsg;
+    public void setResult(ResultBean result) {
+        this.result = result;
     }
 
-    public void setErrmsg(String errmsg) {
-        this.errmsg = errmsg;
+    public static class ResultBean {
+        /**
+         * errno : 103
+         * errmsg : 乘客被禁用
+         */
+        private String oid;
+
+        public String getOid() {
+            return oid;
+        }
+
+        public void setOid(String oid) {
+            this.oid = oid;
+        }
+
+        private int errno;
+        private String errmsg;
+
+        public int getErrno() {
+            return errno;
+        }
+
+        public void setErrno(int errno) {
+            this.errno = errno;
+        }
+
+        public String getErrmsg() {
+            return errmsg;
+        }
+
+        public void setErrmsg(String errmsg) {
+            this.errmsg = errmsg;
+        }
     }
 }

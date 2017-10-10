@@ -3,14 +3,17 @@ package com.example.bckj.projectbcb.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +26,7 @@ import com.example.bckj.projectbcb.Bean.DiDiBean.DengLuBeanData;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiCodeBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiTaskIdBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiZhuCeBean;
+import com.example.bckj.projectbcb.Bean.DiDiBean.GetPicCodeBeanData;
 import com.example.bckj.projectbcb.Bean.DiDiBean.HuoQuYanZhengMaBeanData;
 import com.example.bckj.projectbcb.Bean.DiDiBean.SheZhiMiMaBeanData;
 import com.example.bckj.projectbcb.Bean.DiDiBean.SheZhiMiMaSuccessBeanData;
@@ -36,11 +40,14 @@ import com.example.bckj.projectbcb.Utils.CountDownTimerUtils;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiOneParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiTweParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.PathUrl;
+import com.example.bckj.projectbcb.Utils.OnMultiClickListener;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.example.bckj.projectbcb.ViewLayer.SensitizeView;
 import com.google.gson.Gson;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -49,156 +56,19 @@ import okhttp3.Response;
 import static java.lang.Thread.sleep;
 
 public class SensitizeActivity extends AppCompatActivity implements SensitizeView{
-    private TextView resend;
-    private Button sensitize_s;
-    private TextView sensitize_pwd;
-    private Context context=SensitizeActivity.this;
-    private Button sens_log;
-    private TextView sensitize_car;
-    private TextView sens_forget;
-    private ImageView pic_code;
-    private EditText sens_edit_phone;
-    private EditText sens_log_edit_phone;
     private PresenterLayer presenterLayer = new PresenterLayer();
-    private SharedUtils instance;
-    private String token;
-    private String sens_phone;
-    private String log_edit_phone;
-    private EditText sens_log_edit_pwd;
-    private String log_edit_pwd;
-    private EditText et_one;
-    private EditText et_two;
-    private EditText et_three;
-    private EditText et_four;
+    private SharedUtils instance = SharedUtils.getInstance();
+    private Context context=SensitizeActivity.this;
     private AlertDialog alertDialog;
-    private TextView chongxin;
-    private EditText pice_one;
-    private EditText pice_twe;
-    private EditText pice_three;
-    private EditText pice_frou;
-    private EditText sens_edit_pwd;
-
-
-    //判断用户是否注册个handler对象
-    Handler handler=new Handler(){
-        public void handleMessage(android.os.Message msg) {
-            //取出消息内容
-            Object what = msg.obj;
-            Log.d("zzz1", (String) what);
-            if(what.equals("0")){
-                //登录对话框的方法
-                Pop_Log();
-            }else {
-                //判断如果激活过就直接弹出得到验证码
-                setCodeOnClick();
-            }
-        }
-    };
-    //登录handler对象
-    Handler logHandler=new Handler(){
-        public void handleMessage(android.os.Message msg) {
-            //取出消息内容
-            Object what = msg.obj;
-            Log.d("zzz", "sensitize  滴滴登录传来的状态："+ what);
-            if(what.equals("OK")) {
-                instance.saveData(context,"success",what);
-                Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show();
-                //关闭弹出框
-
-                //得到token值
-                String token = (String) instance.getData(context, "token", "");
-                //滴滴登录成功后将滴滴信息存入到数据库
-                Log.d("zzz", "sensitize  得到要用的token值：" + token);
-                presenterLayer.setSensitize("taxi",2,log_edit_pwd,log_edit_phone,token);
-                finish();
-            }else {
-                Toast.makeText(context, "登录失败：" + what, Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
-
-    //设置密码handler对象
-    Handler setLoginHandler=new Handler(){
-        public void handleMessage(android.os.Message msg) {
-            //取出消息内容
-            Object what = msg.obj;
-            Log.d("zzz", "sensitize  滴滴登录传来的状态："+ what);
-            if(what.equals("OK")) {
-                instance.saveData(context,"success",what);
-                Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show();
-                //关闭弹出框
-
-                //得到token值
-                String token = (String) instance.getData(context, "token", "");
-                //滴滴登录成功后将滴滴信息存入到数据库
-                Log.d("zzz", "sensitize  得到要用的token值：" + token);
-                presenterLayer.setSensitize("taxi",2,pwd,log_edit_phone,token);
-                finish();
-            }else {
-                Toast.makeText(context, "登录失败：" + what, Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
-    //获得验证码的handler对象
-    Handler getCodeHandler=new Handler(){
-        public void handleMessage(android.os.Message msg) {
-            //取出消息内容
-            Object what = msg.obj;
-            Log.d("zzz1", (String) what);
-            if(what.equals("OK")) {
-                Toast.makeText(context, "请等待得到短信验证码", Toast.LENGTH_LONG).show();
-            }else {
-                Toast.makeText(context, "你需要这样获得验证码：" + what, Toast.LENGTH_SHORT).show();
-            }
-        }
-    };
-
-    //发送验证码正确的handler对象
-    Handler codeHandler=new Handler(){
-        public void handleMessage(android.os.Message msg) {
-            //取出消息内容
-            Object what = msg.obj;
-            Log.d("zzz1", (String) what);
-            if(what.equals("OK")) {
-                setPopPwdOnClickPwd();
-            }
-        }
-    };
-
-    //发送验证码错误的handler对象
-    Handler codeHandler1=new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            //取出消息内容
-            Object what = msg.obj;
-            Log.d("zzz", "sensitize  滴滴登录传来的状态："+ what);
-            if(what.equals("-104")){
-                Toast.makeText(context, "验证码输入格式有误", Toast.LENGTH_LONG).show();
-            }else if(what.equals("-302")){
-                Toast.makeText(context, "请输入正确的验证码", Toast.LENGTH_LONG).show();
-            }else if(what.equals("-301")){
-                Toast.makeText(context, "验证码已过期，请重新获取", Toast.LENGTH_LONG).show();
-            }
-        }
-    };
-
-
-
-    //发送图片code  handler对象
-    Handler picCodeHandler=new Handler(){
-        public void handleMessage(android.os.Message msg) {
-            //取出消息内容
-            Object what = msg.obj;
-            Log.d("zzz1", (String) what);
-            if(what.equals("success")) {
-                setCodeOnClick();
-            }
-        }
-    };
-    private String pwd;
-    private TextView codephone;
+    private ImageView pic_code;
+    private Button sensitize_s;
+    private Button sens_log;
+    private TextView resend,sensitize_pwd,chongxin,codephone, sensitize_car,sens_forget;
+    private EditText et_one, et_two, et_three,et_four;
+    private EditText pice_one,pice_twe,pice_three,pice_frou;
+    private EditText sens_edit_phone,sens_log_edit_phone,sens_log_edit_pwd,sens_edit_pwd;
+    private String token,sens_phone,log_edit_phone,pwd, log_edit_pwd;
+    private EditText[] mArray;
 
 
     @Override
@@ -207,7 +77,6 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         setContentView(R.layout.activity_sensitize);
         PathUrl.getIp(context);
         //得到注册的token值
-        instance = SharedUtils.getInstance();
         int code = (int) instance.getData(this, "mainLogCode", 0);
         Log.d("zzz", "sensitize  得到本地的登录状态码：" + code);
         //得到token值
@@ -224,7 +93,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             back.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(context,MainActivity.class));
+                    startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
                     finish();
                 }
             });
@@ -232,6 +101,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
                     finish();
                 }
             });
@@ -242,6 +112,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             this.finish();
         }
     }
+
     //得到P层的对象
     public void load(){
         Log.d("zzz", "sensitize 得到token" + token);
@@ -251,17 +122,23 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
 
     //点击下一步的监听方法
     private void nextOnclivk() {
-        sensitize_s.setOnClickListener(new View.OnClickListener() {
+        sensitize_s.setOnClickListener(new OnMultiClickListener(){
             @Override
-            public void onClick(View v) {
+            public void onMultiClick(View v) {
                 //得到一个参数的对象
                 DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
                 //得到手机号码的输入框
                 sens_edit_phone = (EditText)findViewById(R.id.sens_edit_phone);
                 //得到手机号的值
                 sens_phone = sens_edit_phone.getText().toString();
-                //调用滴滴的接口方法
-                registerTaskIDRequest(diDiOneParameter,"getRegisterStatus","phoneNum", sens_phone);
+                boolean mobile = isMobile(sens_phone);
+                Log.d("zzz",mobile+"");
+                if(mobile&&!sens_phone.isEmpty()&&sens_phone.length()>0){
+                    //调用滴滴的接口方法
+                    registerTaskIDRequest(diDiOneParameter,"getRegisterStatus","phoneNum", sens_phone);
+                }else {
+                    Toast.makeText(context, "请输入正确的手机号", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
@@ -269,7 +146,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
     //登录的对话框
     private void Pop_Log() {
         //打开登录的对话框
-        final AlertDialog alertDialog = setAlertDialog(context, R.layout.activity_sens_pop_log);
+        alertDialog = setAlertDialog(context, R.layout.activity_sens_pop_log);
         //得到输入手机号的控件
         sens_edit_phone = (EditText)findViewById(R.id.sens_edit_phone);
         //得到手机号的值
@@ -277,9 +154,9 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         //给登录的对话框电话处赋值
         sens_log_edit_phone.setText(sens_phone);
         //对话框里登录的监听
-        sens_log.setOnClickListener(new View.OnClickListener() {
+        sens_log.setOnClickListener(new OnMultiClickListener(){
             @Override
-            public void onClick(View v) {
+            public void onMultiClick(View v) {
                 //得到两个参数的对象
                 DiDiTweParameter diDiTweParameter = new DiDiTweParameter();
                 //得到输入控上的用户名
@@ -287,18 +164,98 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                 //得到输入框上的密码
                 log_edit_pwd = sens_log_edit_pwd.getText().toString();
                 Log.d("zzz", "sensitize  登录的手机号和密码："+log_edit_phone +"==="+ log_edit_pwd);
-                //调用登录滴滴的方法
-                logInTaskIDRequest(diDiTweParameter,"login",log_edit_phone,log_edit_pwd);
+                if(log_edit_phone.isEmpty()&&log_edit_phone.length()==0&&log_edit_pwd.isEmpty()&&log_edit_pwd.length()==0){
+                    Toast.makeText(context, "请输入手机号和密码", Toast.LENGTH_SHORT).show();
+                }else {
+                    //调用登录滴滴的方法
+                    logInTaskIDRequest(diDiTweParameter,"login",log_edit_phone,log_edit_pwd);
+                }
             }
         });
-        //对话框里忘记密码吗的监听
+        /*//对话框里忘记密码吗的监听
         sens_forget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setPopForgetOnClick();
                 alertDialog.cancel();
             }
+        });*/
+    }
+
+
+    //图形验证码的对话框
+    private void setPhotoCodeOnClick(Object pic) {
+        Log.d("zzz", "从子线程中得到的图形码：" + pic);
+
+        byte[] bytes = hexStrToByteArray(String.valueOf(pic));
+        //打开获得图形验证码的对话框
+        alertDialog = setAlertDialog(context, R.layout.activity_sens_pop_pic_code);
+        //将byte转成bitmap对象
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        Log.d("zzz", bitmap+"");
+        //给图片验证码处赋值
+        pic_code.setImageBitmap(bitmap);
+
+        //滴滴输入验证码的方法
+        PhotoCodeinitListener();
+        /**点击图片换一张**/
+        pic_code.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "你点击了重新换一张图片", Toast.LENGTH_SHORT).show();
+                //得到一个参数的对象
+                DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                //得到弹出框手机号的值
+                String sens_phone1 = sens_edit_phone.getText().toString();
+                //调起滴滴获得验证码的方法
+                verificationCodeTaskIDRequest(diDiOneParameter,"getVerificationCode","phoneNum",sens_phone1);
+            }
         });
+    }
+    //接口，包括三个方法：（EditText的监听类  输入完图形验证码自动跳转）
+    private void PhotoCodeinitListener() {
+        mArray = new EditText[]{pice_one, pice_twe, pice_three,pice_frou};
+        for (int i = 0; i < mArray.length; i++) {
+            final int j = i;
+            mArray[j].addTextChangedListener(new TextWatcher() {
+                private CharSequence temp;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    temp = s;
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    if (temp.length() == 1 && j >= 0 && j < mArray.length - 1) {
+                        mArray[j + 1].setFocusable(true);
+                        mArray[j + 1].setFocusableInTouchMode(true);
+                        mArray[j + 1].requestFocus();
+                    }
+
+                    if (temp.length() == 0) {
+                        if (j >= 1) {
+                            mArray[j - 1].setFocusable(true);
+                            mArray[j - 1].setFocusableInTouchMode(true);
+                            mArray[j - 1].requestFocus();
+                        }
+                    }
+                    if (!TextUtils.isEmpty(pice_one.getText().toString().trim()) && !TextUtils.isEmpty(pice_twe.getText().toString().trim()) && !TextUtils.isEmpty(pice_three.getText().toString().trim()) && !TextUtils.isEmpty(pice_frou.getText().toString().trim())) {
+                        String code = pice_one.getText().toString().trim() + pice_twe.getText().toString().trim() + pice_three.getText().toString().trim() + pice_frou.getText().toString().trim();
+                        Toast.makeText(context,code, Toast.LENGTH_SHORT).show();
+                        //得到一个参数的对象
+                        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                        //调起发送验证码的方法
+                        setPhotoCodeTaskIDRequest(diDiOneParameter,"setPhotoCode","photoCode",code);
+                    }
+                }
+            });
+        }
     }
 
     //短信验证码对话框（没有注册过的手机号）
@@ -307,22 +264,17 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         final DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
 
         //打开获得短信验证码的对话框
-        final AlertDialog alertDialog = setAlertDialog(context, R.layout.activity_sens_pop_code);
+        alertDialog = setAlertDialog(context, R.layout.activity_sens_pop_code);
         //得到弹出框手机号的值
         final String sens_phone1 = sens_edit_phone.getText().toString();
         //将手机号赋给验证码处
         codephone.setText("验证码发送至   "+sens_phone1);
-        //调起滴滴获得验证码的方法
-        verificationCodeTaskIDRequest(diDiOneParameter,"getVerificationCode","phoneNum",sens_phone1);
 
-        //设置EditText的文本改变的监听
-        et_one.addTextChangedListener(textWatcher);
-        et_two.addTextChangedListener(textWatcher);
-        et_three.addTextChangedListener(textWatcher);
-        et_four.addTextChangedListener(textWatcher);
+        //滴滴输入验证码的方法
+        codeInitListener();
 
         //开启倒计时
-        CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(resend, 60000, 1000);
+        CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(resend, 70000, 1000);
         mCountDownTimerUtils.start();
 
         /**点击重新发送验证码**/
@@ -331,7 +283,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             public void onClick(View v) {
                 Toast.makeText(context, "你点击了重新发送", Toast.LENGTH_SHORT).show();
                 //开启倒计时
-                CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(resend, 60000, 1000);
+                CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(resend, 70000, 1000);
                 mCountDownTimerUtils.start();
                 //调起滴滴获得验证码的方法
                 verificationCodeTaskIDRequest(diDiOneParameter,"getVerificationCode","phoneNum",sens_phone1);
@@ -339,111 +291,213 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         });
     }
     //接口，包括三个方法：（EditText的监听类  输入完验证码自动跳转）
-    private TextWatcher textWatcher = new TextWatcher() {
-        //得到一个参数的对象
-        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
-        @Override//文本改变之前的方法
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-        @Override//改变中
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    private void codeInitListener() {
+        mArray = new EditText[]{et_one, et_two, et_three,et_four};
+        for (int i = 0; i < mArray.length; i++) {
+            final int j = i;
+            mArray[j].addTextChangedListener(new TextWatcher() {
+                private CharSequence temp;
 
-        }
-        @Override//改变后
-        public void afterTextChanged(Editable editable) {
-            if (editable.toString().length() == 1) {//editable.toString()为当前输入框的内容，限定长度为1
-                if (et_one.isFocused()) {
-                    et_one.clearFocus();
-                    et_two.requestFocus();
-                } else if (et_two.isFocused()) {
-                    et_two.clearFocus();
-                    et_three.requestFocus();
-                } else if (et_three.isFocused()) {
-                    et_three.clearFocus();
-                    et_four.requestFocus();
-                } else if (et_four.isFocused()) {
-                    et_four.clearFocus();
-                    String one = et_one.getText().toString();
-                    String twe = et_two.getText().toString();
-                    String three = et_three.getText().toString();
-                    String four = et_four.getText().toString();
-                    String code = one + twe + three + four;
-                    Toast.makeText(context, "验证码："+one+twe+three+four, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(context, "已经输入完毕", Toast.LENGTH_SHORT).show();
-                    //调起发送验证码的方法
-                    submitecodeTaskIDRequest(diDiOneParameter,"submitEcode","SmsCode",code);
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
-            }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    temp = s;
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    if (temp.length() == 1 && j >= 0 && j < mArray.length - 1) {
+                        mArray[j + 1].setFocusable(true);
+                        mArray[j + 1].setFocusableInTouchMode(true);
+                        mArray[j + 1].requestFocus();
+                    }
+
+                    if (temp.length() == 0) {
+                        if (j >= 1) {
+                            mArray[j - 1].setFocusable(true);
+                            mArray[j - 1].setFocusableInTouchMode(true);
+                            mArray[j - 1].requestFocus();
+                        }
+                    }
+                    if (!TextUtils.isEmpty(et_one.getText().toString().trim()) && !TextUtils.isEmpty(et_two.getText().toString().trim()) && !TextUtils.isEmpty(et_three.getText().toString().trim()) && !TextUtils.isEmpty(et_four.getText().toString().trim())) {
+                        String code = et_one.getText().toString().trim() + et_two.getText().toString().trim() + et_three.getText().toString().trim() + et_four.getText().toString().trim();
+                        Toast.makeText(context,code, Toast.LENGTH_SHORT).show();
+                        //得到一个参数的对象
+                        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                        //调起发送验证码的方法
+                        submiteCodeTaskIDRequest(diDiOneParameter,"submitEcode","smsCode",code);
+                    }
+                }
+            });
         }
-    };
+    }
 
-    //点击忘记密码的监听（图形验证码的对话框）
-    private void setPopForgetOnClick() {
+
+
+    //图形验证码的对话框
+    private void setPicCodeOnClick(Object pic) {
+        Log.d("zzz", "从子线程中得到的图形码：" + pic);
+
+        byte[] bytes = hexStrToByteArray(String.valueOf(pic));
         //打开获得图形验证码的对话框
-        final AlertDialog alertDialog = setAlertDialog(context, R.layout.activity_sens_pop_pic_code);
-        //得到一个参数的对象
-        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
-        //得到弹出框手机号的值
-        String sens_phone1 = sens_edit_phone.getText().toString();
-        //调起滴滴获得验证码的方法
-        verificationCodeTaskIDRequest(diDiOneParameter,"getVerificationCode","phoneNum",sens_phone1);
+        alertDialog = setAlertDialog(context, R.layout.activity_sens_pop_pic_code);
+        //将byte转成bitmap对象
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        Log.d("zzz", bitmap+"");
+        //给图片验证码处赋值
+        pic_code.setImageBitmap(bitmap);
 
-        //设置EditText的文本改变的监听
-        pice_one.addTextChangedListener(picTextWatcher);
-        pice_twe.addTextChangedListener(picTextWatcher);
-        pice_three.addTextChangedListener(picTextWatcher);
-        pice_frou.addTextChangedListener(picTextWatcher);
+        //滴滴输入验证码的方法
+        picCodeinitListener();
         /**点击图片换一张**/
         pic_code.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "你点击了重新换一张图片", Toast.LENGTH_SHORT).show();
+                //得到一个参数的对象
+                DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                //得到弹出框手机号的值
+                String sens_phone1 = sens_edit_phone.getText().toString();
+                //调起滴滴获得验证码的方法
+                picToVerificationCodeTaskIDRequest(diDiOneParameter,"getVerificationCode","phoneNum",sens_phone1);
+                //alertDialog.dismiss();
             }
         });
     }
     //接口，包括三个方法：（EditText的监听类  输入完图形验证码自动跳转）
-    private TextWatcher picTextWatcher = new TextWatcher() {
-        //得到一个参数的对象
-        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
-        @Override//文本改变之前的方法
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-        @Override//改变中
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    private void picCodeinitListener() {
+        mArray = new EditText[]{pice_one, pice_twe, pice_three,pice_frou};
+        for (int i = 0; i < mArray.length; i++) {
+            final int j = i;
+            mArray[j].addTextChangedListener(new TextWatcher() {
+                private CharSequence temp;
 
-        }
-        @Override//改变后
-        public void afterTextChanged(Editable editable) {
-            if (editable.toString().length() == 1) {//editable.toString()为当前输入框的内容，限定长度为1
-                if (pice_one.isFocused()) {
-                    pice_one.clearFocus();
-                    pice_twe.requestFocus();
-                } else if (pice_twe.isFocused()) {
-                    pice_twe.clearFocus();
-                    pice_three.requestFocus();
-                } else if (pice_three.isFocused()) {
-                    pice_three.clearFocus();
-                    pice_frou.requestFocus();
-                } else if (pice_frou.isFocused()) {
-                    pice_frou.clearFocus();
-                    String one = pice_one.getText().toString();
-                    String twe = pice_twe.getText().toString();
-                    String three = pice_three.getText().toString();
-                    String four = pice_frou.getText().toString();
-                    String code = one + twe + three + four;
-                    Toast.makeText(context, "验证码："+one+twe+three+four, Toast.LENGTH_SHORT).show();
-                    Toast.makeText(context, "已经输入完毕", Toast.LENGTH_SHORT).show();
-                    //调起发送验证码的方法
-                    setPhotoCodeTaskIDRequest(diDiOneParameter,"setPhotoCode","photoCode",code);
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 }
-            }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    temp = s;
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    if (temp.length() == 1 && j >= 0 && j < mArray.length - 1) {
+                        mArray[j + 1].setFocusable(true);
+                        mArray[j + 1].setFocusableInTouchMode(true);
+                        mArray[j + 1].requestFocus();
+                    }
+
+                    if (temp.length() == 0) {
+                        if (j >= 1) {
+                            mArray[j - 1].setFocusable(true);
+                            mArray[j - 1].setFocusableInTouchMode(true);
+                            mArray[j - 1].requestFocus();
+                        }
+                    }
+                    if (!TextUtils.isEmpty(pice_one.getText().toString().trim()) && !TextUtils.isEmpty(pice_twe.getText().toString().trim()) && !TextUtils.isEmpty(pice_three.getText().toString().trim()) && !TextUtils.isEmpty(pice_frou.getText().toString().trim())) {
+                        String code = pice_one.getText().toString().trim() + pice_twe.getText().toString().trim() + pice_three.getText().toString().trim() + pice_frou.getText().toString().trim();
+                        Toast.makeText(context,code, Toast.LENGTH_SHORT).show();
+                        //得到一个参数的对象
+                        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                        //调起发送验证码的方法
+                        setPicCodeTaskIDRequest(diDiOneParameter,"setPhotoCode","photoCode",code);
+                    }
+                }
+            });
         }
-    };
+    }
+
+
+    //图形验证码之后弹出的短信验证码对话框
+    private void setPicToCodeOnClick() {
+        //得到一个参数的对象
+        final DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+
+        //打开获得短信验证码的对话框
+        alertDialog= setAlertDialog(context, R.layout.activity_sens_pop_code);
+        //得到弹出框手机号的值
+        final String sens_phone1 = sens_edit_phone.getText().toString();
+        //将手机号赋给验证码处
+        codephone.setText("验证码发送至   "+sens_phone1);
+
+        //滴滴输入验证码的方法
+        picToCodeinitListener();
+
+        //开启倒计时
+        CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(resend, 70000, 1000);
+        mCountDownTimerUtils.start();
+
+        /**点击重新发送验证码**/
+        resend.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(context, "你点击了重新发送", Toast.LENGTH_SHORT).show();
+                //开启倒计时
+                CountDownTimerUtils mCountDownTimerUtils = new CountDownTimerUtils(resend, 70000, 1000);
+                mCountDownTimerUtils.start();
+                //调起滴滴获得验证码的方法
+                picToVerificationCodeTaskIDRequest(diDiOneParameter,"getVerificationCode","phoneNum",sens_phone1);
+            }
+        });
+    }
+    //接口，包括三个方法：（EditText的监听类  输入完验证码自动跳转）
+    private void picToCodeinitListener() {
+        mArray = new EditText[]{et_one, et_two, et_three,et_four};
+        for (int i = 0; i < mArray.length; i++) {
+            final int j = i;
+            mArray[j].addTextChangedListener(new TextWatcher() {
+                private CharSequence temp;
+
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    temp = s;
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                    if (temp.length() == 1 && j >= 0 && j < mArray.length - 1) {
+                        mArray[j + 1].setFocusable(true);
+                        mArray[j + 1].setFocusableInTouchMode(true);
+                        mArray[j + 1].requestFocus();
+                    }
+
+                    if (temp.length() == 0) {
+                        if (j >= 1) {
+                            mArray[j - 1].setFocusable(true);
+                            mArray[j - 1].setFocusableInTouchMode(true);
+                            mArray[j - 1].requestFocus();
+                        }
+                    }
+                    if (!TextUtils.isEmpty(et_one.getText().toString().trim()) && !TextUtils.isEmpty(et_two.getText().toString().trim()) && !TextUtils.isEmpty(et_three.getText().toString().trim()) && !TextUtils.isEmpty(et_four.getText().toString().trim())) {
+                        String code = et_one.getText().toString().trim() + et_two.getText().toString().trim() + et_three.getText().toString().trim() + et_four.getText().toString().trim();
+                        Toast.makeText(context,code, Toast.LENGTH_SHORT).show();
+                        //得到一个参数的对象
+                        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                        //调起发送验证码的方法
+                        submitePicTocodeTaskIDRequest(diDiOneParameter,"submitEcode","smsCode",code);
+                    }
+                }
+            });
+        }
+    }
+
 
     //设置密码的点击监听方法
     private void setPopPwdOnClickPwd() {
         //打开设置密码的对话框
-        final AlertDialog alertDialog = setAlertDialog(context,R.layout.activity_sens_pop_pwd);
+        alertDialog = setAlertDialog(context,R.layout.activity_sens_pop_pwd);
 
         //设置密码控件的监听
         sensitize_pwd.setOnClickListener(new View.OnClickListener() {
@@ -461,7 +515,6 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
 
 
 
-
     //调起得到是否注册过滴滴的TaskId的请求方法
     private void registerTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
         Call oneCall = diDiOneParameter.okUitls(modle,parameter,vaule);
@@ -469,7 +522,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(context,"找不到网关地址,请重启设备");
+                threadToast(context,"找不到网关地址,请重启设备");
                 //Toast.makeText(context, "找不到网关地址", Toast.LENGTH_SHORT).show();
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
@@ -497,7 +550,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+                threadToast(SensitizeActivity.this,"连接超时，请重试");
             }
 
             @Override
@@ -537,15 +590,33 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                     Log.d("zzz", "终于到了done:" + returnJSONStr);
 
                     ZhuCeBeanData zhuCeBeanData = gson.fromJson(returnJSONStr, ZhuCeBeanData.class);
-                    ZhuCeBeanData.ResultBean result = zhuCeBeanData.getResult();
-                    ZhuCeBeanData.ResultBean.NameValuePairsBean nameValuePairs = result.getNameValuePairs();
+                    int errorCode = zhuCeBeanData.getErrorCode();
+                    String errorMessage = zhuCeBeanData.getErrorMessage();
+                    if(errorCode!=0){
+                        threadToast(context,errorMessage);
+                    }else {
+                        ZhuCeBeanData.ResultBean result = zhuCeBeanData.getResult();
+                        ZhuCeBeanData.ResultBean.NameValuePairsBean nameValuePairs = result.getNameValuePairs();
 
-                    String dataStatus = nameValuePairs.getStatus();
-                    String userType = nameValuePairs.getUserType();
-                    Log.d("zzzz", "sensitize  解析出需要的值："+dataStatus +"=="+ userType);
-                    Message obtain = Message.obtain();
-                    obtain.obj=userType;
-                    handler.sendMessage(obtain);
+                        String dataStatus = nameValuePairs.getStatus();
+                        final String userType = nameValuePairs.getUserType();
+                        Log.d("zzzz", "sensitize  解析出需要的值："+dataStatus +"=="+ userType);
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(userType.equals("0")){
+                                    //登录对话框的方法
+                                    Pop_Log();
+                                }else {
+                                    //判断如果激活过就直接弹出得到验证码
+                                    DiDiOneParameter diDiOneParameter1 = new DiDiOneParameter();
+                                    //得到弹出框手机号的值
+                                    final String sens_phone1 = sens_edit_phone.getText().toString();
+                                    verificationCodeTaskIDRequest(diDiOneParameter1,"getVerificationCode","phoneNum",sens_phone1);
+                                }
+                            }
+                        });
+                    }
                 }
             }
         });
@@ -558,7 +629,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(context,"找不到网关地址,请重启设备");
+                threadToast(context,"找不到网关地址,请重启设备");
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -585,7 +656,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+                threadToast(SensitizeActivity.this,"连接超时，请重试");
             }
 
             @Override
@@ -624,23 +695,49 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                     Log.d("zzz", "当前的状态值：" + status);
                     Log.d("zzz", "终于到了done:" + returnJSONStr);
                     DengLuBeanData dengLuBeanData = gson.fromJson(returnJSONStr, DengLuBeanData.class);
-                    DengLuBeanData.ResultBean result = dengLuBeanData.getResult();
-                    String errno = result.getErrno();
-                    String error = result.getError();
-                    Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
-                    if(errno.equals("0")){
-                        Message obtain = Message.obtain();
-                        obtain.obj=error;
-                        logHandler.sendMessage(obtain);
+                    int errorCode = dengLuBeanData.getErrorCode();
+                    String errorMessage = dengLuBeanData.getErrorMessage();
+                    if(errorCode==0){
+                        DengLuBeanData.ResultBean result = dengLuBeanData.getResult();
+                        final String errno = result.getErrno();
+                        final String error = result.getError();
+                        Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(errno.equals("0")){
+                                    Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show();
+                                    //得到token值
+                                    String token = (String) instance.getData(context, "token", "");
+                                    //滴滴登录成功后将滴滴信息存入到数据库
+                                    Log.d("zzz", "sensitize  得到要用的token值：" + token);
+                                    presenterLayer.setSensitize("taxi",2,log_edit_pwd,log_edit_phone,token);
+                                    startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
+                                    finish();
+                                }else if(errno.equals("-425")){
+                                    threadToast(context,error);
+                                    //调起获取验证码的接口
+                                    //得到一个参数的对象
+                                    DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                                    //得到弹出框手机号的值
+                                    final String sens_phone1 = sens_edit_phone.getText().toString();
+                                    //调起滴滴获得验证码的方法
+                                    picToVerificationCodeTaskIDRequest(diDiOneParameter,"getVerificationCode","phoneNum",sens_phone1);
+                                }else {
+                                    Toast.makeText(context, "登录失败：" + error, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
                     }else {
-                        Message obtain = Message.obtain();
-                        obtain.obj=error;
-                        logHandler.sendMessage(obtain);
+                        threadToast(context,errorMessage);
                     }
                 }
             }
         });
     }
+
+
 
     //调起得到获取验证码滴滴的 TaskId的请求方法
     private void verificationCodeTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
@@ -649,7 +746,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(context,"找不到网关地址,请重启设备");
+                threadToast(context,"找不到网关地址,请重启设备");
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -676,7 +773,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+                threadToast(context,"连接超时，请重试");
             }
 
             @Override
@@ -708,221 +805,53 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                             e.printStackTrace();
                         }
                         //调起请求数据的方法
-                        verificationCodeDataRequest(diDiOneParameter,taskId);
+                        picToVerificationCodeDataRequest(diDiOneParameter,taskId);
                         Log.d("zzz", "当前的状态值：" + status);
                         return;
                     }
                     Log.d("zzz", "当前的状态值：" + status);
                     Log.d("zzz", "终于到了done:" + returnJSONStr);
-                    HuoQuYanZhengMaBeanData huoQuYanZhengMaBeanData = gson.fromJson(returnJSONStr, HuoQuYanZhengMaBeanData.class);
-                    HuoQuYanZhengMaBeanData.ResultBean result = huoQuYanZhengMaBeanData.getResult();
-                    String errno = result.getErrno();
-                    String error = result.getError();
-                    Log.d("zzz", "终于得到想要的值了" + errno+"==="+error);
-                    if(errno.equals("0")){
-                        Message obtain = Message.obtain();
-                        obtain.obj=error;
-                        getCodeHandler.sendMessage(obtain);
+                    GetPicCodeBeanData getPicCodeBeanData = gson.fromJson(returnJSONStr, GetPicCodeBeanData.class);
+                    int errorCode = getPicCodeBeanData.errorCode;
+                    String errorMessage = getPicCodeBeanData.errorMessage;
+                    Log.d("zzz", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
+                    if(errorCode!=0){
+                        threadToast(context,errorMessage);
                     }else {
-                        Message obtain = Message.obtain();
-                        obtain.obj=error;
-                        getCodeHandler.sendMessage(obtain);
-                    }
-                }
-            }
-        });
-    }
-
-
-    //调起得到发送验证码滴滴的TaskId的请求方法
-    private void submitecodeTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
-        Call oneCall = diDiOneParameter.okUitls(modle,parameter,vaule);
-        //开始请求
-        oneCall.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(context,"找不到网关地址,请重启设备");
-                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                //得到请求返回的值
-                String data = response.body().string();
-                Log.d("zzz","得到值是："+data);
-                //得到gson对象
-                Gson gson = new Gson();
-                //得到bean类
-                DiDiTaskIdBean taskIdBean = gson.fromJson(data, DiDiTaskIdBean.class);
-                //得到bean类里面的值
-                String taskId = taskIdBean.getTaskId();
-                //调起请求数据的方法
-                submitecodeDataRequest(diDiOneParameter,taskId);
-            }
-        });
-    }
-    //调起发送验证码滴滴的数据请求的方法
-    private void submitecodeDataRequest(final DiDiOneParameter diDiOneParameter, final String taskId) {
-        Call tweCall = diDiOneParameter.okUitls1(taskId);
-        tweCall.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(final Call call, Response response) throws IOException {
-                //得到请求返回的值
-                String data = response.body().string();
-                Log.d("zzz","得到值是："+data);
-                //解析数据
-                Gson gson = new Gson();
-                //得到解析的bean
-                DiDiZhuCeBean dataBean = gson.fromJson(data, DiDiZhuCeBean.class);
-                //得到值
-                String status = dataBean.getStatus();
-                String returnJSONStr = dataBean.getReturnJSONStr();
-
-                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
-                if(status.equals("fail")){
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(context, "滴滴没有开启", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }else {
-                    while (!status.equals("done")) {
-                        try {
-                            sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        //调起请求数据的方法
-                        submitecodeDataRequest(diDiOneParameter,taskId);
-                        Log.d("zzz", "当前的状态值：" + status);
-                        return;
-                    }
-                    Log.d("zzz", "当前的状态值：" + status);
-                    Log.d("zzz", "终于到了done:" + returnJSONStr);
-                    if(returnJSONStr.equals("none")){
-                        return;
-                    }else {
-                        //得到最终要解析的值
-                        DiDiCodeBean diDiCodeBean = gson.fromJson(returnJSONStr, DiDiCodeBean.class);
-                        String errno = diDiCodeBean.getErrno();
-                        String error = diDiCodeBean.getError();
-                        Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
-                        if(errno.equals("0")){
-                            Message obtain = Message.obtain();
-                            obtain.obj=error;
-                            codeHandler.sendMessage(obtain);
+                        GetPicCodeBeanData.ResultBean result = getPicCodeBeanData.result;
+                        List<Object> values = result.values;
+                        if(values==null){
+                            threadToast(context,"获得短信验证码");
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setCodeOnClick();
+                                }
+                            });
                         }else {
-                            Message obtain = Message.obtain();
-                            obtain.obj=errno;
-                            codeHandler1.sendMessage(obtain);
+                            Object msg = values.get(0);
+                            final Object pic= values.get(1);
+                            Log.d("zzz", "得到验证码之类的值："+msg+"=="+pic);
+                            DiDiCodeBean diDiCodeBean = gson.fromJson(String.valueOf(msg), DiDiCodeBean.class);
+                            String errno = diDiCodeBean.getErrno();
+                            String error = diDiCodeBean.getError();
+                            Log.d("zzz", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
+                            if(errno.equals("1003")){
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setPhotoCodeOnClick(pic);
+                                    }
+                                });
+                            }else {
+                                threadToast(context,error);
+                            }
                         }
                     }
                 }
             }
         });
     }
-
-
-    //调起得到设置密码 滴滴的TaskId的请求方法
-    private void setpwdTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
-        Call oneCall = diDiOneParameter.okUitls(modle,parameter,vaule);
-        //开始请求
-        oneCall.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(context,"找不到网关地址,请重启设备");
-                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                //得到请求返回的值
-                String data = response.body().string();
-                Log.d("zzz","得到值是："+data);
-                //得到gson对象
-                Gson gson = new Gson();
-                //得到bean类
-                DiDiTaskIdBean taskIdBean = gson.fromJson(data, DiDiTaskIdBean.class);
-                //得到bean类里面的值
-                String taskId = taskIdBean.getTaskId();
-                //调起请求数据的方法
-                setpwdDataRequest(diDiOneParameter,taskId);
-            }
-        });
-    }
-    //调起设置密码 滴滴的数据请求的方法
-    private void setpwdDataRequest(final DiDiOneParameter diDiOneParameter, final String taskId) {
-        Call tweCall = diDiOneParameter.okUitls1(taskId);
-        tweCall.enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onResponse(final Call call, Response response) throws IOException {
-                //得到请求返回的值
-                String data = response.body().string();
-                Log.d("zzz","得到值是："+data);
-                //解析数据
-                Gson gson = new Gson();
-                //得到解析的bean
-                DiDiZhuCeBean dataBean = gson.fromJson(data, DiDiZhuCeBean.class);
-                //得到值
-                String status = dataBean.getStatus();
-                String returnJSONStr = dataBean.getReturnJSONStr();
-
-                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
-                if(status.equals("fail")){
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(context, "滴滴没有开启", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }else {
-                    while (!status.equals("done")) {
-                        try {
-                            sleep(500);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        //调起请求数据的方法
-                        setpwdDataRequest(diDiOneParameter,taskId);
-                        Log.d("zzz", "当前的状态值：" + status);
-                        return;
-                    }
-                    Log.d("zzz", "当前的状态值：" + status);
-                    Log.d("zzz", "终于到了done:" + returnJSONStr);
-                    SheZhiMiMaBeanData sheZhiMiMaBeanData = gson.fromJson(returnJSONStr, SheZhiMiMaBeanData.class);
-                    String result = sheZhiMiMaBeanData.getResult();
-                    Log.d("zzz", "终于到了result:" + result);
-                    SheZhiMiMaSuccessBeanData sheZhiMiMaSuccessBeanData = gson.fromJson(result, SheZhiMiMaSuccessBeanData.class);
-                    String errno = sheZhiMiMaSuccessBeanData.getErrno();
-                    String error = sheZhiMiMaSuccessBeanData.getError();
-                    Log.d("zzz", "终于到了设置密码想要的值了：" + errno+"==="+error);
-                    if(errno.equals("0")){
-                        Message obtain = Message.obtain();
-                        obtain.obj=error;
-                        setLoginHandler.sendMessage(obtain);
-                    }else {
-                        Message obtain = Message.obtain();
-                        obtain.obj=error;
-                        setLoginHandler.sendMessage(obtain);
-                    }
-                }
-            }
-        });
-    }
-
 
     //调起得到发送图形验证码 滴滴的TaskId的请求方法
     private void setPhotoCodeTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
@@ -931,7 +860,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                backgroundThreadShortToast(context,"找不到网关地址,请重启设备");
+                threadToast(context,"找不到网关地址,请重启设备");
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -958,7 +887,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
-                Toast.makeText(context, e.toString(), Toast.LENGTH_SHORT).show();
+                threadToast(context,"连接超时，请重试");
             }
 
             @Override
@@ -997,44 +926,613 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                 }
                 Log.d("zzz", "当前的状态值：" + status);
                 Log.d("zzz", "终于到了done:" + returnJSONStr);
-
-                Message obtain = Message.obtain();
-                obtain.obj="success";
-                picCodeHandler.sendMessage(obtain);
-
-                //得到成功的标示跳到设置密码页面
-                /*if(returnJSONStr.equals("success")){
-                    Message obtain = Message.obtain();
-                    obtain.obj="success";
-                    picCodeHandler.sendMessage(obtain);
+                GetPicCodeBeanData getPicCodeBeanData = gson.fromJson(returnJSONStr, GetPicCodeBeanData.class);
+                int errorCode = getPicCodeBeanData.errorCode;
+                String errorMessage = getPicCodeBeanData.errorMessage;
+                Log.d("zzz", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
+                if(errorCode!=0){
+                    threadToast(context,errorMessage);
                 }else {
-                    //得到最终要解析的值
-                    DiDiCodeBean diDiCodeBean = gson.fromJson(returnJSONStr, DiDiCodeBean.class);
-                    String errno = diDiCodeBean.getErrno();
-                    String error = diDiCodeBean.getError();
-                    Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
-                    Message obtain = Message.obtain();
-                    obtain.obj=errno;
-                    codeHandler1.sendMessage(obtain);
-                }*/
+                    GetPicCodeBeanData.ResultBean result = getPicCodeBeanData.result;
+                    List<Object> values = result.values;
+                    if(values==null){
+                        threadToast(context,"验证成功");
+                        HuoQuYanZhengMaBeanData huoQuYanZhengMaBeanData = gson.fromJson(returnJSONStr, HuoQuYanZhengMaBeanData.class);
+                        HuoQuYanZhengMaBeanData.ResultBean result1 = huoQuYanZhengMaBeanData.getResult();
+                        String errno = result1.getErrno();
+                        String error = result1.getError();
+                        Log.d("zzz", "得到验证码之类的值："+errno+ "==" +error);
+                        if(errno.equals("0")){
+                            alertDialog.cancel();
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setCodeOnClick();
+                                }
+                            });
+                        }else {
+                            threadToast(context,"图形验证码的信息："+error);
+                        }
+                    }else {
+                        Object msg = values.get(0);
+                        final Object pic= values.get(1);
+                        Log.d("zzz", "得到验证码之类的值："+msg+ "==" +pic);
+                        DiDiCodeBean diDiCodeBean = gson.fromJson(String.valueOf(msg), DiDiCodeBean.class);
+                        String errno = diDiCodeBean.getErrno();
+                        String error = diDiCodeBean.getError();
+                        Log.d("zzz", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
+                        if(errno.equals("2002")){
+                            alertDialog.cancel();
+                            threadToast(context,error);
+                            Log.d("zzz", "得到验证错误后的图形：" +pic);
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setPhotoCodeOnClick(pic);
+                                }
+                            });
+                        }else {
+                            threadToast(context,error);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    //调起得到发送验证码滴滴的TaskId的请求方法
+    private void submiteCodeTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
+        Call oneCall = diDiOneParameter.okUitls(modle,parameter,vaule);
+        //开始请求
+        oneCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                threadToast(context,"找不到网关地址,请重启设备");
+                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //得到gson对象
+                Gson gson = new Gson();
+                //得到bean类
+                DiDiTaskIdBean taskIdBean = gson.fromJson(data, DiDiTaskIdBean.class);
+                //得到bean类里面的值
+                String taskId = taskIdBean.getTaskId();
+                //调起请求数据的方法
+                submiteCodeDataRequest(diDiOneParameter,taskId);
+            }
+        });
+    }
+    //调起发送验证码滴滴的数据请求的方法
+    private void submiteCodeDataRequest(final DiDiOneParameter diDiOneParameter, final String taskId) {
+        Call tweCall = diDiOneParameter.okUitls1(taskId);
+        tweCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
+                threadToast(SensitizeActivity.this,"连接超时，请重试");
+            }
+
+            @Override
+            public void onResponse(final Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //解析数据
+                Gson gson = new Gson();
+                //得到解析的bean
+                DiDiZhuCeBean dataBean = gson.fromJson(data, DiDiZhuCeBean.class);
+                //得到值
+                String status = dataBean.getStatus();
+                String returnJSONStr = dataBean.getReturnJSONStr();
+
+                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
+                if(status.equals("fail")){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "滴滴没有开启", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    while (!status.equals("done")) {
+                        try {
+                            sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //调起请求数据的方法
+                        submiteCodeDataRequest(diDiOneParameter,taskId);
+                        Log.d("zzz", "当前的状态值：" + status);
+                        return;
+                    }
+                    Log.d("zzz", "当前的状态值：" + status);
+                    Log.d("zzz", "终于到了done:" + returnJSONStr);
+                    if(returnJSONStr.equals("none")){
+                        return;
+                    }else {
+                        //得到最终要解析的值
+                        DiDiCodeBean diDiCodeBean = gson.fromJson(returnJSONStr, DiDiCodeBean.class);
+                        final String errno = diDiCodeBean.getErrno();
+                        final String error = diDiCodeBean.getError();
+                        Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(error.equals("OK")){
+                                    setPopPwdOnClickPwd();
+                                }else {
+                                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+    //调起得到设置密码 滴滴的TaskId的请求方法
+    private void setpwdTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
+        Call oneCall = diDiOneParameter.okUitls(modle,parameter,vaule);
+        //开始请求
+        oneCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                threadToast(context,"找不到网关地址,请重启设备");
+                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //得到gson对象
+                Gson gson = new Gson();
+                //得到bean类
+                DiDiTaskIdBean taskIdBean = gson.fromJson(data, DiDiTaskIdBean.class);
+                //得到bean类里面的值
+                String taskId = taskIdBean.getTaskId();
+                //调起请求数据的方法
+                setpwdDataRequest(diDiOneParameter,taskId);
+            }
+        });
+    }
+    //调起设置密码 滴滴的数据请求的方法
+    private void setpwdDataRequest(final DiDiOneParameter diDiOneParameter, final String taskId) {
+        Call tweCall = diDiOneParameter.okUitls1(taskId);
+        tweCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
+                threadToast(SensitizeActivity.this,"连接超时，请重试");
+            }
+
+            @Override
+            public void onResponse(final Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //解析数据
+                Gson gson = new Gson();
+                //得到解析的bean
+                DiDiZhuCeBean dataBean = gson.fromJson(data, DiDiZhuCeBean.class);
+                //得到值
+                String status = dataBean.getStatus();
+                String returnJSONStr = dataBean.getReturnJSONStr();
+
+                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
+                if(status.equals("fail")){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "滴滴没有开启", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    while (!status.equals("done")) {
+                        try {
+                            sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //调起请求数据的方法
+                        setpwdDataRequest(diDiOneParameter,taskId);
+                        Log.d("zzz", "当前的状态值：" + status);
+                        return;
+                    }
+                    Log.d("zzz", "当前的状态值：" + status);
+                    Log.d("zzz", "终于到了done:" + returnJSONStr);
+                    SheZhiMiMaBeanData sheZhiMiMaBeanData = gson.fromJson(returnJSONStr, SheZhiMiMaBeanData.class);
+                    int errorCode = sheZhiMiMaBeanData.getErrorCode();
+                    String errorMessage = sheZhiMiMaBeanData.getErrorMessage();
+                    if(errorCode!=0){
+                        threadToast(context,errorMessage);
+                    }else {
+                        String result = sheZhiMiMaBeanData.getResult();
+                        Log.d("zzz", "终于到了result:" + result);
+                        SheZhiMiMaSuccessBeanData sheZhiMiMaSuccessBeanData = gson.fromJson(result, SheZhiMiMaSuccessBeanData.class);
+                        final String errno = sheZhiMiMaSuccessBeanData.getErrno();
+                        final String error = sheZhiMiMaSuccessBeanData.getError();
+                        Log.d("zzz", "终于到了设置密码想要的值了：" + errno+"==="+error);
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(errno.equals("0")){
+                                    Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show();
+                                    //得到token值
+                                    String token = (String) instance.getData(context, "token", "");
+                                    //滴滴登录成功后将滴滴信息存入到数据库
+                                    Log.d("zzz", "sensitize  得到要用的token值：" + token);
+                                    presenterLayer.setSensitize("taxi",2,pwd,sens_phone,token);
+                                    Log.d("zzz", "  设置密码之前得到密码值：" + pwd);
+                                    startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
+                                    finish();
+                                }else {
+                                    Toast.makeText(context, "设置密码的提示：\n"+error, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }
             }
         });
     }
 
 
 
-    //解决在子线程中吐司的方法
-    public  void backgroundThreadShortToast(final Context context, final String msg) {
-        if (context != null && msg != null) {
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
 
-                @Override
-                public void run() {
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
+    //调起得到获取验证码滴滴的 TaskId的请求方法
+    private void picToVerificationCodeTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
+        Call oneCall = diDiOneParameter.okUitls(modle,parameter,vaule);
+        //开始请求
+        oneCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                threadToast(context,"找不到网关地址,请重启设备");
+                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //得到gson对象
+                Gson gson = new Gson();
+                //得到bean类
+                DiDiTaskIdBean taskIdBean = gson.fromJson(data, DiDiTaskIdBean.class);
+                //得到bean类里面的值
+                String taskId = taskIdBean.getTaskId();
+                //调起请求数据的方法
+                picToVerificationCodeDataRequest(diDiOneParameter,taskId);
+            }
+        });
     }
+    //调起获取验证码滴滴的求数据请的方法
+    private void picToVerificationCodeDataRequest(final DiDiOneParameter diDiOneParameter, final String taskId) {
+        Call tweCall = diDiOneParameter.okUitls1(taskId);
+        tweCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
+                threadToast(context,"连接超时，请重试");
+            }
+
+            @Override
+            public void onResponse(final Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //解析数据
+                Gson gson = new Gson();
+                //得到解析的bean
+                DiDiZhuCeBean dataBean = gson.fromJson(data, DiDiZhuCeBean.class);
+                //得到值
+                String status = dataBean.getStatus();
+                String returnJSONStr = dataBean.getReturnJSONStr();
+
+                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
+                if(status.equals("fail")){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "滴滴没有开启", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    while (!status.equals("done")) {
+                        try {
+                            sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //调起请求数据的方法
+                        picToVerificationCodeDataRequest(diDiOneParameter,taskId);
+                        Log.d("zzz", "当前的状态值：" + status);
+                        return;
+                    }
+                    Log.d("zzz", "当前的状态值：" + status);
+                    Log.d("zzz", "终于到了done:" + returnJSONStr);
+                    GetPicCodeBeanData getPicCodeBeanData = gson.fromJson(returnJSONStr, GetPicCodeBeanData.class);
+                    int errorCode = getPicCodeBeanData.errorCode;
+                    String errorMessage = getPicCodeBeanData.errorMessage;
+                    Log.d("zzz", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
+                    if(errorCode!=0){
+                        threadToast(context,errorMessage);
+                    }else {
+                        GetPicCodeBeanData.ResultBean result = getPicCodeBeanData.result;
+                        List<Object> values = result.values;
+                        if(values==null){
+                            threadToast(context,"获得短信验证码");
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setPicToCodeOnClick();
+                                }
+                            });
+                        }else {
+                            Object msg = values.get(0);
+                            final Object pic= values.get(1);
+                            Log.d("zzz", "得到验证码之类的值："+msg+"=="+pic);
+                            DiDiCodeBean diDiCodeBean = gson.fromJson(String.valueOf(msg), DiDiCodeBean.class);
+                            String errno = diDiCodeBean.getErrno();
+                            String error = diDiCodeBean.getError();
+                            Log.d("zzz", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
+                            if(errno.equals("1003")){
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        setPicCodeOnClick(pic);
+                                    }
+                                });
+                            }else {
+                                threadToast(context,error);
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    //调起得到发送图形验证码 滴滴的TaskId的请求方法
+    private void setPicCodeTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
+        Call oneCall = diDiOneParameter.okUitls(modle,parameter,vaule);
+        //开始请求
+        oneCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                threadToast(context,"找不到网关地址,请重启设备");
+                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //得到gson对象
+                Gson gson = new Gson();
+                //得到bean类
+                DiDiTaskIdBean taskIdBean = gson.fromJson(data, DiDiTaskIdBean.class);
+                //得到bean类里面的值
+                String taskId = taskIdBean.getTaskId();
+                //调起请求数据的方法
+                setPicCodeDataRequest(diDiOneParameter,taskId);
+            }
+        });
+    }
+    //调起发送图形验证码滴滴的数据请求的方法
+    private void setPicCodeDataRequest(final DiDiOneParameter diDiOneParameter, final String taskId) {
+        Call tweCall = diDiOneParameter.okUitls1(taskId);
+        tweCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
+                threadToast(context,"连接超时，请重试");
+            }
+
+            @Override
+            public void onResponse(final Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //解析数据
+                Gson gson = new Gson();
+                //得到解析的bean
+                DiDiZhuCeBean dataBean = gson.fromJson(data, DiDiZhuCeBean.class);
+                //得到值
+                String status = dataBean.getStatus();
+                String returnJSONStr = dataBean.getReturnJSONStr();
+
+                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
+                if(status.equals("fail")){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "滴滴没有开启", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    while (!status.equals("done")) {
+                        try {
+                            sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //调起请求数据的方法
+                        setPicCodeDataRequest(diDiOneParameter,taskId);
+                        Log.d("zzz", "当前的状态值：" + status);
+                        return;
+                    }
+                }
+                Log.d("zzz", "当前的状态值：" + status);
+                Log.d("zzz", "终于到了done:" + returnJSONStr);
+                GetPicCodeBeanData getPicCodeBeanData = gson.fromJson(returnJSONStr, GetPicCodeBeanData.class);
+                int errorCode = getPicCodeBeanData.errorCode;
+                String errorMessage = getPicCodeBeanData.errorMessage;
+                Log.d("zzz", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
+                if(errorCode!=0){
+                    threadToast(context,errorMessage);
+                }else {
+                    GetPicCodeBeanData.ResultBean result = getPicCodeBeanData.result;
+                    List<Object> values = result.values;
+                    if(values==null){
+                        threadToast(context,"验证成功");
+                        HuoQuYanZhengMaBeanData huoQuYanZhengMaBeanData = gson.fromJson(returnJSONStr, HuoQuYanZhengMaBeanData.class);
+                        HuoQuYanZhengMaBeanData.ResultBean result1 = huoQuYanZhengMaBeanData.getResult();
+                        String errno = result1.getErrno();
+                        String error = result1.getError();
+                        Log.d("zzz", "得到验证码之类的值："+errno+ "==" +error);
+                        if(errno.equals("0")){
+                            alertDialog.cancel();
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setPicToCodeOnClick();
+                                }
+                            });
+                        }else {
+                            threadToast(context,"图形验证码的信息："+error);
+                        }
+                    }else {
+                        Object msg = values.get(0);
+                        final Object pic= values.get(1);
+                        Log.d("zzz", "得到验证码之类的值："+msg+ "==" +pic);
+                        DiDiCodeBean diDiCodeBean = gson.fromJson(String.valueOf(msg), DiDiCodeBean.class);
+                        String errno = diDiCodeBean.getErrno();
+                        String error = diDiCodeBean.getError();
+                        Log.d("zzz", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
+                        if(errno.equals("2002")){
+                            alertDialog.cancel();
+                            threadToast(context,error);
+                            Log.d("zzz", "得到验证错误后的图形：" +pic);
+                            new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setPicCodeOnClick(pic);
+                                }
+                            });
+                        }else {
+                            threadToast(context,error);
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    //图片验证码发送成功后，发送短信验证码    滴滴的TaskId的请求方法
+    private void submitePicTocodeTaskIDRequest(final DiDiOneParameter diDiOneParameter,String modle,String parameter,String vaule) {
+        Call oneCall = diDiOneParameter.okUitls(modle,parameter,vaule);
+        //开始请求
+        oneCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                threadToast(context,"找不到网关地址,请重启设备");
+                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //得到gson对象
+                Gson gson = new Gson();
+                //得到bean类
+                DiDiTaskIdBean taskIdBean = gson.fromJson(data, DiDiTaskIdBean.class);
+                //得到bean类里面的值
+                String taskId = taskIdBean.getTaskId();
+                //调起请求数据的方法
+                submitePicTocodeDataRequest(diDiOneParameter,taskId);
+            }
+        });
+    }
+    //图片验证码发送成功后，发送短信验证码    滴滴的数据请求的方法
+    private void submitePicTocodeDataRequest(final DiDiOneParameter diDiOneParameter, final String taskId) {
+        Call tweCall = diDiOneParameter.okUitls1(taskId);
+        tweCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("zzz", "请求过程中错误的信息：--" + e.toString());
+                threadToast(SensitizeActivity.this,"连接超时，请重试");
+            }
+
+            @Override
+            public void onResponse(final Call call, Response response) throws IOException {
+                //得到请求返回的值
+                String data = response.body().string();
+                Log.d("zzz","得到值是："+data);
+                //解析数据
+                Gson gson = new Gson();
+                //得到解析的bean
+                DiDiZhuCeBean dataBean = gson.fromJson(data, DiDiZhuCeBean.class);
+                //得到值
+                String status = dataBean.getStatus();
+                String returnJSONStr = dataBean.getReturnJSONStr();
+
+                Log.d("zzz","得到值是："+status+"------"+returnJSONStr);
+                if(status.equals("fail")){
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(context, "滴滴没有开启", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }else {
+                    while (!status.equals("done")) {
+                        try {
+                            sleep(500);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                        //调起请求数据的方法
+                        submitePicTocodeDataRequest(diDiOneParameter,taskId);
+                        Log.d("zzz", "当前的状态值：" + status);
+                        return;
+                    }
+                    Log.d("zzz", "当前的状态值：" + status);
+                    Log.d("zzz", "终于到了done:" + returnJSONStr);
+                    if(returnJSONStr.equals("none")){
+                        return;
+                    }else {
+                        //得到最终要解析的值
+                        DiDiCodeBean diDiCodeBean = gson.fromJson(returnJSONStr, DiDiCodeBean.class);
+                        final String errno = diDiCodeBean.getErrno();
+                        final String error = diDiCodeBean.getError();
+                        Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
+
+
+
+                        new Handler(Looper.getMainLooper()).post(new Runnable() {
+                            @Override
+                            public void run() {
+                                if(errno.equals("0")){
+                                    Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show();
+                                    alertDialog.cancel();
+                                    finish();
+                                }else {
+                                    Toast.makeText(context,error, Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        });
+    }
+
+
+
 
     //弹出对话框的属性
     public AlertDialog setAlertDialog(Context context,int view){
@@ -1086,7 +1584,26 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         et_four = (EditText) view.findViewById(R.id.e_frou);
     }
 
+    //将16进制改成btye数组
+    private byte[] hexStrToByteArray(String str) {
+        if (str == null) {
+            return null;
+        }
+        if (str.length() == 0) {
+            return new byte[0];
+        }
+        byte[] byteArray = new byte[str.length() / 2];
+        for (int i = 0; i < byteArray.length; i++) {
+            String subStr = str.substring(2 * i, 2 * i + 2);
+            byteArray[i] = ((byte) Integer.parseInt(subStr, 16));
+        }
+        return byteArray;
+    }
 
+    //判断手机号的正则标的是
+    public  boolean isMobile(String mobile) {
+        return Pattern.matches( "^((13[0-9])|(15[^4,\\D])|(18[0-9]))\\d{8}$", mobile);
+    }
 
     //是否激活了本App
     @Override
@@ -1103,9 +1620,9 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                 nextOnclivk();
             }else {
                 //弹出的对话框-
-                //normalDialog(data);
+                normalDialog(data);
                 //下一步的点击监听
-                nextOnclivk();
+                //nextOnclivk();
                 Log.d("zzz", "sensitize  返回的信息   请去邮箱激活此APP，方可激活服务");
             }
         }else {
@@ -1141,7 +1658,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
     //弹出的对话框
     private void normalDialog(final int data) {
         AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        alertDialog = builder.create();
+        alertDialog= builder.create();
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.setCancelable(false);
         View view = View.inflate(context, R.layout.activity_alertdialog, null);
@@ -1153,16 +1670,8 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, R.string.adl_tweMsg_t, Toast.LENGTH_LONG).show();
-                //startActivity(new Intent(SensitizeActivity.this, MainActivity.class));
+                startActivity(new Intent(SensitizeActivity.this, MainActivity.class));
                 SensitizeActivity.this.finish();
-            }
-        });
-        quxiao.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(context,R.string.adl_tweMsg_t,Toast.LENGTH_LONG).show();
-                startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
-                finish();
             }
         });
         chongxin.setOnClickListener(new View.OnClickListener() {
@@ -1175,5 +1684,29 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         });
         alertDialog.setView(view);
         alertDialog.show();
+    }
+
+    //子线程吐司的方法
+    public  void threadToast(final Context context, final String msg) {
+        if (context != null && msg != null) {
+            new Handler(Looper.getMainLooper()).post(new Runnable() {
+
+                @Override
+                public void run() {
+                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            System.out.println("按下了back键   onKeyDown()");
+            startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
+            finish();
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
+        }
     }
 }

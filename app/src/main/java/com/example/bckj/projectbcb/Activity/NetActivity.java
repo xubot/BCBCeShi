@@ -53,4 +53,5 @@ public class NetActivity extends AppCompatActivity {
             Toast.makeText(this, "当前网络不可用，请检查网络是否正常", Toast.LENGTH_SHORT).show();
         }
     }
+
 }

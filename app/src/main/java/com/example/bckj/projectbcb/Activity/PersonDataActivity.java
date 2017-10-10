@@ -103,7 +103,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(PersonDataActivity.this,ModifyActivity.class));
-                finish();
+                //finish();
             }
         });
     }

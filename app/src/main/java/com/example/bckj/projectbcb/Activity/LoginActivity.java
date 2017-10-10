@@ -3,7 +3,6 @@ package com.example.bckj.projectbcb.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -206,7 +205,7 @@ public class LoginActivity extends BaseActivity implements LoginView{
             startActivity(new Intent(LoginActivity.this,SensitizeActivity.class));
         }
     }
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    /*public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             System.out.println("按下了back键   onKeyDown()");
             startActivity(new Intent(LoginActivity.this,LogActivity.class));
@@ -215,5 +214,5 @@ public class LoginActivity extends BaseActivity implements LoginView{
         }else {
             return super.onKeyDown(keyCode, event);
         }
-    }
+    }*/
 }

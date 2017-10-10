@@ -2,6 +2,8 @@ package com.example.bckj.projectbcb.Utils.DiDiUtils;
 
 import android.util.Log;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -15,7 +17,9 @@ import okhttp3.RequestBody;
 public class DiDiOneParameter {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public Call okUitls(String methodName, String name, String phone){
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(3, TimeUnit.SECONDS);
+        OkHttpClient client = builder.build();
         String json="{\n" +
                 "  \"androidId\": \"d81e4d43835c5dbb\",\n" +
                 "  \"pkgName\": \"com.sdu.didi.psnger\",\n" +
@@ -33,6 +37,7 @@ public class DiDiOneParameter {
         Call call = client.newCall(request);
         return call;
     }
+
     public Call okUitls1(String taskId){
         Log.d("zzz", "请求下来的taskid:"+taskId);
         String path=new PathUrl().URLDATA+taskId+"";

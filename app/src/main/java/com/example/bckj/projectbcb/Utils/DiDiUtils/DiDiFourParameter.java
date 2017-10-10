@@ -2,6 +2,8 @@ package com.example.bckj.projectbcb.Utils.DiDiUtils;
 
 import android.util.Log;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Call;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -15,7 +17,9 @@ import okhttp3.RequestBody;
 public class DiDiFourParameter {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     public Call okUitls(String startAddress,String endAddress,String slat,String slng,String elat,String elng){
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        builder.connectTimeout(3, TimeUnit.SECONDS);
+        OkHttpClient client = builder.build();
         String json="{\n" +
                 "  \"androidId\": \"d81e4d43835c5dbb\",\n" +
                 "  \"pkgName\": \"com.sdu.didi.psnger\",\n" +

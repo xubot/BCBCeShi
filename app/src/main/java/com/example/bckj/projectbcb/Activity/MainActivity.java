@@ -145,9 +145,9 @@ public class MainActivity extends BaseActivity implements MainView{
     public void initView() {
         setContentView(R.layout.activity_main);
 
-        DecideWifi.getIp(this);
         //判断连接的是否是局域网
         DecideWifiMethod(new DecideWifi(),"getVerificationCode","phoneNum","13051672112");
+
         //得到刚进入就要用的控件方法
         initFindView();
 
@@ -197,36 +197,25 @@ public class MainActivity extends BaseActivity implements MainView{
     //判断连接的是否是局域网
     private void DecideWifiMethod(final DecideWifi decideWifi, String modle, String parameter, String vaule) {
         Call oneCall = decideWifi.okUitls(modle,parameter,vaule);
-        if(oneCall==null){
-            Log.d("zzz", "连接不正确");
-            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                @Override
-                public void run() {
-                    new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
-                }
-            });
-            return;
-        }else {
-            //开始请求
-            oneCall.enqueue(new Callback() {
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    Log.d("zzz", "请求过程中错误的信息：" + e.toString());
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                            new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
-                        }
-                    });
-                }
+        //开始请求
+        oneCall.enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d("zzz", "请求过程中错误的信息：" + e.toString());
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
+                    }
+                });
+            }
 
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    Log.d("zzz", "连接正确，可进行下面的操作");
-                    return;
-                }
-            });
-        }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                Log.d("zzz", "连接正确，可进行下面的操作");
+                return;
+            }
+        });
     }
 
 
@@ -264,15 +253,15 @@ public class MainActivity extends BaseActivity implements MainView{
             if(mainLogCode==1){
                 Log.d("zzz", "main 得到本地存的taken值：-" +token);
                 presenterLayer.setSensitizelist(token);
-                /*//登录滴滴
+                //登录滴滴
                 String taxiaccount = (String) instance.getData(MainActivity.this, "taxiaccount", "");
                 String taxipass = (String) instance.getData(MainActivity.this, "taxipass", "");
                 Log.d("zzz", "Main   如果登录退出将自动登录滴滴的账号信息：" + taxiaccount + "==" + taxipass);
                 if((taxiaccount.isEmpty()&&taxiaccount.length()==0)&&(taxipass.isEmpty()&&taxipass.length()==0)){
                     return;
                 }else {
-                    logInTaskIDRequest(new DiDiTweParameter(), "login", "15718871164", "X123456789");
-                }*/
+                    //logInTaskIDRequest(new DiDiTweParameter(), "login", taxiaccount, taxipass);
+                }
             }else {
                 return;
             }
@@ -401,7 +390,7 @@ public class MainActivity extends BaseActivity implements MainView{
                 }else {
                     taxi_meun_jihuo.setText(R.string.jihuo);
                     startActivity(new Intent(MainActivity.this,SensitizeActivity.class));
-                    finish();
+                    //finish();
                 }
             }
         });
@@ -941,10 +930,9 @@ public class MainActivity extends BaseActivity implements MainView{
                     @Override
                     public void run() {
                         myWebView.loadUrl("javascript:backHome()");
+                        new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
                     }
                 });
-
-                threadToast(MainActivity.this,"找不到网关地址,请重启设备");
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1106,7 +1094,12 @@ public class MainActivity extends BaseActivity implements MainView{
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(MainActivity.this,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1195,7 +1188,12 @@ public class MainActivity extends BaseActivity implements MainView{
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(MainActivity.this,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1305,7 +1303,12 @@ public class MainActivity extends BaseActivity implements MainView{
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(MainActivity.this,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1449,7 +1452,12 @@ public class MainActivity extends BaseActivity implements MainView{
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(MainActivity.this,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1564,7 +1572,12 @@ public class MainActivity extends BaseActivity implements MainView{
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(MainActivity.this,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1692,7 +1705,12 @@ public class MainActivity extends BaseActivity implements MainView{
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(MainActivity.this,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(MainActivity.this);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 

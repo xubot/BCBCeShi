@@ -16,6 +16,7 @@ import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiTaskIdBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DiDiZhuCeBean;
 import com.example.bckj.projectbcb.Bean.DiDiBean.DingDaiLieBiaoBeanData;
 import com.example.bckj.projectbcb.R;
+import com.example.bckj.projectbcb.Utils.DecideWifiAlertdialog;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiOneParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.QuXiaoDingDaiUtils;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
@@ -198,7 +199,12 @@ public class TaxiActivity extends BaseActivity {
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(TaxiActivity.this,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(TaxiActivity.this);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -317,7 +323,12 @@ public class TaxiActivity extends BaseActivity {
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(TaxiActivity.this,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(TaxiActivity.this);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 

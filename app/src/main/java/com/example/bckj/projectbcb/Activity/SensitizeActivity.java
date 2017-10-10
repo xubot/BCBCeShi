@@ -13,7 +13,6 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -37,6 +36,7 @@ import com.example.bckj.projectbcb.Bean.StatusBean;
 import com.example.bckj.projectbcb.Presenter.PresenterLayer;
 import com.example.bckj.projectbcb.R;
 import com.example.bckj.projectbcb.Utils.CountDownTimerUtils;
+import com.example.bckj.projectbcb.Utils.DecideWifiAlertdialog;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiOneParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiTweParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.PathUrl;
@@ -93,7 +93,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             back.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
+                    //startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
                     finish();
                 }
             });
@@ -101,7 +101,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
+                    //startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
                     finish();
                 }
             });
@@ -522,8 +522,12 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(context,"找不到网关地址,请重启设备");
-                //Toast.makeText(context, "找不到网关地址", Toast.LENGTH_SHORT).show();
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(context);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -629,7 +633,12 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(context,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(context);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -746,7 +755,12 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(context,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(context);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -860,7 +874,12 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(context,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(context);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -987,7 +1006,12 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(context,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(context);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1084,7 +1108,12 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(context,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(context);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1196,7 +1225,12 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(context,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(context);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1310,7 +1344,12 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(context,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(context);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1437,7 +1476,12 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         oneCall.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
-                threadToast(context,"找不到网关地址,请重启设备");
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        new DecideWifiAlertdialog().netAlertdialog(context);
+                    }
+                });
                 Log.d("zzz", "请求过程中错误的信息：" + e.toString());
             }
 
@@ -1620,9 +1664,9 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                 nextOnclivk();
             }else {
                 //弹出的对话框-
-                normalDialog(data);
+                //normalDialog(data);
                 //下一步的点击监听
-                //nextOnclivk();
+                nextOnclivk();
                 Log.d("zzz", "sensitize  返回的信息   请去邮箱激活此APP，方可激活服务");
             }
         }else {
@@ -1670,7 +1714,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, R.string.adl_tweMsg_t, Toast.LENGTH_LONG).show();
-                startActivity(new Intent(SensitizeActivity.this, MainActivity.class));
+                //startActivity(new Intent(SensitizeActivity.this, MainActivity.class));
                 SensitizeActivity.this.finish();
             }
         });
@@ -1699,7 +1743,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         }
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+   /* public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             System.out.println("按下了back键   onKeyDown()");
             startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
@@ -1708,5 +1752,5 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         }else {
             return super.onKeyDown(keyCode, event);
         }
-    }
+    }*/
 }

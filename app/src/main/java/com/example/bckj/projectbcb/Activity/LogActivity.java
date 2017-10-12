@@ -100,7 +100,7 @@ public class LogActivity extends BaseActivity implements LogView{
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //startActivity(new Intent(LogActivity.this,MainActivity.class));
+                startActivity(new Intent(LogActivity.this,MainActivity.class));
                 finish();
             }
         });

@@ -16,7 +16,6 @@ import okhttp3.RequestBody;
 
 public class DecideWifi {
     public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
-    private static String ip;
 
     public Call okUitls(String methodName, String name, String phone){
         OkHttpClient.Builder builder = new OkHttpClient.Builder();

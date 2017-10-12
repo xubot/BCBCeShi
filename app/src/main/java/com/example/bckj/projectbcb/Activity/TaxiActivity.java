@@ -171,7 +171,7 @@ public class TaxiActivity extends BaseActivity {
                 QuXiaoDingDaiUtils quXiaoDingDaiUtils = new QuXiaoDingDaiUtils();
                 //得到当前时间，在当前时间的基础上加5分钟
                 Date date = new Date();
-                Date afterDate= new Date(date.getTime()+300000);
+                Date afterDate= new Date(date.getTime()+420000);
                 SimpleDateFormat format = new SimpleDateFormat("HH : mm");
                 String format1 = format.format(afterDate);
                 Log.d("zzz", "得到当前的24进制时间：" + format1);
@@ -288,6 +288,7 @@ public class TaxiActivity extends BaseActivity {
                             threadToast(TaxiActivity.this,"行程已完成");
                             finish();
                         }else if(status1==4){
+                            threadToast(TaxiActivity.this,"4:"+status1);
                             timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
@@ -298,8 +299,9 @@ public class TaxiActivity extends BaseActivity {
                                 }
                             },5000);
                         }else {
-                            timer.cancel();
-                            timer.schedule(new TimerTask() {
+                            threadToast(TaxiActivity.this,"正在行程中1:"+status1);
+                            //timer.cancel();
+                            /*timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
                                     //得到一个参数的对象
@@ -307,7 +309,7 @@ public class TaxiActivity extends BaseActivity {
                                     //查看司机信息
                                     getTaxiOrderTaskIDRequest(diDiOneParameter,"getTaxiOrder","orderId",driverOid);
                                 }
-                            },5000);
+                            },5000);*/
                         }
                     }
                 }
@@ -408,7 +410,7 @@ public class TaxiActivity extends BaseActivity {
                         QuXiaoDingDaiUtils quXiaoDingDaiUtils = new QuXiaoDingDaiUtils();
                         //得到当前时间，在当前时间的基础上加5分钟
                         Date date = new Date();
-                        Date afterDate= new Date(date.getTime()+300000);
+                        Date afterDate= new Date(date.getTime()+420000);
                         SimpleDateFormat format = new SimpleDateFormat("HH : mm");
                         String format1 = format.format(afterDate);
                         Log.d("zzz", "得到当前的24进制时间：" + format1);
@@ -428,7 +430,7 @@ public class TaxiActivity extends BaseActivity {
 
                 @Override
                 public void run() {
-                    Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
                 }
             });
         }

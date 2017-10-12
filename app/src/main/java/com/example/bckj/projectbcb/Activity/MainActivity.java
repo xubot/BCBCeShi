@@ -98,6 +98,7 @@ public class MainActivity extends BaseActivity implements MainView{
     private PresenterLayer presenterLayer = new PresenterLayer();
     private UpdateVersionController controller;
     private AlertDialog alertDialog;
+    private AlertDialog dialog;
     private SharedUtils instance = SharedUtils.getInstance();
     private WebView myWebView;
     private int REQUEST_CODE=0;
@@ -138,6 +139,7 @@ public class MainActivity extends BaseActivity implements MainView{
             }
         }
     };
+
 
 
     //初始化布局
@@ -1021,55 +1023,85 @@ public class MainActivity extends BaseActivity implements MainView{
                         String errorMessage = daCheSuccessBeanData.getErrorMessage();
                         if(errorCode.equals("0")){
                             DaCheSuccessBeanData.ResultBean result = daCheSuccessBeanData.getResult();
-                            final int errno = result.getErrno();
-                            final String errmsg = result.getErrmsg();
-                            final String oid = result.getOid();
-                            //将打车成功的oid存到本地
-                            instance.saveData(MainActivity.this, "taxiOid", oid);
-                            Log.d("zzz", "main   解析处理的oid : " + oid);
-                            Log.d("zzz", "main  解析出来的errno : " + errno);
-                            Log.d("zzz", "main  解析出来的errmsg : " + errmsg);
+                            if(result.equals("null")){
+                                return;
+                            }else {
+                                final int errno = result.getErrno();
+                                final String errmsg = result.getErrmsg();
+                                final String oid = result.getOid();
+                                //将打车成功的oid存到本地
+                                instance.saveData(MainActivity.this, "taxiOid", oid);
+                                Log.d("zzz", "main   解析处理的oid : " + oid);
+                                Log.d("zzz", "main  解析出来的errno : " + errno);
+                                Log.d("zzz", "main  解析出来的errmsg : " + errmsg);
 
-                            new Handler(Looper.getMainLooper()).post(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (errno == 0) {
-                                        //得到一个参数的对象
-                                        DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
-                                        //查看司机信息
-                                        getTaxiOrderTaskIDRequest(diDiOneParameter, "getTaxiOrder", "orderId", oid);
-                                        Log.d("zzz", "main   成功的信息 : " + oid);
-                                    } else if (errno == 101) {
-                                        //回到叫起打车的页面
-                                        myWebView.loadUrl("javascript:backHome()");
+                                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if (errno == 0) {
+                                            //得到一个参数的对象
+                                            DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
+                                            //查看司机信息
+                                            getTaxiOrderTaskIDRequest(diDiOneParameter, "getTaxiOrder", "orderId", oid);
+                                            Log.d("zzz", "main   成功的信息 : " + oid);
+                                        } else if (errno == 101) {
+                                            //回到叫起打车的页面
+                                            myWebView.loadUrl("javascript:backHome()");
 
-                                        String taxiaccount = (String) instance.getData(MainActivity.this, "taxiaccount", "");
-                                        String taxipass = (String) instance.getData(MainActivity.this, "taxipass", "");
-                                        Log.d("zzz", "Main   如果登录退出将自动登录滴滴的账号信息：" + taxiaccount + "==" + taxipass);
-                                        if(taxiaccount.isEmpty()&&taxiaccount.length()==0&&taxipass.isEmpty()&&taxipass.length()==0){
-                                            return;
-                                        }else {
-                                            logInTaskIDRequest(new DiDiTweParameter(), "login", taxiaccount, taxipass);
+                                            String taxiaccount = (String) instance.getData(MainActivity.this, "taxiaccount", "");
+                                            String taxipass = (String) instance.getData(MainActivity.this, "taxipass", "");
+                                            Log.d("zzz", "Main   如果登录退出将自动登录滴滴的账号信息：" + taxiaccount + "==" + taxipass);
+                                            if(taxiaccount.isEmpty()&&taxiaccount.length()==0&&taxipass.isEmpty()&&taxipass.length()==0){
+                                                return;
+                                            }else {
+                                                logInTaskIDRequest(new DiDiTweParameter(), "login", taxiaccount, taxipass);
+                                            }
+                                        } else if (errno == 1018) {
+                                            //回到叫起打车的页面
+                                            myWebView.loadUrl("javascript:backHome()");
+
+                                            final String taxiOid = (String) instance.getData(MainActivity.this, "taxiOid", "");
+                                            Log.d("zzz", "Main  --将要为订单状态传过去的oid是："+ taxiOid);
+
+                                            int status1= (int) instance.getData(MainActivity.this,"status1",5);
+                                            Log.d("zzz", "Main  得到打车时返回后的状态："+ status1);
+                                            if(status1==5){
+                                                AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                                                //设置对话框内的文本
+                                                builder.setMessage("正在为你通知附近车辆，请等待。。。。");
+                                                //设置确定按钮，并给按钮设置一个点击侦听，注意这个OnClickListener使用的是DialogInterface类里的一个内部接口
+                                                builder.setPositiveButton("取消订单", new DialogInterface.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                        // 执行点击确定按钮的业务逻辑
+                                                        if(!taxiOid.equals("")){
+                                                            cancelOrderBeforeOrderTakingTaskIDRequest(new DiDiOneParameter(),"cancelOrderBeforeOrderTaking","orderId",taxiOid);
+                                                            Log.d("zzz", "已成功调起了取消订单的接口");
+                                                        }
+                                                    }
+                                                });
+                                                //使用builder创建出对话框对象
+                                                dialog = builder.create();
+                                                dialog.setCanceledOnTouchOutside(false);
+                                                dialog.setCancelable(false);
+                                                //显示对话框
+                                                dialog.show();
+                                            }else if(status1==4){
+                                                Toast.makeText(MainActivity.this, "您有一笔未完成的叫车订单,将为您恢复。请等待", Toast.LENGTH_SHORT).show();
+                                                //打车成功跳到等待应答页面
+                                                Intent intent = new Intent(MainActivity.this, TaxiActivity.class);
+                                                intent.putExtra("oid",taxiOid+"");
+                                                startActivity(intent);
+                                            }
+                                        } else {
+                                            //回到叫起打车的页面
+                                            myWebView.loadUrl("javascript:backHome()");
+
+                                            Toast.makeText(MainActivity.this, "打车的错误信息：\n"+errmsg, Toast.LENGTH_SHORT).show();
                                         }
-                                    } else if (errno == 1018) {
-                                        //回到叫起打车的页面
-                                        myWebView.loadUrl("javascript:backHome()");
-
-                                        String taxiOid = (String) instance.getData(MainActivity.this, "taxiOid", "");
-                                        Log.d("zzz", "Main  --将要为订单状态传过去的oid是："+ taxiOid);
-                                        Toast.makeText(MainActivity.this, "您有一笔未完成的叫车订单,将为您恢复。请等待", Toast.LENGTH_SHORT).show();
-                                        //打车成功跳到等待应答页面
-                                        Intent intent = new Intent(MainActivity.this, TaxiActivity.class);
-                                        intent.putExtra("oid",taxiOid+"");
-                                        startActivity(intent);
-                                    } else {
-                                        //回到叫起打车的页面
-                                        myWebView.loadUrl("javascript:backHome()");
-
-                                        Toast.makeText(MainActivity.this, "打车的错误信息：\n"+errmsg, Toast.LENGTH_SHORT).show();
                                     }
-                                }
-                            });
+                                });
+                            }
                         }else {
                             //回到叫起打车的页面
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -1168,6 +1200,11 @@ public class MainActivity extends BaseActivity implements MainView{
                             }
                         });
                         threadToast(MainActivity.this,"您的订单已经取消成功");
+                        if(dialog==null){
+                           return;
+                        }else {
+                            dialog.cancel();
+                        }
                     }else {
                         threadToast(MainActivity.this,"异常:"+returnJSONStr);
                         //String taxiOid = (String) instance.getData(MainActivity.this, "taxiOid", "");
@@ -1393,6 +1430,7 @@ public class MainActivity extends BaseActivity implements MainView{
                             //调起请求数据的方法
                             getTaxiOrderTaskIDRequest(diDiOneParameter,"getTaxiOrder","orderId", oid1);
                         }else if(status1==4){
+
                             //回到叫起打车的页面
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
@@ -1436,6 +1474,11 @@ public class MainActivity extends BaseActivity implements MainView{
                                             startActivity(intent);
                                     }
                                 });
+                                if(dialog==null){
+                                    return;
+                                }else {
+                                    dialog.cancel();
+                                }
                             }
                         }
                     }

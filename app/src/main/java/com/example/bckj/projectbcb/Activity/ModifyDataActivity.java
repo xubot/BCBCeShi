@@ -2,6 +2,7 @@ package com.example.bckj.projectbcb.Activity;
 
 import android.content.Intent;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -65,6 +66,7 @@ public class ModifyDataActivity extends BaseActivity implements MadifyDataView {
         img1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(ModifyDataActivity.this,PersonDataActivity.class));
                 finish();
             }
         });
@@ -82,6 +84,16 @@ public class ModifyDataActivity extends BaseActivity implements MadifyDataView {
             finish();
         }else {
             Toast.makeText(this,msg+"/n"+msg_en, Toast.LENGTH_SHORT).show();
+        }
+    }
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if ((keyCode == KeyEvent.KEYCODE_BACK)) {
+            System.out.println("按下了back键   onKeyDown()");
+            startActivity(new Intent(ModifyDataActivity.this,PersonDataActivity.class));
+            finish();
+            return false;
+        }else {
+            return super.onKeyDown(keyCode, event);
         }
     }
 }

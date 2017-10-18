@@ -32,7 +32,7 @@ public class LiaoTianUtils {
         RequestBody body = RequestBody.create(JSON, json);
         Request request = new Request.Builder()
                 .addHeader("Accept","*/*")
-                .url(new PathUrl().URLTASK)
+                .url(PathUrl.URLTASK)
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -42,7 +42,7 @@ public class LiaoTianUtils {
 
     public Call okUitls1(String taskId){
         Log.d("zzz", "请求下来的taskid:"+taskId);
-        String path=new PathUrl().URLDATA+taskId+"";
+        String path=PathUrl.URLDATA+taskId+"";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .addHeader("Accept","*/*")

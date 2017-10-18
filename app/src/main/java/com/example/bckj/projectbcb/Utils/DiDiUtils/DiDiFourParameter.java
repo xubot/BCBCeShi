@@ -32,7 +32,7 @@ public class DiDiFourParameter {
         Log.d("zzz22", body+"");
         Request request = new Request.Builder()
                 .addHeader("Accept","*/*")
-                .url(new PathUrl().URLTASK)
+                .url(PathUrl.URLTASK)
                 .post(body)
                 .build();
         Call call = client.newCall(request);
@@ -42,7 +42,7 @@ public class DiDiFourParameter {
 
     public Call okUitls1(String taskId){
         Log.d("zzz1", taskId);
-        String path=new PathUrl().URLDATA+taskId+"";
+        String path=PathUrl.URLDATA+taskId+"";
         OkHttpClient client = new OkHttpClient();
         Request request = new Request.Builder()
                 .addHeader("Accept","*/*")

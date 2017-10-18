@@ -14,7 +14,7 @@
         android:layout_width="297dp"
         android:layout_height="230dp"
         android:layout_marginTop="106dp"
-        android:background="@drawable/shp"
+        android:background="@drawable/s"
         android:layout_below="@+id/base"
         android:layout_centerHorizontal="true">
 
@@ -31,11 +31,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="30dp"
             android:layout_toRightOf="@+id/taxiimg"
             android:layout_toEndOf="@+id/taxiimg"
-            android:layout_marginLeft="30dp"
-            android:layout_marginStart="30dp"/>
+            android:layout_marginLeft="35dp"
+            android:layout_marginStart="35dp"/>
+
         <LinearLayout
             android:id="@+id/star_ll"
             android:layout_below="@id/taxi_name"
@@ -46,36 +47,29 @@
             android:layout_marginTop="15dp"
             android:layout_toRightOf="@+id/taxiimg"
             android:layout_toEndOf="@+id/taxiimg">
+
             <ImageView
                 android:id="@+id/star_one"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@mipmap/icon_09"/>
+                style="@style/asses_Star"/>
+
             <ImageView
                 android:id="@+id/star_twe"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:src="@mipmap/icon_09"/>
+                style="@style/asses_Star"/>
+
             <ImageView
                 android:id="@+id/star_three"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:src="@mipmap/icon_09"/>
+                style="@style/asses_Star"/>
+
             <ImageView
                 android:id="@+id/star_frou"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:src="@mipmap/icon_09"/>
+                style="@style/asses_Star"/>
+
             <ImageView
                 android:id="@+id/star_five"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:src="@mipmap/icon_09"/>
+                style="@style/asses_Star"/>
+
         </LinearLayout>
+
         <TextView
             android:id="@+id/bill"
             android:layout_width="wrap_content"
@@ -83,9 +77,10 @@
             android:layout_below="@id/star_ll"
             android:layout_toRightOf="@+id/taxiimg"
             android:layout_toEndOf="@+id/taxiimg"
-            android:layout_marginLeft="30dp"
+            android:layout_marginLeft="35dp"
             android:layout_marginTop="7dp"
             android:text=""/>
+
         <TextView
             android:id="@+id/taxinumer"
             android:layout_below="@id/taxiimg"
@@ -104,7 +99,9 @@
             android:layout_centerHorizontal="true"
             android:layout_alignParentBottom="true"
             android:layout_marginBottom="14dp"/>
+
     </RelativeLayout>
+
     <TextView
         android:id="@+id/cancel"
         android:layout_below="@id/response_rl"

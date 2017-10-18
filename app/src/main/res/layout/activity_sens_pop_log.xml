@@ -5,46 +5,34 @@
     android:layout_height="250dp"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:background="@drawable/shp">
+    android:background="@drawable/s">
         <EditText
             android:id="@+id/sens_log_edit_phone"
-            android:layout_width="250dp"
-            android:layout_height="30dp"
-            android:background="@null"
-            android:hint="请输入手机号"
-            android:textSize="13sp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="35dp"
-            android:layout_marginBottom="10dp"
-            android:textColorHint="#a9a9a9a9"/>
+            style="@style/input_Box"
+            android:hint="13051672112"
+            android:layout_marginTop="35dp"/>
         <View
-            style="@style/sens_View"
-            android:id="@+id/view"/>
+            android:id="@+id/view"
+            style="@style/separate_View"
+            android:layout_gravity="center"/>
+
         <EditText
             android:id="@+id/sens_log_edit_pwd"
-            android:layout_width="250dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="20dp"
+            style="@style/input_Box"
             android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"
-            android:textSize="14sp"
             android:hint="@string/hiht_pwd"
-            android:background="@null"
-            android:textColorHint="#a9a9a9a9"
             android:inputType="textPassword"/>
+
         <View
-            style="@style/sens_View"
-            android:id="@+id/view3"/>
+            android:id="@+id/view3"
+            style="@style/separate_View"
+            android:layout_gravity="center"/>
+
         <Button
             android:id="@+id/sens_log"
-            android:layout_width="240dp"
-            android:layout_height="40dp"
-            android:text="@string/menu_log"
-            android:textSize="19sp"
-            android:textColor="#ffffff"
-            android:background="@drawable/sp"
-            android:layout_marginTop="35dp"
-            android:layout_gravity="center"/>
+            style="@style/confirm_Button"
+            android:text="@string/menu_log"/>
+
         <!--@string/log_forget-->
         <TextView
             android:id="@+id/sens_forget"

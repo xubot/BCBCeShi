@@ -4,9 +4,9 @@ import android.content.Intent;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.bckj.projectbcb.Bean.UpdateInfoBean;
@@ -21,13 +21,13 @@ public class ModifyDataActivity extends BaseActivity implements MadifyDataView {
     private String token;
     private EditText m_name;
     private EditText m_phone;
-    private RelativeLayout m_rr;
+    private Button modify_finish;
     private PresenterLayer presenterLayer;
 
     @Override
     public void initView() {
         setContentView(R.layout.activity_modify_data);
-        setToolBar("",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        setToolBar("",R.mipmap.back_02,R.color.one);
         //得到登陆后的token值
         instance = SharedUtils.getInstance();
         token = (String) instance.getData(this, "token", "");
@@ -37,13 +37,13 @@ public class ModifyDataActivity extends BaseActivity implements MadifyDataView {
     protected void init() {
         m_name = (EditText) findViewById(R.id.Mdetails_name);
         m_phone = (EditText) findViewById(R.id.Mdetails_phone);
-        m_rr = (RelativeLayout) findViewById(R.id.Mlogout_rr);
+        modify_finish = (Button) findViewById(R.id.modify_finish);
     }
 
     @Override
     public void cheked() {
         //修改完成的点监听
-        m_rr.setOnClickListener(new View.OnClickListener() {
+        modify_finish.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String name = m_name.getText().toString();

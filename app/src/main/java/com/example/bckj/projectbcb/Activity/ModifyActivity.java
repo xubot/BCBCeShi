@@ -25,7 +25,7 @@ public class ModifyActivity extends BaseActivity implements ModifyView{
     @Override
     public void initView() {
         setContentView(R.layout.activity_modify);
-        setToolBar("修改密码",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        setToolBar("修改密码",R.mipmap.back_02,R.color.one);
         SharedUtils instance = SharedUtils.getInstance();
         token = (String) instance.getData(this, "token", "");
     }

@@ -22,14 +22,17 @@ public class DecideWifiAlertdialog {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 // 执行点击确定按钮的业务逻辑
+                dialog.cancel();
             }
         });
         //使用builder创建出对话框对象
         AlertDialog dialog = builder.create();
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
+
         //显示对话框
         dialog.show();
+
     }
 
 }

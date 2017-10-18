@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:layout_gravity="center"
-    android:background="#fff"
+    android:background="@drawable/s"
     android:layout_width="290dp"
     android:layout_height="250dp">
 
@@ -35,43 +35,24 @@
 
        <EditText
            android:id="@+id/e_one"
-           android:layout_width="48dp"
-           android:layout_height="48dp"
-           android:gravity="center_vertical|center"
-           android:textCursorDrawable="@null"
-           android:maxLength="1"
-           android:inputType="number"
-           android:background="@drawable/s"/>
+           style="@style/validation_Box"
+           android:inputType="number"/>
+
        <EditText
            android:id="@+id/e_twe"
-           android:layout_width="48dp"
-           android:layout_height="48dp"
-           android:layout_marginLeft="18dp"
-           android:gravity="center_vertical|center"
-           android:textCursorDrawable="@null"
-           android:maxLength="1"
-           android:inputType="number"
-           android:background="@drawable/s"/>
+           style="@style/validation_Box"
+           android:inputType="number"/>
+
        <EditText
            android:id="@+id/e_three"
-           android:layout_width="48dp"
-           android:layout_height="48dp"
-           android:layout_marginLeft="18dp"
-           android:gravity="center_vertical|center"
-           android:textCursorDrawable="@null"
-           android:maxLength="1"
-           android:inputType="number"
-           android:background="@drawable/s"/>
+           style="@style/validation_Box"
+           android:inputType="number"/>
+
        <EditText
            android:id="@+id/e_frou"
-           android:layout_width="48dp"
-           android:layout_height="48dp"
-           android:layout_marginLeft="18dp"
-           android:gravity="center_vertical|center"
-           android:textCursorDrawable="@null"
-           android:maxLength="1"
-           android:inputType="number"
-           android:background="@drawable/s"/>
+           style="@style/validation_Box"
+           android:inputType="number"/>
+
    </LinearLayout>
 
 </LinearLayout>

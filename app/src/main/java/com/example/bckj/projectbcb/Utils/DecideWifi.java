@@ -2,6 +2,8 @@ package com.example.bckj.projectbcb.Utils;
 
 import android.util.Log;
 
+import com.example.bckj.projectbcb.Utils.DiDiUtils.PathUrl;
+
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Call;
@@ -19,7 +21,7 @@ public class DecideWifi {
 
     public Call okUitls(String methodName, String name, String phone){
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
-        builder.connectTimeout(3, TimeUnit.SECONDS);
+        builder.connectTimeout(2, TimeUnit.SECONDS);
         OkHttpClient client = builder.build();
         String json="{\n" +
                 "  \"androidId\": \"d81e4d43835c5dbb\",\n" +
@@ -34,7 +36,7 @@ public class DecideWifi {
         Log.d("zzz22", body+"");
         Request request = new Request.Builder()
                 .addHeader("Accept","*/*")
-                .url("http://192.168.0.1:2805/tasks")
+                .url(PathUrl.URLTASK)
                 .post(body)
                 .build();
         Call call = client.newCall(request);

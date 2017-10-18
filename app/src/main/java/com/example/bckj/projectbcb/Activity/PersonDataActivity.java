@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -40,13 +41,13 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
     private String token;
     private ImageView personhead;
     private RelativeLayout modify_rr;
-    private RelativeLayout logout_rr;
+    private Button person_quit;
     private SharedUtils instance;
 
     @Override
     public void initView() {
         setContentView(R.layout.activity_person_data);
-        setToolBar("",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        setToolBar("",R.mipmap.back_02,R.color.one);
         //得到登陆后的token值
         instance = SharedUtils.getInstance();
         token = (String) instance.getData(this, "token", "");
@@ -69,7 +70,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
         //修改密码控件组
         modify_rr = (RelativeLayout) findViewById(R.id.modify_rr);
         //退出控件组
-        logout_rr = (RelativeLayout) findViewById(R.id.logout_rr);
+        person_quit = (Button) findViewById(R.id.person_quit);
     }
 
     @Override
@@ -92,7 +93,7 @@ public class PersonDataActivity extends BaseActivity implements PersonDataView{
             }
         });
         //退出监听
-        logout_rr.setOnClickListener(new View.OnClickListener() {
+        person_quit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 normalDialog();

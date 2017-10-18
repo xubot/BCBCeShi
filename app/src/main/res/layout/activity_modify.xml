@@ -10,6 +10,7 @@
     <include
         android:id="@+id/base"
         layout="@layout/activity_base"/>
+
     <TextView
         android:id="@+id/complete"
         android:layout_width="wrap_content"
@@ -20,110 +21,74 @@
         android:layout_marginTop="5dp"
         android:textColor="#fff"
         android:layout_alignParentRight="true"/>
+
     <LinearLayout
         android:layout_below="@id/base"
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:background="#fff"
         android:layout_height="wrap_content">
-        
-        <LinearLayout
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
             android:layout_height="45dp">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#333333"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
+                android:id="@+id/modify_oldpwd"
+                style="@style/revise_Text"
                 android:text="@string/old_pwd"/>
+
             <EditText
                 android:id="@+id/oldpwd"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:background="@null"
-                android:layout_gravity="center"
-                android:textColorHint="#999999"
-                android:textSize="14sp"
-                android:layout_marginLeft="50dp"
+                style="@style/revise_Box"
                 android:inputType="textPassword"
-                android:gravity="center_vertical|right"
-                android:textCursorDrawable="@null"
-                android:hint="@string/modify_ed"/>
-        </LinearLayout>
+                android:hint="@string/modify_ed"
+                android:layout_toRightOf="@+id/modify_oldpwd"
+                android:layout_toEndOf="@+id/modify_oldpwd"/>
+
+        </RelativeLayout>
+
         <View
+            style="@style/long_separate_View"/>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#d6d6d6"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="horizontal"
             android:layout_height="45dp">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#333333"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
+                android:id="@+id/modify_newpwd"
+                style="@style/revise_Text"
                 android:text="@string/modify_pwd"/>
+
             <EditText
                 android:id="@+id/newpwd"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:background="@null"
-                android:layout_gravity="center"
-                android:textColorHint="#999999"
-                android:textSize="14sp"
-                android:layout_marginLeft="50dp"
+                style="@style/revise_Box"
                 android:inputType="textPassword"
-                android:gravity="center_vertical|right"
-                android:textCursorDrawable="@null"
-                android:hint="@string/modify_ed"/>
-        </LinearLayout>
+                android:hint="@string/modify_ed"
+                android:layout_toRightOf="@+id/modify_newpwd"
+                android:layout_toEndOf="@+id/modify_newpwd"/>
+
+        </RelativeLayout>
+
         <View
+            style="@style/long_separate_View"/>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#d6d6d6"/>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:orientation="horizontal">
+            android:layout_height="45dp">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginLeft="15dp"
-                android:text="@string/forget_repwd"
-                android:textColor="#333333"
-                android:textSize="14sp"/>
+                android:id="@+id/modify_newrepwd"
+                style="@style/revise_Text"
+                android:text="@string/forget_repwd"/>
 
             <EditText
                 android:id="@+id/newrepwd"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_gravity="center"
-                android:layout_marginLeft="38dp"
-                android:background="@null"
+                style="@style/revise_Box"
                 android:hint="@string/modify_ed"
                 android:inputType="textPassword"
-                android:gravity="center_vertical|right"
-                android:textCursorDrawable="@null"
-                android:textColorHint="#999999"
-                android:textSize="14sp"/>
-        </LinearLayout>
+                android:layout_toRightOf="@+id/modify_newrepwd"
+                android:layout_toEndOf="@+id/modify_newrepwd"/>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#d6d6d6"/>
+        </RelativeLayout>
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#d6d6d6"/>
     </LinearLayout>
 </RelativeLayout>

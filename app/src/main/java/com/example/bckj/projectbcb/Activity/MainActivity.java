@@ -67,7 +67,6 @@ import com.example.bckj.projectbcb.Utils.DecideWifiAlertdialog;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiFourParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiOneParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiTweParameter;
-import com.example.bckj.projectbcb.Utils.DiDiUtils.PathUrl;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.example.bckj.projectbcb.Utils.update.UpdateVersionController;
 import com.example.bckj.projectbcb.ViewLayer.MainView;
@@ -115,6 +114,7 @@ public class MainActivity extends BaseActivity implements MainView{
     private EditText pice_one, pice_twe, pice_three, pice_frou;
     private EditText et_one, et_two, et_three,et_four;
     private LinearLayout yuyan_ll,ssss_ll,meunlog_ll;
+    private int i=0;
 
     //声明AMapLocationClient类对象
     public AMapLocationClient mLocationClient = null;
@@ -131,6 +131,29 @@ public class MainActivity extends BaseActivity implements MainView{
                     //纬度
                     double latitude = aMapLocation.getLatitude();
                     doubles = gaoDeToBaidu(longitude,latitude);
+                    try {
+                        //当页面加载完成后，调用js方法
+                        //mWebview.loadUrl("javascript:方法名(参数)");
+                        if(doubles==null){
+                            return;
+                        }else {
+                            JSONObject json = new JSONObject();
+                            json.put("lng", doubles[0]);
+                            json.put("lat", doubles[1]);
+                            Log.d("zzz", doubles[0]+""+doubles[1]);
+                            myWebView.loadUrl("javascript:showMessage("+json.toString()+")");
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    /**
+                     * 后期不用
+                     * */
+                    if(i<1){
+                        setWebViewH5();
+                        i++;
+                        Log.d("zzz", "dfas" + i);
+                    }
                 }else {
                    //错误日志
                     int errorCode = aMapLocation.getErrorCode();
@@ -141,20 +164,15 @@ public class MainActivity extends BaseActivity implements MainView{
     };
 
 
-
     //初始化布局
     @Override
     public void initView() {
         setContentView(R.layout.activity_main);
-
-        //判断连接的是否是局域网
-        DecideWifiMethod(new DecideWifi(),"getVerificationCode","phoneNum","13051672112");
-
         //得到刚进入就要用的控件方法
         initFindView();
 
-        //得到WiFi的网关类
-        PathUrl.getIp(MainActivity.this);
+        //判断连接的是否是局域网
+        DecideWifiMethod(new DecideWifi(),"getVerificationCode","phoneNum","13051672112");
 
         //初始化EventBus
         EventBus.getDefault().register(this);
@@ -181,6 +199,7 @@ public class MainActivity extends BaseActivity implements MainView{
                                 Manifest.permission.ACCESS_COARSE_LOCATION,Manifest.permission.CALL_PHONE,Manifest.permission.ACCESS_WIFI_STATE},
                         REQUEST_CODE);
             } else {
+                Toast.makeText(this, "请检查定位是否开启", Toast.LENGTH_SHORT).show();
                 location();
             }
         }
@@ -262,7 +281,12 @@ public class MainActivity extends BaseActivity implements MainView{
                 if((taxiaccount.isEmpty()&&taxiaccount.length()==0)&&(taxipass.isEmpty()&&taxipass.length()==0)){
                     return;
                 }else {
-                    //logInTaskIDRequest(new DiDiTweParameter(), "login", taxiaccount, taxipass);
+                    if(i<1){
+                        logInTaskIDRequest(new DiDiTweParameter(), "login",taxiaccount,taxipass);
+                        i++;
+                    }else {
+                        return;
+                    }
                 }
             }else {
                 return;
@@ -392,7 +416,7 @@ public class MainActivity extends BaseActivity implements MainView{
                 }else {
                     taxi_meun_jihuo.setText(R.string.jihuo);
                     startActivity(new Intent(MainActivity.this,SensitizeActivity.class));
-                    //finish();
+                    finish();
                 }
             }
         });
@@ -628,11 +652,16 @@ public class MainActivity extends BaseActivity implements MainView{
                 //当页面加载完成后，调用js方法
                 //mWebview.loadUrl("javascript:方法名(参数)");
                 //Log.d("zzz", doubles[0]+""+doubles[1]);
-                JSONObject json = new JSONObject();
-                json.put("lng", doubles[0]);
-                json.put("lat", doubles[1]);
-                //Log.d("zzz", doubles[0]+""+doubles[1]);
-                myWebView.loadUrl("javascript:showMessage("+json.toString()+")");
+                if(doubles==null){
+                    Toast.makeText(MainActivity.this, "请检查定位是否开启", Toast.LENGTH_SHORT).show();
+                    return;
+                }else {
+                    JSONObject json = new JSONObject();
+                    json.put("lng", doubles[0]);
+                    json.put("lat", doubles[1]);
+                    //Log.d("zzz", doubles[0]+""+doubles[1]);
+                    myWebView.loadUrl("javascript:showMessage("+json.toString()+")");
+                }
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -969,7 +998,6 @@ public class MainActivity extends BaseActivity implements MainView{
                     }
                 });
 
-
                 threadToast(MainActivity.this,"连接超时，请重试");
             }
 
@@ -1207,9 +1235,9 @@ public class MainActivity extends BaseActivity implements MainView{
                         }
                     }else {
                         threadToast(MainActivity.this,"异常:"+returnJSONStr);
-                        //String taxiOid = (String) instance.getData(MainActivity.this, "taxiOid", "");
+                        String taxiOid = (String) instance.getData(MainActivity.this, "taxiOid", "");
                         //调起请求数据的方法
-                        //cancelOrderBeforeOrderTakingTaskIDRequest(diDiOneParameter,"cancelOrderBeforeOrderTaking","orderId", taxiOid);
+                        cancelOrderBeforeOrderTakingTaskIDRequest(diDiOneParameter,"cancelOrderBeforeOrderTaking","orderId", taxiOid);
                     }
 
                 }
@@ -1979,7 +2007,7 @@ public class MainActivity extends BaseActivity implements MainView{
                 //用户不同意，向用户展示该权限作用
                 if (!ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.ACCESS_FINE_LOCATION)) {
                     AlertDialog dialog = new AlertDialog.Builder(this)
-                            .setMessage("签到功能需要定位你目前的位置，不赋予定位权限将无法正常工作！")
+                            .setMessage("本应用需要定位你目前的位置，不赋予定位权限将无法正常工作！")
                             .setPositiveButton("前往授权", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
@@ -1988,13 +2016,9 @@ public class MainActivity extends BaseActivity implements MainView{
                                     intent.setData(Uri.parse("package:" + getPackageName()));
                                     startActivity(intent);
                                 }
-                            })
-                            .setNegativeButton("取消授权", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-                                    finish();
-                                }
                             }).create();
+                    dialog.setCanceledOnTouchOutside(false);
+                    dialog.setCancelable(false);
                     dialog.show();
                     return;
                 }
@@ -2028,6 +2052,7 @@ public class MainActivity extends BaseActivity implements MainView{
         }
         return super.onKeyDown(keyCode, event);
     }
+
     //点两次退出的方法
     public void exit() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {

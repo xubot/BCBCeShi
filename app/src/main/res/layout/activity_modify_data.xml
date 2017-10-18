@@ -31,76 +31,44 @@
             android:layout_width="match_parent"
             android:layout_height="45dp">
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#333333"
-                android:layout_marginLeft="15dp"
-                android:layout_centerVertical="true"
+                android:id="@+id/modify_data_name"
+                style="@style/revise_Text"
                 android:text="@string/person_user"/>
+
             <EditText
                 android:id="@+id/Mdetails_name"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:gravity="center_vertical|right"
-                android:textCursorDrawable="@null"
-                android:textColor="#333333"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:background="@null"
-                android:textSize="12sp"
-                android:hint="xubotao"/>
+                style="@style/revise_Box"
+                android:hint="xubotao"
+                android:layout_toRightOf="@+id/modify_data_name"
+                android:layout_toEndOf="@+id/modify_data_name"/>
         </RelativeLayout>
 
         <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#d6d6d6"
-            android:id="@+id/view"/>
+            style="@style/long_separate_View"/>
+
         <RelativeLayout
-            android:id="@+id/phone_rrr"
             android:layout_width="match_parent"
             android:layout_height="45dp">
+
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="14sp"
-                android:textColor="#333333"
-                android:layout_marginLeft="15dp"
-                android:layout_centerVertical="true"
+                android:id="@+id/modify_data_phone"
+                style="@style/revise_Text"
                 android:text="@string/person_phone"/>
+
             <EditText
                 android:id="@+id/Mdetails_phone"
-                android:layout_width="100dp"
-                android:layout_height="40dp"
-                android:gravity="center_vertical|right"
-                android:textCursorDrawable="@null"
-                android:textColor="#333333"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_marginRight="20dp"
-                android:background="@null"
-                android:textSize="12sp"
-                android:hint="13051672112"/>
+                style="@style/revise_Box"
+                android:hint="13051672112"
+                android:layout_toRightOf="@+id/modify_data_phone"
+                android:layout_toEndOf="@+id/modify_data_phone"/>
+
         </RelativeLayout>
     </LinearLayout>
-    <RelativeLayout
-        android:id="@+id/Mlogout_rr"
-        android:layout_width="match_parent"
+
+    <Button
+        android:id="@+id/modify_finish"
+        style="@style/confirm_Button"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="10dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:layout_height="45dp"
-        android:background="@drawable/sp">
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_centerHorizontal="true"
-            android:textSize="16sp"
-            android:textColor="#fff"
-            android:text="@string/complete"/>
-    </RelativeLayout>
+        android:text="@string/complete"/>
+
 </RelativeLayout>

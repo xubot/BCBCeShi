@@ -30,7 +30,7 @@ public class ForgetActivity extends BaseActivity implements ForgetView{
     @Override
     public void initView() {
         setContentView(R.layout.activity_forget);
-        setToolBar("",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        setToolBar("",R.mipmap.back_02,R.color.one);
     }
 
     @Override
@@ -83,19 +83,15 @@ public class ForgetActivity extends BaseActivity implements ForgetView{
                 if(emails||codeData||password||repassword){
                     Toast.makeText(ForgetActivity.this, R.string.panNull, Toast.LENGTH_SHORT).show();
                 }else {
-                    if(email){
-                        if(pwd.length()>=6&&repwd.length()>=6){
-                            if(!pwd.equals(repwd)){
-                                Toast.makeText(ForgetActivity.this,R.string.panTwePwd, Toast.LENGTH_SHORT).show();
-                            } else {
-                                //请求
-                                presenterLayer.setForget_Back(emal,code,pwd,repwd);
-                            }
-                        }else {
-                            Toast.makeText(ForgetActivity.this,R.string.panPwd, Toast.LENGTH_SHORT).show();
+                    if(pwd.length()>=6&&repwd.length()>=6){
+                        if(!pwd.equals(repwd)){
+                            Toast.makeText(ForgetActivity.this,R.string.panTwePwd, Toast.LENGTH_SHORT).show();
+                        } else {
+                            //请求
+                            presenterLayer.setForget_Back(emal,code,pwd,repwd);
                         }
                     }else {
-                        Toast.makeText(ForgetActivity.this, R.string.panEmail, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ForgetActivity.this,R.string.panPwd, Toast.LENGTH_SHORT).show();
                     }
                 }
             }

@@ -4,21 +4,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@mipmap/bg">
+
     <RelativeLayout
         android:id="@+id/sens_rr"
         android:layout_width="match_parent"
         android:gravity="center"
         android:layout_height="44dp">
+
         <LinearLayout
             android:id="@+id/sensitizze_back"
             android:layout_width="45dp"
             android:layout_height="40dp">
+
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:src="@mipmap/back_02"
                 android:layout_marginLeft="15dp"/>
+
         </LinearLayout>
 
 
@@ -44,7 +48,7 @@
 
     <LinearLayout
         android:orientation="vertical"
-        android:background="#fff"
+        android:background="@drawable/s"
         android:layout_width="290dp"
         android:layout_height="174dp"
         android:layout_below="@+id/sensitize_car"
@@ -53,32 +57,21 @@
 
         <EditText
             android:id="@+id/sens_edit_phone"
-            android:layout_width="250dp"
-            android:layout_height="30dp"
+            style="@style/input_Box"
             android:layout_marginTop="35dp"
-            android:layout_marginBottom="15dp"
-            android:layout_gravity="center"
-            android:background="@null"
             android:hint="@string/pop_phone"
-            android:inputType="number"
-            android:textSize="14sp"
-            android:textColorHint="#a9a9a9a9"/>
+            android:inputType="number"/>
 
         <View
-            style="@style/Home_View"
+            style="@style/separate_View"
             android:layout_gravity="center"
             android:id="@+id/view2"/>
 
         <Button
             android:id="@+id/sensitize_s"
-            android:layout_width="240dp"
-            android:layout_height="40dp"
-            android:text="@string/pop_next"
-            android:textSize="18sp"
-            android:textColor="#ffffff"
-            android:background="@drawable/sp"
-            android:layout_marginTop="30dp"
-            android:layout_gravity="center"/>
+            style="@style/confirm_Button"
+            android:text="@string/pop_next"/>
+
     </LinearLayout>
 
 </RelativeLayout>

@@ -25,58 +25,40 @@
     <RelativeLayout
         android:layout_width="290dp"
         android:layout_height="250dp"
-        android:background="@drawable/shp"
+        android:background="@drawable/s"
         android:id="@+id/relativeLayout"
         android:layout_centerHorizontal="true"
         android:layout_below="@id/log_tv"
         android:layout_marginTop="50dp">
         <EditText
             android:id="@+id/log_edit_usre"
-            android:layout_width="250dp"
-            android:layout_height="30dp"
-            android:background="@null"
+            style="@style/input_Box"
             android:hint="@string/hiht_user"
-            android:gravity="center_vertical|center"
-            android:textCursorDrawable="@null"
-            android:textSize="14sp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="35dp"
-            android:layout_marginBottom="10dp"
-            android:textColorHint="#a9a9a9a9"/>
+            android:layout_marginTop="35dp"/>
+
         <View
             android:layout_below="@id/log_edit_usre"
-            style="@style/Home_View"
+            style="@style/separate_View"
             android:id="@+id/view"/>
+
             <EditText
                 android:id="@+id/log_edit_pwd"
                 android:layout_below="@+id/view"
-                android:layout_width="250dp"
-                android:layout_height="30dp"
-                android:layout_marginLeft="20dp"
+                style="@style/input_Box"
                 android:layout_marginTop="10dp"
-                android:layout_marginBottom="10dp"
-                android:textSize="14sp"
                 android:hint="@string/hiht_pwd"
-                android:gravity="center_vertical|center"
-                android:textCursorDrawable="@null"
-                android:background="@null"
-                android:textColorHint="#a9a9a9a9"
                 android:inputType="textPassword"/>
         <View
             android:layout_below="@id/log_edit_pwd"
-            style="@style/Home_View"
+            style="@style/separate_View"
             android:id="@+id/view3"/>
+
         <Button
             android:id="@+id/log"
-            android:layout_width="240dp"
-            android:layout_height="40dp"
-            android:text="@string/log"
-            android:textSize="19sp"
-            android:textColor="#ffffff"
-            android:background="@drawable/sp"
-            android:layout_marginTop="35dp"
             android:layout_below="@+id/view3"
-            android:layout_centerHorizontal="true"/>
+            style="@style/confirm_Button"
+            android:text="@string/log"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -84,10 +66,11 @@
             android:textColor="#437af0"
             android:textSize="13sp"
             android:id="@+id/forget"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="10dp"
             android:layout_below="@+id/log"
             android:layout_alignLeft="@+id/log"
             android:layout_alignStart="@+id/log"/>
+
         <TextView
             android:id="@+id/log_login"
             android:layout_width="wrap_content"

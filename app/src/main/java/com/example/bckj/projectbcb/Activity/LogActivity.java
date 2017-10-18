@@ -35,7 +35,7 @@ public class LogActivity extends BaseActivity implements LogView{
     @Override
     public void initView() {
         setContentView(R.layout.activity_log);
-        setToolBar("",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        setToolBar("",R.mipmap.back_02,R.color.one);
         //得到存储对象
         instance = SharedUtils.getInstance();
     }

@@ -13,6 +13,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -39,7 +40,6 @@ import com.example.bckj.projectbcb.Utils.CountDownTimerUtils;
 import com.example.bckj.projectbcb.Utils.DecideWifiAlertdialog;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiOneParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiTweParameter;
-import com.example.bckj.projectbcb.Utils.DiDiUtils.PathUrl;
 import com.example.bckj.projectbcb.Utils.OnMultiClickListener;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.example.bckj.projectbcb.ViewLayer.SensitizeView;
@@ -75,7 +75,6 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensitize);
-        PathUrl.getIp(context);
         //得到注册的token值
         int code = (int) instance.getData(this, "mainLogCode", 0);
         Log.d("zzz", "sensitize  得到本地的登录状态码：" + code);
@@ -93,7 +92,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             back.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
+                    startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
                     finish();
                 }
             });
@@ -101,7 +100,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             close.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
+                    startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
                     finish();
                 }
             });
@@ -260,6 +259,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
 
     //短信验证码对话框（没有注册过的手机号）
     private void setCodeOnClick() {
+        Log.d("zzzz15", "sensitizexxxxxx");
         //得到一个参数的对象
         final DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
 
@@ -330,6 +330,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                         DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
                         //调起发送验证码的方法
                         submiteCodeTaskIDRequest(diDiOneParameter,"submitEcode","smsCode",code);
+                        Log.d("zzzz16", "sensitizexxxxxx");
                     }
                 }
             });
@@ -604,19 +605,25 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
 
                         String dataStatus = nameValuePairs.getStatus();
                         final String userType = nameValuePairs.getUserType();
-                        Log.d("zzzz", "sensitize  解析出需要的值："+dataStatus +"=="+ userType);
+                        Log.d("zzzz11", "sensitize  解析出需要的值："+dataStatus +"=="+ userType);
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
                                 if(userType.equals("0")){
+                                    //存入值
+                                    instance.saveData(context,"usetType",userType);
                                     //登录对话框的方法
                                     Pop_Log();
                                 }else {
+                                    //存入值
+                                    instance.saveData(context,"usetType",userType);
+
                                     //判断如果激活过就直接弹出得到验证码
                                     DiDiOneParameter diDiOneParameter1 = new DiDiOneParameter();
                                     //得到弹出框手机号的值
                                     final String sens_phone1 = sens_edit_phone.getText().toString();
                                     verificationCodeTaskIDRequest(diDiOneParameter1,"getVerificationCode","phoneNum",sens_phone1);
+                                    Log.d("zzzz12", "sensitizexxxxxx");
                                 }
                             }
                         });
@@ -710,7 +717,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                         DengLuBeanData.ResultBean result = dengLuBeanData.getResult();
                         final String errno = result.getErrno();
                         final String error = result.getError();
-                        Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
+                        Log.d("zzz13", "sensitize  解析出需要的值："+errno +"=="+ error);
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
@@ -720,14 +727,13 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                                     //得到token值
                                     String token = (String) instance.getData(context, "token", "");
                                     //滴滴登录成功后将滴滴信息存入到数据库
-                                    Log.d("zzz", "sensitize  得到要用的token值：" + token);
+                                    Log.d("zzz14", "sensitize  得到要用的token值：" + token);
                                     presenterLayer.setSensitize("taxi",2,log_edit_pwd,log_edit_phone,token);
                                     startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
                                     finish();
                                 }else if(errno.equals("-425")){
                                     threadToast(context,error);
                                     //调起获取验证码的接口
-                                    //得到一个参数的对象
                                     DiDiOneParameter diDiOneParameter = new DiDiOneParameter();
                                     //得到弹出框手机号的值
                                     final String sens_phone1 = sens_edit_phone.getText().toString();
@@ -828,7 +834,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                     GetPicCodeBeanData getPicCodeBeanData = gson.fromJson(returnJSONStr, GetPicCodeBeanData.class);
                     int errorCode = getPicCodeBeanData.errorCode;
                     String errorMessage = getPicCodeBeanData.errorMessage;
-                    Log.d("zzz", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
+                    Log.d("zzz15", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
                     if(errorCode!=0){
                         threadToast(context,errorMessage);
                     }else {
@@ -842,14 +848,15 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                                     setCodeOnClick();
                                 }
                             });
+                            Log.d("zzzz16", "sensitizexxxxxx");
                         }else {
                             Object msg = values.get(0);
                             final Object pic= values.get(1);
-                            Log.d("zzz", "得到验证码之类的值："+msg+"=="+pic);
+                            Log.d("zzz17", "得到验证码之类的值："+msg+"=="+pic);
                             DiDiCodeBean diDiCodeBean = gson.fromJson(String.valueOf(msg), DiDiCodeBean.class);
                             String errno = diDiCodeBean.getErrno();
                             String error = diDiCodeBean.getError();
-                            Log.d("zzz", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
+                            Log.d("zzz18", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
                             if(errno.equals("1003")){
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
@@ -948,7 +955,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                 GetPicCodeBeanData getPicCodeBeanData = gson.fromJson(returnJSONStr, GetPicCodeBeanData.class);
                 int errorCode = getPicCodeBeanData.errorCode;
                 String errorMessage = getPicCodeBeanData.errorMessage;
-                Log.d("zzz", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
+                Log.d("zzz19", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
                 if(errorCode!=0){
                     threadToast(context,errorMessage);
                 }else {
@@ -960,30 +967,30 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                         HuoQuYanZhengMaBeanData.ResultBean result1 = huoQuYanZhengMaBeanData.getResult();
                         String errno = result1.getErrno();
                         String error = result1.getError();
-                        Log.d("zzz", "得到验证码之类的值："+errno+ "==" +error);
+                        Log.d("zzz101", "得到验证码之类的值："+errno+ "==" +error);
                         if(errno.equals("0")){
-                            alertDialog.cancel();
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
                                     setCodeOnClick();
                                 }
                             });
+                            alertDialog.cancel();
                         }else {
                             threadToast(context,"图形验证码的信息："+error);
                         }
                     }else {
                         Object msg = values.get(0);
                         final Object pic= values.get(1);
-                        Log.d("zzz", "得到验证码之类的值："+msg+ "==" +pic);
+                        Log.d("zzz102", "得到验证码之类的值："+msg+ "==" +pic);
                         DiDiCodeBean diDiCodeBean = gson.fromJson(String.valueOf(msg), DiDiCodeBean.class);
                         String errno = diDiCodeBean.getErrno();
                         String error = diDiCodeBean.getError();
-                        Log.d("zzz", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
+                        Log.d("zzz103", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
                         if(errno.equals("2002")){
                             alertDialog.cancel();
                             threadToast(context,error);
-                            Log.d("zzz", "得到验证错误后的图形：" +pic);
+                            Log.d("zzz104", "得到验证错误后的图形：" +pic);
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1083,15 +1090,17 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                         DiDiCodeBean diDiCodeBean = gson.fromJson(returnJSONStr, DiDiCodeBean.class);
                         final String errno = diDiCodeBean.getErrno();
                         final String error = diDiCodeBean.getError();
-                        Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
+                        Log.d("zzzz105", "sensitize  解析出需要的值："+errno +"=="+ error);
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
+                                Toast.makeText(context,"没有手机号注册：", Toast.LENGTH_SHORT).show();
                                 if(error.equals("OK")){
                                     setPopPwdOnClickPwd();
                                 }else {
-                                    Toast.makeText(context, error, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context,"没有手机号注册：" +error, Toast.LENGTH_SHORT).show();
+                                    setPopPwdOnClickPwd();
                                 }
                             }
                         });
@@ -1298,13 +1307,14 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                     GetPicCodeBeanData getPicCodeBeanData = gson.fromJson(returnJSONStr, GetPicCodeBeanData.class);
                     int errorCode = getPicCodeBeanData.errorCode;
                     String errorMessage = getPicCodeBeanData.errorMessage;
-                    Log.d("zzz", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
+                    Log.d("zzz107", "得到验证码之类的值：" + errorMessage + "==" + errorCode);
                     if(errorCode!=0){
                         threadToast(context,errorMessage);
                     }else {
                         GetPicCodeBeanData.ResultBean result = getPicCodeBeanData.result;
                         List<Object> values = result.values;
                         if(values==null){
+                            Log.d("zzz108", "fffsffdfs");
                             threadToast(context,"获得短信验证码");
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
@@ -1315,11 +1325,11 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                         }else {
                             Object msg = values.get(0);
                             final Object pic= values.get(1);
-                            Log.d("zzz", "得到验证码之类的值："+msg+"=="+pic);
+                            Log.d("zzz109", "得到验证码之类的值："+msg+"=="+pic);
                             DiDiCodeBean diDiCodeBean = gson.fromJson(String.valueOf(msg), DiDiCodeBean.class);
                             String errno = diDiCodeBean.getErrno();
                             String error = diDiCodeBean.getError();
-                            Log.d("zzz", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
+                            Log.d("zzz110", "得到验证码之类的值集合0里面的值："+errno+ "==" + error);
                             if(errno.equals("1003")){
                                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                                     @Override
@@ -1430,7 +1440,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                         HuoQuYanZhengMaBeanData.ResultBean result1 = huoQuYanZhengMaBeanData.getResult();
                         String errno = result1.getErrno();
                         String error = result1.getError();
-                        Log.d("zzz", "得到验证码之类的值："+errno+ "==" +error);
+                        Log.d("zzz111", "得到验证码之类的值："+errno+ "==" +error);
                         if(errno.equals("0")){
                             alertDialog.cancel();
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -1445,7 +1455,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                     }else {
                         Object msg = values.get(0);
                         final Object pic= values.get(1);
-                        Log.d("zzz", "得到验证码之类的值："+msg+ "==" +pic);
+                        Log.d("zzz112", "得到验证码之类的值："+msg+ "==" +pic);
                         DiDiCodeBean diDiCodeBean = gson.fromJson(String.valueOf(msg), DiDiCodeBean.class);
                         String errno = diDiCodeBean.getErrno();
                         String error = diDiCodeBean.getError();
@@ -1453,7 +1463,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                         if(errno.equals("2002")){
                             alertDialog.cancel();
                             threadToast(context,error);
-                            Log.d("zzz", "得到验证错误后的图形：" +pic);
+                            Log.d("zzz113", "得到验证错误后的图形：" +pic);
                             new Handler(Looper.getMainLooper()).post(new Runnable() {
                                 @Override
                                 public void run() {
@@ -1553,18 +1563,32 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                         DiDiCodeBean diDiCodeBean = gson.fromJson(returnJSONStr, DiDiCodeBean.class);
                         final String errno = diDiCodeBean.getErrno();
                         final String error = diDiCodeBean.getError();
-                        Log.d("zzzz", "sensitize  解析出需要的值："+errno +"=="+ error);
-
-
+                        Log.d("zzz114", "sensitize  解析出需要的值："+errno +"=="+ error);
 
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
                             @Override
                             public void run() {
                                 if(errno.equals("0")){
-                                    Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show();
-                                    alertDialog.cancel();
-                                    finish();
+                                    /**
+                                     * 只是猜测是指样可以（待修改）
+                                     *
+                                     * **/
+                                    String  usetType = (String) instance.getData(context, "usetType", "-1");
+                                    Log.d("zzz", "查看是不是没有注册过的手机：" + usetType);
+                                    if(usetType.equals("1")){
+                                        Log.d("zzz115", "sensitize sffafdfda ");
+                                        setPopPwdOnClickPwd();
+                                    }else {
+                                        Log.d("zzz120", "sensitize 思路没问题"+usetType);
+                                        Toast.makeText(context, "登录成功", Toast.LENGTH_SHORT).show();
+                                        alertDialog.cancel();
+                                        presenterLayer.setSensitize("taxi",2,log_edit_pwd,log_edit_phone,token);
+                                        startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
+                                        finish();
+                                    }
                                 }else {
+                                    String  usetType = (String) instance.getData(context, "usetType", "-1");
+                                    Log.d("zzz", "查看是不是没有注册过的手机：" + usetType);
                                     Toast.makeText(context,error, Toast.LENGTH_SHORT).show();
                                 }
                             }
@@ -1574,7 +1598,6 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             }
         });
     }
-
 
 
 
@@ -1664,9 +1687,9 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
                 nextOnclivk();
             }else {
                 //弹出的对话框-
-                //normalDialog(data);
+                normalDialog(data);
                 //下一步的点击监听
-                nextOnclivk();
+                //nextOnclivk();
                 Log.d("zzz", "sensitize  返回的信息   请去邮箱激活此APP，方可激活服务");
             }
         }else {
@@ -1714,7 +1737,8 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, R.string.adl_tweMsg_t, Toast.LENGTH_LONG).show();
-                //startActivity(new Intent(SensitizeActivity.this, MainActivity.class));
+                startActivity(new Intent(SensitizeActivity.this, MainActivity.class));
+                alertDialog.cancel();
                 SensitizeActivity.this.finish();
             }
         });
@@ -1743,7 +1767,7 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         }
     }
 
-   /* public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
         if ((keyCode == KeyEvent.KEYCODE_BACK)) {
             System.out.println("按下了back键   onKeyDown()");
             startActivity(new Intent(SensitizeActivity.this,MainActivity.class));
@@ -1752,5 +1776,5 @@ public class SensitizeActivity extends AppCompatActivity implements SensitizeVie
         }else {
             return super.onKeyDown(keyCode, event);
         }
-    }*/
+    }
 }

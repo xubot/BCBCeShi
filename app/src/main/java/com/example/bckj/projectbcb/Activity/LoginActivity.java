@@ -37,7 +37,7 @@ public class LoginActivity extends BaseActivity implements LoginView{
     @Override
     public void initView() {
         setContentView(R.layout.activity_login);
-        setToolBar("",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        setToolBar("",R.mipmap.back_02,R.color.one);
         //得到存储对象
         instance = SharedUtils.getInstance();
     }
@@ -82,23 +82,20 @@ public class LoginActivity extends BaseActivity implements LoginView{
                         Log.d("email", email+"");//(对为true)
                         //手机号的正则表达式
                         boolean mobile = isMobile(login_phone);
-                        if(email){
-                            if(login_pwd.length()>6&&login_repwd.length()>6){
-                                if(!login_pwd.equals(login_repwd)){
-                                    Toast.makeText(LoginActivity.this, R.string.panTwePwd, Toast.LENGTH_SHORT).show();
-                                }else {
-                                    if(mobile){
-                                        //请求
-                                        presenterLayer.setLoginOne(login_usre, login_email, login_pwd,login_repwd,login_phone);
-                                    }else {
-                                        Toast.makeText(LoginActivity.this,R.string.panPhone, Toast.LENGTH_SHORT).show();
-                                    }
-                                }
+
+                        if(login_pwd.length()>6&&login_repwd.length()>6){
+                            if(!login_pwd.equals(login_repwd)){
+                                Toast.makeText(LoginActivity.this, R.string.panTwePwd, Toast.LENGTH_SHORT).show();
                             }else {
-                                Toast.makeText(LoginActivity.this, R.string.panPwd, Toast.LENGTH_SHORT).show();
+                                if(mobile){
+                                    //请求
+                                    presenterLayer.setLoginOne(login_usre, login_email, login_pwd,login_repwd,login_phone);
+                                }else {
+                                    Toast.makeText(LoginActivity.this,R.string.panPhone, Toast.LENGTH_SHORT).show();
+                                }
                             }
                         }else {
-                            Toast.makeText(LoginActivity.this,  R.string.panEmail, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, R.string.panPwd, Toast.LENGTH_SHORT).show();
                         }
                     }
                 } else {
@@ -108,19 +105,16 @@ public class LoginActivity extends BaseActivity implements LoginView{
                         //email的正则表达式
                         boolean email = isEmail(login_email);
                         Log.d("email", email+"");//(对为true)
-                        if(email){
-                            if(login_pwd.length()>6&&login_repwd.length()>6){
-                                if(!login_pwd.equals(login_repwd)){
-                                    Toast.makeText(LoginActivity.this, R.string.panTwePwd, Toast.LENGTH_SHORT).show();
-                                }else {
-                                    //请求
-                                    presenterLayer.setLoginTwe(login_usre, login_email, login_pwd,login_repwd);
-                                }
+
+                        if(login_pwd.length()>6&&login_repwd.length()>6){
+                            if(!login_pwd.equals(login_repwd)){
+                                Toast.makeText(LoginActivity.this, R.string.panTwePwd, Toast.LENGTH_SHORT).show();
                             }else {
-                                Toast.makeText(LoginActivity.this, R.string.panPwd, Toast.LENGTH_SHORT).show();
+                                //请求
+                                presenterLayer.setLoginTwe(login_usre, login_email, login_pwd,login_repwd);
                             }
                         }else {
-                            Toast.makeText(LoginActivity.this,  R.string.panEmail, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, R.string.panPwd, Toast.LENGTH_SHORT).show();
                         }
                     }
                 }

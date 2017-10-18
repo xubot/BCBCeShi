@@ -19,6 +19,7 @@ import com.example.bckj.projectbcb.R;
 import com.example.bckj.projectbcb.Utils.DecideWifiAlertdialog;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.DiDiOneParameter;
 import com.example.bckj.projectbcb.Utils.DiDiUtils.QuXiaoDingDaiUtils;
+import com.example.bckj.projectbcb.Utils.OnMultiClickListener;
 import com.example.bckj.projectbcb.Utils.SharedUtils;
 import com.google.gson.Gson;
 
@@ -118,13 +119,11 @@ public class TaxiActivity extends BaseActivity {
         //查看司机信息
         getTaxiOrderTaskIDRequest(diDiOneParameter,"getTaxiOrder","orderId",driverOid);
 
-        setToolBar("等待应答",R.mipmap.back_02,R.color.one,R.menu.zhihu_toolbar_menu);
+        setToolBar("等待应答",R.mipmap.back_02,R.color.one);
     }
 
     @Override
     protected void init() {
-        //得到聊天的控件
-        //taxiim = (ImageView) findViewById(R.id.taxiim);
         //打电话控件
         taxicall = (ImageView) findViewById(R.id.taxicall);
         //取消控件
@@ -133,25 +132,6 @@ public class TaxiActivity extends BaseActivity {
     //控件的点击事件
     @Override
     public void cheked(){
-       /* //调起聊天按钮监听
-        taxiim.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(TaxiActivity.this, TaxiImActivity.class);
-                if(driverName.isEmpty()&&driverPhone.isEmpty()&&driverDid.isEmpty()&&driverSkey.isEmpty()&&driverOid.isEmpty()){
-                    return;
-                }else {
-                    intent.putExtra("did",driverDid);
-                    intent.putExtra("driverPhone",driverPhone);
-                    intent.putExtra("driverName",driverName);
-                    intent.putExtra("driverOid",driverOid);
-                    intent.putExtra("driverSkey",driverSkey);
-                    //启动跳转
-                    startActivity(intent);
-                }
-                //Toast.makeText(TaxiActivity.this, "正在更新中。。。。。。", Toast.LENGTH_SHORT).show();
-            }
-        });*/
         //调起打电话的控件监听
         taxicall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -164,14 +144,14 @@ public class TaxiActivity extends BaseActivity {
             }
         });
         //取消订单监听
-        cancel.setOnClickListener(new View.OnClickListener() {
+        cancel.setOnClickListener(new OnMultiClickListener(){
             @Override
-            public void onClick(View v) {
+            public void onMultiClick(View v) {
                 //得到取消订单的工具类
                 QuXiaoDingDaiUtils quXiaoDingDaiUtils = new QuXiaoDingDaiUtils();
                 //得到当前时间，在当前时间的基础上加5分钟
                 Date date = new Date();
-                Date afterDate= new Date(date.getTime()+420000);
+                Date afterDate= new Date(date.getTime()+540000);
                 SimpleDateFormat format = new SimpleDateFormat("HH : mm");
                 String format1 = format.format(afterDate);
                 Log.d("zzz", "得到当前的24进制时间：" + format1);
@@ -179,6 +159,23 @@ public class TaxiActivity extends BaseActivity {
                 getCancelOrderTaskIDRequest(quXiaoDingDaiUtils,driverOid,format1);
             }
         });
+
+        /*//取消订单监听
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //得到取消订单的工具类
+                QuXiaoDingDaiUtils quXiaoDingDaiUtils = new QuXiaoDingDaiUtils();
+                //得到当前时间，在当前时间的基础上加5分钟
+                Date date = new Date();
+                Date afterDate= new Date(date.getTime()+540000);
+                SimpleDateFormat format = new SimpleDateFormat("HH : mm");
+                String format1 = format.format(afterDate);
+                Log.d("zzz", "得到当前的24进制时间：" + format1);
+                //请求取消等待的方法
+                getCancelOrderTaskIDRequest(quXiaoDingDaiUtils,driverOid,format1);
+            }
+        });*/
     }
 
     @Override
@@ -288,7 +285,7 @@ public class TaxiActivity extends BaseActivity {
                             threadToast(TaxiActivity.this,"行程已完成");
                             finish();
                         }else if(status1==4){
-                            threadToast(TaxiActivity.this,"4:"+status1);
+                            //threadToast(TaxiActivity.this,"4:"+status1);
                             timer.schedule(new TimerTask() {
                                 @Override
                                 public void run() {
@@ -379,6 +376,16 @@ public class TaxiActivity extends BaseActivity {
                         @Override
                         public void run() {
                             Toast.makeText(TaxiActivity.this, "滴滴没有开启", Toast.LENGTH_SHORT).show();
+                            //得到取消订单的工具类
+                            QuXiaoDingDaiUtils quXiaoDingDaiUtils = new QuXiaoDingDaiUtils();
+                            //得到当前时间，在当前时间的基础上加5分钟
+                            Date date = new Date();
+                            Date afterDate= new Date(date.getTime()+540000);
+                            SimpleDateFormat format = new SimpleDateFormat("HH : mm");
+                            String format1 = format.format(afterDate);
+                            Log.d("zzz", "得到当前的24进制时间：" + format1);
+                            //请求取消等待的方法
+                            getCancelOrderTaskIDRequest(quXiaoDingDaiUtils,driverOid,format1);
                         }
                     });
                 }else {
@@ -410,7 +417,7 @@ public class TaxiActivity extends BaseActivity {
                         QuXiaoDingDaiUtils quXiaoDingDaiUtils = new QuXiaoDingDaiUtils();
                         //得到当前时间，在当前时间的基础上加5分钟
                         Date date = new Date();
-                        Date afterDate= new Date(date.getTime()+420000);
+                        Date afterDate= new Date(date.getTime()+540000);
                         SimpleDateFormat format = new SimpleDateFormat("HH : mm");
                         String format1 = format.format(afterDate);
                         Log.d("zzz", "得到当前的24进制时间：" + format1);

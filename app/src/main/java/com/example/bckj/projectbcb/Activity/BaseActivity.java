@@ -29,7 +29,7 @@ public abstract class BaseActivity extends Activity {
     protected abstract void init();
     public abstract void cheked();
     protected abstract void load();
-    public void setToolBar(String name, int img, int color, int menuitem){
+    public void setToolBar(String name, int img, int color){
         //设置ToolBar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView title= (TextView) findViewById(R.id.titleName);
@@ -38,7 +38,7 @@ public abstract class BaseActivity extends Activity {
         title.setText(name);
         toolbar.setBackgroundColor(color);
         toolbar.getBackground().setAlpha(100);
-        toolbar.inflateMenu(menuitem);
+        //toolbar.inflateMenu(menuitem);
     }
     public void onClike(LinearLayout img1) {}
 

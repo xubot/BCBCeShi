@@ -67,8 +67,6 @@
         </activity>
         <activity android:name=".Activity.ModifyDataActivity">
         </activity>
-        <activity android:name=".Activity.TaxiImActivity">
-        </activity>
         <activity android:name=".Activity.NetActivity">
         </activity>
     </application>

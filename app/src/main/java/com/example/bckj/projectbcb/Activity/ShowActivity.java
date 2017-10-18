@@ -92,6 +92,7 @@ public class ShowActivity extends AppCompatActivity {
                 view.loadUrl("javascript:$('.scope-page-detail').append('<button   style=\"opacity: 0;position:absolute;left:50%;margin:12px 0 12px -65px;height:27px;padding:0 0 30px 0;overflow:hidden;border:3px solid #00a3ff;border-radius:4px;background:#fff;color:#00a3ff\" id=\"MicrosoftTranslatorWidget\"></button>')");
                 view.loadUrl("javascript:$('.place-page-detail').append('<button   style=\"opacity: 0;position:absolute;left:50%;margin:12px 0 12px -65px;height:27px;padding:0 0 30px 0;overflow:hidden;border:3px solid #00a3ff;border-radius:4px;background:#fff;color:#00a3ff\" id=\"MicrosoftTranslatorWidget\"></button>')");
                 view.loadUrl("javascript:$('#cater-page-detail').append('<button   style=\"opacity: 0;position:absolute;left:50%;margin:12px 0 12px -65px;height:27px;padding:0 0 30px 0;overflow:hidden;border:3px solid #00a3ff;border-radius:4px;background:#fff;color:#00a3ff\" id=\"MicrosoftTranslatorWidget\"></button>')");
+                view.loadUrl("javascript:$('body').append('<button   style=\"opacity: 0;position:absolute;left:50%;margin:12px 0 12px -65px;height:27px;padding:0 0 30px 0;overflow:hidden;border:3px solid #00a3ff;border-radius:4px;background:#fff;color:#00a3ff\" id=\"MicrosoftTranslatorWidget\"></button>')");
                 //添加翻译的脚本
                 view.loadUrl(insertJavaScript);
                 Log.d("zzz", "添加成功");

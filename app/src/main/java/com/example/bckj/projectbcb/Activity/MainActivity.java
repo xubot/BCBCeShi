@@ -794,6 +794,7 @@ public class MainActivity extends BaseActivity implements MainView{
     }
 
 
+
     //图形验证码的对话框
     private void setPicCodeOnClick(Object pic) {
         Log.d("zzz", "从子线程中得到的图形码：" + pic);
